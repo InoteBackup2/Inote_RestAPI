@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="user activation : all tests PASSED">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2edkcpAZqvuoPv8xzcUz7x8VJ9n" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "HTTP Request.requests | Register an user with \"USER\" default role.executor": "Run",
+    "JUnit.All tests.executor": "Run",
+    "JUnit.AuthControllerTest.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
+    "JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
+    "JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
+    "JUnit.AuthController_IT.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
+    "JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist.executor": "Run",
+    "JUnit.AuthController_IT.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
+    "JUnit.AuthController_IT.executor": "Run",
+    "JUnit.EndPointsTest_IT.executor": "Run",
+    "JUnit.EndPointsTest_IT.register_shouldFail_whenUserExist.executor": "Run",
+    "JUnit.EndPointsTest_IT.register_shouldSuccess_whenUserNotExist.executor": "Debug",
+    "JUnit.RoleRepositoryTest.findByName_shouldReturnOptionalOfRole_whenAskedRoleIsInDb.executor": "Run",
+    "JUnit.RoleServiceImplTest.insertRolesInDb_shouldReturnAnArrayWithNumberOfRoleApp.executor": "Run",
+    "JUnit.UserServiceImplTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
+    "JUnit.UserServiceImplTest.activation_ShouldFail_whenUserIsNotPresent.executor": "Run",
+    "JUnit.UserServiceImplTest.activation_ShouldFail_whenValidationIsExpired.executor": "Run",
+    "JUnit.UserServiceImplTest.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
+    "JUnit.UserServiceImplTest.executor": "Run",
+    "JUnit.UserServiceImplTest.register_shouldSuccess_whenUserNotExistAndGoodParameters.executor": "Run",
+    "JUnit.ValidationServiceImplTest.getValidationFromCode_ShouldFail_WhenValidationNotExists.executor": "Run",
+    "JUnit.ValidationServiceImplTest.getValidationFromCode_ShouldSuccess_WhenValidationExists.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.InoteApiApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "h2",
+      "mysql"
+    ],
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/": [
+      "H2"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.All tests">
+    <configuration name="All tests" type="JUnit" factoryName="JUnit">
+      <module name="InoteApi" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="/usr/lib/jvm/jdk-17-oracle-x64" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="activation_ShouldFail_whenCodeIsNotCorrect" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.activation_ShouldSuccess_whenCodeIsCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="activation_ShouldSuccess_whenCodeIsCorrect" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="IT_activation_ShouldFail_whenCodeIsNotCorrect" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT.IT_register_shouldSuccess_whenUserNotExist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="IT_register_shouldSuccess_whenUserNotExist" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="InoteApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="InoteApi" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="fr.inote.inoteApi.InoteApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.All tests" />
+      <item itemvalue="JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect" />
+      <item itemvalue="JUnit.AuthControllerTest.activation_ShouldSuccess_whenCodeIsCorrect" />
+      <item itemvalue="JUnit.AuthController_IT" />
+      <item itemvalue="JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect" />
+      <item itemvalue="JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist" />
+      <item itemvalue="Spring Boot.InoteApiApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect" />
+        <item itemvalue="JUnit.AuthControllerTest.activation_ShouldSuccess_whenCodeIsCorrect" />
+        <item itemvalue="JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect" />
+        <item itemvalue="JUnit.AuthController_IT" />
+        <item itemvalue="JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-78a6f59c" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="" />
+      <created>1712241934423</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712241934423</updated>
+      <workItem from="1712241937642" duration="1241000" />
+      <workItem from="1712302450783" duration="2154000" />
+      <workItem from="1712305627895" duration="18273000" />
+    </task>
+    <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
+      <option name="closed" value="true" />
+      <created>1712307268308</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712307268308</updated>
+    </task>
+    <task id="LOCAL-00002" summary="MAJ - all tests PASSED">
+      <option name="closed" value="true" />
+      <created>1712309831352</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712309831352</updated>
+    </task>
+    <task id="LOCAL-00003" summary="getValidationFromCode_ShouldSuccess_WhenValidationExists PASSED">
+      <option name="closed" value="true" />
+      <created>1712311389345</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712311389347</updated>
+    </task>
+    <task id="LOCAL-00004" summary="getValidationFromCode_ShouldFail_WhenValidationNotExists PASSED">
+      <option name="closed" value="true" />
+      <created>1712311655798</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712311655798</updated>
+    </task>
+    <task id="LOCAL-00005" summary="activation_ShouldSuccess_whenCodeIsCorrect PASSED">
+      <option name="closed" value="true" />
+      <created>1712316909653</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1712316909654</updated>
+    </task>
+    <task id="LOCAL-00006" summary="activation_ShouldFail_whenCodeIsNotCorrect PASSED">
+      <option name="closed" value="true" />
+      <created>1712317314591</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1712317314591</updated>
+    </task>
+    <task id="LOCAL-00007" summary="activation_ShouldFail_whenValidationIsExpired PASSED">
+      <option name="closed" value="true" />
+      <created>1712317553321</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1712317553321</updated>
+    </task>
+    <task id="LOCAL-00008" summary="activation_ShouldFail_whenUserIsNotPresent PASSED">
+      <option name="closed" value="true" />
+      <created>1712317972876</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1712317972876</updated>
+    </task>
+    <task id="LOCAL-00009" summary="MAJ">
+      <option name="closed" value="true" />
+      <created>1712324512379</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1712324512379</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactoring">
+      <option name="closed" value="true" />
+      <created>1712324782812</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1712324782812</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Refactoring">
+      <option name="closed" value="true" />
+      <created>1712324816153</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1712324816153</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Refactoring">
+      <option name="closed" value="true" />
+      <created>1712324956000</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1712324956000</updated>
+    </task>
+    <task id="LOCAL-00013" summary="user activation : all tests PASSED">
+      <option name="closed" value="true" />
+      <created>1712325970525</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1712325970526</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="register_shouldFail_whenUserExist PASSED" />
+    <MESSAGE value="MAJ - all tests PASSED" />
+    <MESSAGE value="getValidationFromCode_ShouldSuccess_WhenValidationExists PASSED" />
+    <MESSAGE value="getValidationFromCode_ShouldFail_WhenValidationNotExists PASSED" />
+    <MESSAGE value="activation_ShouldSuccess_whenCodeIsCorrect PASSED" />
+    <MESSAGE value="activation_ShouldFail_whenCodeIsNotCorrect PASSED" />
+    <MESSAGE value="activation_ShouldFail_whenValidationIsExpired PASSED" />
+    <MESSAGE value="activation_ShouldFail_whenUserIsNotPresent PASSED" />
+    <MESSAGE value="MAJ" />
+    <MESSAGE value="Refactoring" />
+    <MESSAGE value="user activation : all tests PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="user activation : all tests PASSED" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/repository/RoleRepositoryTest.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/UserServiceImpl.java</url>
+          <line>186</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
+          <line>101</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java</url>
+          <line>196</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java</url>
+          <line>203</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Inote_RestAPI$UserServiceImplTest.ic" NAME="UserServiceImplTest Coverage Results" MODIFIED="1712317922255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>fr.inote.inoteApi.service.impl.*</FILTER>
+    </SUITE>
+  </component>
+</project>

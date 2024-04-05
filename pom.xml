@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- project -> root element of POM -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- POM version that the file conforms to and, required for the proper functioning of Maven. -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- The parent tag in a Maven pom.xml file is used to specify a parent POM for the current POM. 
+    This is typically used to specify common configurations that are inherited by all child POMs. The
+    parent tag must be the first element in the POM and must specify a unique identifier for the
+    parent POM, which is typically the groupId and artifactId of the parent POM. 
+    The Spring Boot Starter Parent is a special starter project that provides default configurations
+    for your Spring Boot application and a complete dependency tree to quickly build your project.
+    It also provides default configurations for Maven plugins, such as maven-failsafe-plugin,
+    maven-jar-plugin, maven-surefire-plugin, and maven-war-plugin.
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.3</version>
+        <relativePath />
+    </parent>
+
+    <!-- Project informations -->
+    <groupId>fr.inote</groupId>
+    <artifactId>InoteApi</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>InoteApi</name>
+    <description>Inote Project REST API</description>
+
+    <!-- The <properties> tag in a pom.xml file is used to define project-level properties that can
+    be referenced using the ${propertyName} syntax within the pom.xml. These properties can be used
+    for various purposes, such as defining project version, specifying dependencies version, or
+    configuring plugin parameters. -->
+    <properties>
+        <!-- Project will be compiled with java 17 -->
+        <java.version>17</java.version>
+
+        <!-- Mocking smtp server during tests -->
+        <greenmail.version>1.6.5</greenmail.version>
+    </properties>
+
+    <!-- Dependencies of project     -->
+    <dependencies>
+
+        <!-- Quickly setup web application (including RESTful APIs), using Spring MVC -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
+        <!-- Integration of Java Persistance Api -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- User inputs validations -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Security of application -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>3.2.4</version>
+        </dependency>
+
+        <!-- End-to-end JSON Web Token (JWT) creation and verification. -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+
+        
+
+        <!-- Provides additional development-time features to enhance the application development
+        experience
+        like automatic application restart, caching options disabling, sensible development-time
+        configuration -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- MySQL driver -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Lombok annotations -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Extension of the spring-context module. It provides support for integrating common
+        third-party libraries into a Spring application context for caching, mailing, scheduling,
+        and template engines -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>6.1.5-SNAPSHOT</version>
+        </dependency>
+
+
+        <!-- Simplifies the process of sending emails within your application. 
+            It provides easy configuration and utilizes the JavaMail library to send 
+            emails using the Simple Mail Transfer Protocol (SMTP). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--               TEST DEPENDENCIES       -->
+        <!-- Test tools (JUnit Jupiter, AssertJ, and Hamcrest...) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Small Java DSL for synchronizing asynchronous operations (await...)-->
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The <build> tag in a pom.xml file is used to define the configuration for building the
+                project. It contains a list of plugins that will be executed during the build process. These
+                plugins can perform various tasks such as compiling code, running tests, generating
+                documentation, and packaging the application. -->
+
+        <!-- In-memory database (for tests)-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+<!--            <version>2.2.224</version>-->
+            <scope>test</scope>
+        </dependency>
+
+                
+    <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${testcontainers.version}</version>
+        <scope>test</scope>
+    </dependency>
+
+
+        <!-- Spring Security Tests is a component of Spring Security that provides 
+    support for testing security-related features in your Spring 
+    applications. It works in conjunction with Spring MVC Test 
+    and offers features like:
+        - Configuring the Spring Security filter chain for testing.
+        - Setting up a SecurityContext with mock users for the tests.
+        - Providing RequestPostProcessors and RequestBuilders for modifying requests.
+        - Implementing ResultMatchers for making security-related assertions about requests. -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mocking of stmp server -->
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail-junit5</artifactId>
+            <version>${greenmail.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    
+    <build>
+        <!-- List of plugins -->
+        <plugins>
+
+            <!-- Jacoco is an open-source tool for measuring and reporting Java code coverage -->
+            <plugin>
+                <!-- Plugin informations -->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <!-- <configuration> is used to configure the plugin’s behavior. -->
+
+                <executions> <!-- optional element that defines when and how the plugin should be
+                    executed during the build process -->
+                    <execution>
+                        <goals> <!-- The plugin goals to be executed. -->
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id> <!-- The unique identifier for this execution. -->
+                        <!-- <phase>prepare-package</phase> The build phase during which the plugin
+                        should be executed. -->
+                        <goals>
+                            <goal>report</goal> <!-- The plugin goals to be executed. -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Spring-boot-maven-plugin is a plugin for the Apache Maven build tool, specifically
+            designed to provide support for Spring Boot projects. It allows you to easily create
+            executable JAR or WAR archives, run Spring Boot applications, generate build
+            information, and start your Spring Boot application prior to running integration tests -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,8 @@
+{
+  "type": "about:blank",
+  "title": "Not Acceptable",
+  "status": 406,
+  "detail": "Account creation impossible. A user with this email address is already registered.",
+  "instance": "/api/auth/register",
+  "Error": "Account creation impossible. A user with this email address is already registered."
+}

@@ -1,0 +1,233 @@
+package fr.inote.inoteApi.service.impl;
+
+import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.crossCutting.exceptions.*;
+
+import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.*;
+
+import fr.inote.inoteApi.entity.Role;
+import fr.inote.inoteApi.entity.User;
+import fr.inote.inoteApi.entity.Validation;
+import fr.inote.inoteApi.repository.ValidationRepository;
+import fr.inote.inoteApi.service.UserService;
+import fr.inote.inoteApi.service.ValidationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import fr.inote.inoteApi.repository.RoleRepository;
+import fr.inote.inoteApi.repository.UserRepository;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static fr.inote.inoteApi.crossCutting.constants.RegexPatterns.REGEX_EMAIL_PATTERN;
+import static fr.inote.inoteApi.crossCutting.constants.RegexPatterns.REGEX_PASSWORD_FORMAT;
+
+
+/**
+ * Services related to User
+ *
+ * @author atsuhiko Mochizuki
+ * @date 26/03/2024
+ */
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    /* Dependencies */
+    final private UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    final private ValidationService validationService;
+    final private RoleRepository roleRepository;
+
+    private final ValidationRepository validationRepository;
+
+
+    /* Dependencies injection */
+    @Autowired
+    public UserServiceImpl(
+            UserRepository userRepository,
+            BCryptPasswordEncoder passwordEncoder,
+            ValidationService validationService,
+            RoleRepository roleRepository,
+            ValidationRepository validationRepository
+    ) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.validationService = validationService;
+        this.roleRepository = roleRepository;
+        this.validationRepository = validationRepository;
+    }
+
+    /* public methods* /
+
+    /**
+     * Retrieve an identified user
+     * <p>
+     *
+     * @param username the username identifying the user whose data is required.
+     * @return
+     * @throws UsernameNotFoundException
+     * @author atsuhiko Mochizuki
+     * @date 26/03/2024
+     * The loadUserByUsername() method is a part of the UserDetailsService interface
+     * in Spring Security, which is responsible for retrieving user-related data,
+     * particularly during the authentication process.
+     */
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("None user found"));
+    }
+
+    /**
+     * Create an user in database with:<br>
+     * <ul>
+     *     <li>validation of email format</li>
+     *     <li>validation of password format</li>
+     *     <li>checking is user is allready in database</li>
+     *     <li>encryption of password with Bcrypt</li>
+     * </ul>
+     * then create a validation and save it in database
+     * <p>
+     *
+     * @param user the user to register
+     *             <p>
+     * @return the user
+     * @throws InoteExistingEmailException
+     * @author Atsuhiko Mochizuki
+     * @date 26/03/2024
+     */
+    @Override
+    public User register(User user) throws InoteUserException, InoteExistingEmailException {
+        User userToRegister = this.createUser(user);
+        this.validationService.createAndSave(userToRegister);
+        return userToRegister;
+    }
+
+    /* private methods */
+
+    /**
+     * Create an user in database with:<br>
+     * <ul>
+     *     <li>validation of email format</li>
+     *     <li>validation of password format</li>
+     *     <li>checking is user is allready in database</li>
+     *     <li>encryption of password with Bcrypt</li>
+     * </ul>
+     *
+     * @return the saved user if success
+     * @throws InoteExistingEmailException
+     * @author atsuhiko Mochizuki
+     * @date 26/03/2024
+     */
+    private User createUser(User user) throws InoteUserException, InoteExistingEmailException {
+
+        Pattern compiledPattern;
+        Matcher matcher;
+
+        // Email format checking
+        compiledPattern = Pattern.compile(REGEX_EMAIL_PATTERN);
+        matcher = compiledPattern.matcher(user.getEmail());
+        if (!matcher.matches()) {
+            throw new InoteUserException(EMAIL_ERROR_INVALID_EMAIL_FORMAT);
+        }
+
+        // Password format checking
+        compiledPattern = Pattern.compile(REGEX_PASSWORD_FORMAT);
+        matcher = compiledPattern.matcher(user.getPassword());
+        if (!matcher.matches()) {
+            throw new InoteUserException(EMAIL_ERROR_INVALID_PASSWORD_FORMAT);
+        }
+
+        // Verification of any existing registration
+        Optional<User> utilisateurOptional = this.userRepository.findByEmail(user.getEmail());
+        if (utilisateurOptional.isPresent()) {
+            throw new InoteExistingEmailException();
+        }
+
+        // Insert encrypted password in database
+        String pass = user.getPassword();
+        String mdpCrypte = this.passwordEncoder.encode(pass);
+        user.setPassword(mdpCrypte);
+
+        // Role affectation
+        Role role = this.roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new InoteUserException("The asked role doesn't exists in database"));
+        user.setRole(role);
+
+        return this.userRepository.save(user);
+    }
+
+
+    /**
+     * Activate an user
+     *
+     * @param activation informations
+     * @return
+     */
+
+    public User activation(Map<String, String> activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException {
+        Validation validation =
+                this.validationService.getValidationFromCode(activation.get("code"));
+        if (Instant.now().isAfter(validation.getExpiration())) {
+            throw new InoteValidationExpiredException();
+        }
+
+        User activatedUser =
+                this.userRepository.findById(validation.getUser().getId())
+                        .orElseThrow(InoteUserNotFoundException::new);
+        activatedUser.setActif(true);
+
+        validation.setActivation(Instant.now());
+        validationRepository.save(validation);
+        return this.userRepository.save(activatedUser);
+    }
+
+// /**
+// * Change password user
+// *
+// * @param email
+// */
+// public void changePassword(Map<String, String> email) {
+// User user = this.loadUserByUsername(email.get("email"));
+// this.validationService.save(user);
+// }
+
+// /**
+// * Update the new password in database
+// *
+// * @param email containing user email
+// */
+// public void newPassword(Map<String, String> email) {
+
+// User user = this.loadUserByUsername(email.get("email"));
+
+// final Validation validation =
+// validationService.getValidationFromCode(email.get("code"));
+
+// if (validation.getUser().getEmail().equals(user.getEmail())) {
+// String EncrytedPassword = this.passwordEncoder.encode(email.get("password"));
+// user.setPassword(EncrytedPassword);
+// this.utilisateurRepository.save(user);
+// }
+// }
+
+// /**
+// * Get all users
+// *
+// * @return a list containing all users
+// */
+// public List<User> list() {
+// final Iterable<User> utilisateurIterable =
+// this.utilisateurRepository.findAll();
+// List<User> users = new ArrayList<User>();
+// for (User user : utilisateurIterable) {
+// users.add(user);
+// }
+// return users;
+// }
+}
