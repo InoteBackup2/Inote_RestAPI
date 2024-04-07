@@ -38,6 +38,7 @@
     <properties>
         <!-- Project will be compiled with java 17 -->
         <java.version>17</java.version>
+        
 
         <!-- Mocking smtp server during tests -->
         <greenmail.version>1.6.5</greenmail.version>
@@ -122,8 +123,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>6.1.5-SNAPSHOT</version>
-            <scope>import</scope>
-            <type>pom</type>
         </dependency>
 
 
@@ -199,6 +198,7 @@
     <build>
         <!-- List of plugins -->
         <plugins>
+
 
             <!-- Jacoco is an open-source tool for measuring and reporting Java code coverage -->
             <plugin>
