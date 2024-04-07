@@ -122,6 +122,8 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>6.1.5-SNAPSHOT</version>
+            <scope>import</scope>
+            <type>pom</type>
         </dependency>
 
 
