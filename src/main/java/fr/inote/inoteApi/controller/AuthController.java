@@ -8,6 +8,7 @@ import fr.inote.inoteApi.dto.AuthenticationDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.UserService;
+import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,52 +66,54 @@ public class AuthController {
      * DisabledException, LockedException).
      */
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final JwtServiceImpl jwtService;
 
     /*DI*/
     @Autowired
     public AuthController(
-        AuthenticationManager authenticationManager, 
-        UserService userService ,
-        JwtServiceImpl jwtService) {
+            AuthenticationManager authenticationManager,
+            UserServiceImpl userService,
+            JwtServiceImpl jwtService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-         this.jwtService = jwtService;
+        this.jwtService = jwtService;
     }
 
     /**
      * Create user account
      *
      * @param userDto the user to register
+     * @throws InoteExistingEmailException
      * @author atsuhiko Mochizuki
-     * @throws InoteExistingEmailException 
      * @date 28/03/2024
      */
     @PostMapping(Endpoint.REGISTER)
-    public ResponseEntity<String> register(@RequestBody UserDto userDto) throws InoteUserException, InoteExistingEmailException {
+    public ResponseEntity<String> register(@RequestBody UserDto userDto) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
         User userToRegister = User.builder()
-                                .email(userDto.username())
-                                .name(userDto.name())
-                                .password(userDto.password())
-                                .build();
+                .email(userDto.username())
+                .name(userDto.name())
+                .password(userDto.password())
+                .build();
         this.userService.register(userToRegister);
 
-        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED,HttpStatus.CREATED);
+        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED, HttpStatus.CREATED);
     }
 
     /**
      * Activate a user using the code provided on registration
+     *
      * @param activationCode the activation code
      */
     @PostMapping(path = Endpoint.ACTIVATION)
     public ResponseEntity<String> activation(@RequestBody Map<String, String> activationCode) throws InoteValidationNotFoundException, InoteUserNotFoundException, InoteValidationExpiredException {
         this.userService.activation(activationCode);
-        return new ResponseEntity<>(MessagesEn.ACTIVATION_OF_USER_OK,HttpStatus.OK);
+        return new ResponseEntity<>(MessagesEn.ACTIVATION_OF_USER_OK, HttpStatus.OK);
     }
 
     /**
      * Authenticate an user and give him a JWT token for secured actions in app
+     *
      * @param authenticationDto
      * @return a JWT token if user is authenticated or null
      */
@@ -124,6 +128,23 @@ public class AuthController {
         }
 
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Send a password change request
+     *
+     * @param email
+     */
+    @PostMapping(path = Endpoint.CHANGE_PASSWORD)
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) throws InoteInvalidEmailException {
+        try {
+            this.userService.changePassword(email);
+        } catch (UsernameNotFoundException ex) {
+            return new ResponseEntity<>(MessagesEn.USER_ERROR_USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
+        } catch (InoteInvalidEmailException ex) {
+            return new ResponseEntity<>(MessagesEn.EMAIL_ERROR_INVALID_EMAIL_FORMAT, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED, HttpStatus.OK);
     }
 
 

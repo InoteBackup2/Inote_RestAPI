@@ -20,4 +20,7 @@ public class MessagesEn {
     // USER
     public static final String USER_ERROR_USER_NOT_FOUND = "User not found in database";
     public static final String ACTIVATION_OF_USER_OK = "Use activation succeed";
+
+    //ROLES
+    public static final String ROLE_ERROR_NOT_FOUND = "The asked role doesn't exists in database";
 }

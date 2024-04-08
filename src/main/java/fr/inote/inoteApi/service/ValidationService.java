@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.service;
 
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.User;
@@ -44,7 +45,7 @@ public interface ValidationService {
      * @author atsuhiko Mochizuki
      * @date 2024-03-26
      */
-    Validation createAndSave(User user) throws InoteUserException;
+    Validation createAndSave(User user) throws InoteInvalidEmailException;
 
     /**
      * Get the validation in database from code

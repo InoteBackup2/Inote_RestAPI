@@ -26,7 +26,7 @@ public interface UserService extends UserDetailsService {
      * @throws InoteExistingEmailException 
      * @date 26/03/2024
      */
-    User register(User user) throws InoteUserException, InoteExistingEmailException;
+    User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException;
 
     /**
      * Activate an user

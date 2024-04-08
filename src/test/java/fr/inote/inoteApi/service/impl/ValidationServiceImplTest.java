@@ -1,6 +1,7 @@
 package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.Role;
@@ -72,7 +73,7 @@ class ValidationServiceImplTest {
 
     @Test
     @DisplayName("Create validation ans save when user not exist in db and data are correct")
-    void createAndSave_shouldCreateAnewValidationInDbAndSendCodeActivation_whenUserIsCorrectAndNotExistsInDatabase() throws InoteUserException {
+    void createAndSave_shouldCreateAnewValidationInDbAndSendCodeActivation_whenUserIsCorrectAndNotExistsInDatabase() throws InoteInvalidEmailException {
         // ARRANGE
         when(this.mockedValidationRepository.save(any(Validation.class))).thenReturn(this.validationRef);
         doNothing().when(this.mockedNotificationService).sendValidation_byEmail(any(Validation.class));

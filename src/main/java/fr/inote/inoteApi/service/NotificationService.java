@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.service;
 
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.entity.Validation;
 import org.springframework.mail.MailException;
@@ -17,6 +18,6 @@ public interface NotificationService {
      * @date 26-03-2024
      * @param validation the validation
      */
-    void sendValidation_byEmail(Validation validation) throws MailException, InoteUserException;
+    void sendValidation_byEmail(Validation validation) throws MailException, InoteInvalidEmailException;
 
 }
