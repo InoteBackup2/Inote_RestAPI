@@ -146,7 +146,7 @@ public class UserServiceImplTest {
         // Assert
         assertThat(thrown)
                 .isInstanceOf(InvocationTargetException.class)
-                .hasCauseInstanceOf(InoteUserException.class);
+                .hasCauseInstanceOf(InoteInvalidEmailFormat.class);
 
     }
 

@@ -250,7 +250,7 @@ public class AuthController_IT {
     }
 
     @Test
-    @DisplayName("Sign user with good credentials")
+    @DisplayName("Sign in user with good credentials")
     void IT_signIn_ShouldSuccess_whenCredentialsAreCorrect() throws Exception {
         final String[] messageContainingCode = new String[1];
         // Arrange
@@ -293,6 +293,9 @@ public class AuthController_IT {
         Map<String, String> signInBodyContent = new HashMap<>();
         signInBodyContent.put("username", this.userDtoRef.username());
         signInBodyContent.put("password", this.userDtoRef.password());
+
+       
+       
 
         response = this.mockMvc.perform(
                 post(Endpoint.SIGN_IN)

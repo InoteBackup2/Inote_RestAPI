@@ -204,7 +204,7 @@ public class AuthControllerTest {
         doAnswer(invocation -> {
             //String value = invocation.getArgument(0);
             ((Authentication) mockInterface).setAuthenticated(true);
-            return true;
+            return null;
         }).when(mockInterface).isAuthenticated();
 
         Map<String, String> mockResponse = new HashMap<>();

@@ -14,7 +14,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"134825"
+    "code":"998943"
 }
 
 #### Connexion

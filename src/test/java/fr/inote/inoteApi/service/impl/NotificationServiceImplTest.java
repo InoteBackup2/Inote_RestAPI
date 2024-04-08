@@ -17,6 +17,7 @@ import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailFormat;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
@@ -140,7 +141,7 @@ public class NotificationServiceImplTest {
                                 BODY_OF_EMAIL));
                 assertThat(thrown)
                                 .isInstanceOf(InvocationTargetException.class)
-                                .hasCauseInstanceOf(InoteUserException.class);
+                                .hasCauseInstanceOf(InoteInvalidEmailFormat.class);
 
                 thrown = catchThrowable(() -> privateMethod_sendEmail.invoke(this.notificationService,
                                 SENDER_EMAIL,
@@ -149,7 +150,7 @@ public class NotificationServiceImplTest {
                                 BODY_OF_EMAIL));
                 assertThat(thrown)
                                 .isInstanceOf(InvocationTargetException.class)
-                                .hasCauseInstanceOf(InoteUserException.class);
+                                .hasCauseInstanceOf(InoteInvalidEmailFormat.class);
 
                 // With Space
                 thrown = catchThrowable(() -> privateMethod_sendEmail.invoke(this.notificationService,
@@ -160,7 +161,7 @@ public class NotificationServiceImplTest {
 
                 assertThat(thrown)
                                 .isInstanceOf(InvocationTargetException.class)
-                                .hasCauseInstanceOf(InoteUserException.class);
+                                .hasCauseInstanceOf(InoteInvalidEmailFormat.class);
         }
 
         @Test
@@ -220,7 +221,7 @@ public class NotificationServiceImplTest {
 
                 Throwable thrown = catchThrowable(() -> this.notificationService.sendValidation_byEmail(validationTest));
 
-                assertThat(thrown).isInstanceOf(InoteUserException.class);
+                assertThat(thrown).isInstanceOf(InoteInvalidEmailFormat.class);
         }
 
 }
