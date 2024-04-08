@@ -176,6 +176,29 @@ public class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("Sign in an non-existing user")
+    void signIn_ShouldFail_WhenUserNotExistsInSecurityContext() throws Exception {
+        //Arrange
+        AuthenticationDto userDtoTest = new AuthenticationDto(REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
+        Authentication mockInterface = Mockito.mock(Authentication.class, Mockito.CALLS_REAL_METHODS);
+        when(this.authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockInterface);
+
+        doAnswer(invocation -> {
+            //String value = invocation.getArgument(0);
+            ((Authentication) mockInterface).setAuthenticated(false);
+            return null;
+        }).when(mockInterface).isAuthenticated();
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.SIGN_IN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(userDtoTest)));
+
+        //Assert
+        response.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
     @DisplayName("Sign in an existing user")
     void signIn_ShouldSuccess_WhenExistInSecurityContext() throws Exception {
         //Arrange
