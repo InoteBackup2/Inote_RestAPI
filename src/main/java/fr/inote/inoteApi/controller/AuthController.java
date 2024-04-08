@@ -133,6 +133,6 @@ public class AuthController {
     @PostMapping(path = Endpoint.CHANGE_PASSWORD)
     public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) throws InoteUserException, InoteInvalidEmailFormat {
         this.userService.changePassword(email);
-        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED,HttpStatus.CREATED);
+        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED,HttpStatus.OK);
     }
 }

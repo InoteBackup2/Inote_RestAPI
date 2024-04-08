@@ -243,7 +243,7 @@ public class AuthControllerTest {
 
         //Assert
         response
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 

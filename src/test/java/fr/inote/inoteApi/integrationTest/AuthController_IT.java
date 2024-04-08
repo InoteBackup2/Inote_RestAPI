@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.integrationTest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -320,5 +321,57 @@ public class AuthController_IT {
 
         //Assert
         response.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Change password request with existing username")
+    void changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
+        final String[] messageContainingCode = new String[1];
+        // Arrange
+        this.mockMvc.perform(
+                post(Endpoint.REGISTER)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+        await()
+                .atMost(2, SECONDS)
+                .untilAsserted(() -> {
+                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                    assertThat(receivedMessages.length).isEqualTo(1);
+
+                    MimeMessage receivedMessage = receivedMessages[0];
+
+                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                });
+
+        final String reference = "activation code : ";
+        int startSubtring = messageContainingCode[0].indexOf(reference);
+        int startIndexOfCode = startSubtring + reference.length();
+        int endIndexOfCode = startIndexOfCode + 6;
+        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+        Map<String, String> bodyRequest = new HashMap<>();
+        bodyRequest.put("code", extractedCode);
+
+
+        ResultActions response = this.mockMvc.perform(
+                post(Endpoint.ACTIVATION)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+
+
+        //Act
+        Map<String,String> bodyContent = new HashMap<>();
+        bodyContent.put("email",this.userDtoRef.username());
+        response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(bodyContent)));
+
+        //Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
     }
 }

@@ -14,7 +14,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"280323"
+    "code":"134825"
 }
 
 #### Connexion
@@ -71,11 +71,11 @@ Content-Type: application/json
 #
 #
 ### Demande de modification de mot de passe
-POST http://localhost:8080//api/auth/change_password HTTP/1.1
+POST http://localhost:8080/api/auth/change_password HTTP/1.1
 Content-Type: application/json
 
 {
-    "email":"notExist@gmail.com"
+    "email":"zozo@vegeta.com"
 }
 
 #### Envoi nouveau mot de passe

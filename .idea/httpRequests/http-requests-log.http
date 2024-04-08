@@ -1,3 +1,20 @@
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-08T150612.201.txt
+
+###
+
 POST http://localhost:8080/api/auth/change_password
 Content-Type: application/json
 Content-Length: 36
@@ -733,22 +750,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 
 {
     "username":"sdfsqsdqsdqdqf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 67
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsf@vegeta.com",
     "password":"dddddd"
 }
 
