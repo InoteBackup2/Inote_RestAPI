@@ -4,13 +4,18 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
+import fr.inote.inoteApi.dto.AuthenticationDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.UserService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,17 +65,17 @@ public class AuthController {
      */
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final JwtServiceImpl jwtServiceImpl;
+    private final JwtServiceImpl jwtService;
 
     /*DI*/
     @Autowired
     public AuthController(
         AuthenticationManager authenticationManager, 
         UserService userService ,
-        JwtServiceImpl jwtServiceImpl) {
+        JwtServiceImpl jwtService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-         this.jwtServiceImpl = jwtServiceImpl;
+         this.jwtService = jwtService;
     }
 
     /**
@@ -101,6 +106,24 @@ public class AuthController {
     public ResponseEntity<String> activation(@RequestBody Map<String, String> activationCode) throws InoteValidationNotFoundException, InoteUserNotFoundException, InoteValidationExpiredException {
         this.userService.activation(activationCode);
         return new ResponseEntity<>(MessagesEn.ACTIVATION_OF_USER_OK,HttpStatus.OK);
+    }
+
+    /**
+     * Authenticate an user and give him a JWT token for secured actions in app
+     * @param authenticationDto
+     * @return a JWT token if user is authenticated or null
+     */
+    @PostMapping(path = Endpoint.SIGN_IN)
+    public ResponseEntity<Map<String, String>> signIn(@NotNull @RequestBody AuthenticationDto authenticationDto) {
+        final Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationDto.username(),
+                        authenticationDto.password()));
+
+        if (authenticate.isAuthenticated()) {
+            return new ResponseEntity<>(this.jwtService.generate(authenticationDto.username()), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
 

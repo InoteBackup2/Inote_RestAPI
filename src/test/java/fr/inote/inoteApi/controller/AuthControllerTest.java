@@ -1,28 +1,33 @@
 package fr.inote.inoteApi.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
+import fr.inote.inoteApi.dto.AuthenticationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
@@ -59,6 +64,7 @@ public class AuthControllerTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
+
     @MockBean
     private JwtServiceImpl jwtServiceImpl;
 
@@ -66,6 +72,7 @@ public class AuthControllerTest {
     private UserServiceImpl userService;
 
     private User userRef;
+
 
     @BeforeEach
     void init() {
@@ -166,5 +173,37 @@ public class AuthControllerTest {
         // Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Sign in an existing user")
+    void signIn_ShouldSuccess_WhenExistInSecurityContext() throws Exception {
+        //Arrange
+        AuthenticationDto userDtoTest = new AuthenticationDto(REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
+        Authentication mockInterface = Mockito.mock(Authentication.class, Mockito.CALLS_REAL_METHODS);
+        when(this.authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockInterface);
+
+        doAnswer(invocation -> {
+            //String value = invocation.getArgument(0);
+            ((Authentication) mockInterface).setAuthenticated(true);
+            return true;
+        }).when(mockInterface).isAuthenticated();
+
+        Map<String, String> mockResponse = new HashMap<>();
+        mockResponse.put("bearer", REFERENCE_USER_BEARER);
+        mockResponse.put("refresh", REFERENCE_USER_REFRESH_TOKEN);
+
+        when(this.jwtServiceImpl.generate(REFERENCE_USER_EMAIL)).thenReturn(mockResponse);
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.SIGN_IN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(userDtoTest)));
+
+        //Assert
+        response.andExpect(MockMvcResultMatchers
+                        .content()
+                        .json(mockResponse.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
