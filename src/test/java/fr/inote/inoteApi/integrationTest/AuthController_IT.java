@@ -380,7 +380,7 @@ public class AuthController_IT {
 
     @Test
     @DisplayName("Change password of non existing user")
-    void changePassword_ShouldFail_WhenUserNotExists() throws JsonProcessingException, Exception{
+    void changePassword_ShouldFail_WhenUserNotExists() thergerows JsonProcessingException, Exception{
         
         // Act
         Map<String,String> emailMap = new HashMap<>();
