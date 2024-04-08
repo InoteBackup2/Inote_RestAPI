@@ -4,7 +4,6 @@ import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 
 public interface UserService extends UserDetailsService {
@@ -27,7 +26,7 @@ public interface UserService extends UserDetailsService {
      * @throws InoteExistingEmailException 
      * @date 26/03/2024
      */
-    User register(User user) throws InoteUserException, InoteExistingEmailException, InoteInvalidEmailFormat;
+    User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException;
 
     /**
      * Activate an user
@@ -37,11 +36,4 @@ public interface UserService extends UserDetailsService {
      */
 
     public User activation(Map<String, String> activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException;
-
-    /**
-     * Change password user
-     *
-     * @param email
-     */
-    public void changePassword(Map<String, String> email) throws InoteInvalidEmailFormat, InoteUserException;
 }

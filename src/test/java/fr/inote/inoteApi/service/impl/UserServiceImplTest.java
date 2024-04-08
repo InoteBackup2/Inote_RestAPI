@@ -146,7 +146,7 @@ public class UserServiceImplTest {
         // Assert
         assertThat(thrown)
                 .isInstanceOf(InvocationTargetException.class)
-                .hasCauseInstanceOf(InoteInvalidEmailFormat.class);
+                .hasCauseInstanceOf(InoteInvalidEmailException.class);
 
     }
 
@@ -207,7 +207,7 @@ public class UserServiceImplTest {
 
     @Test
     @DisplayName("Register an non-existing user with good parameter")
-    void register_shouldSuccess_whenUserNotExistAndGoodParameters() throws InoteUserException, NoSuchMethodException, InoteExistingEmailException, InoteInvalidEmailFormat {
+    void register_shouldSuccess_whenUserNotExistAndGoodParameters() throws NoSuchMethodException, InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
         Method privateMethod_createUser = UserServiceImpl.class.getDeclaredMethod("createUser", User.class);
         privateMethod_createUser.setAccessible(true);
 

@@ -3,8 +3,6 @@ package fr.inote.inoteApi.service.impl;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 
-import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.*;
-
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
@@ -20,7 +18,6 @@ import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 
 import java.time.Instant;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -104,7 +101,7 @@ public class UserServiceImpl implements UserService {
      * @date 26/03/2024
      */
     @Override
-    public User register(User user) throws InoteExistingEmailException, InoteInvalidEmailFormat, InoteUserException {
+    public User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
         User userToRegister = this.createUser(user);
         this.validationService.createAndSave(userToRegister);
         return userToRegister;
@@ -126,7 +123,7 @@ public class UserServiceImpl implements UserService {
      * @author atsuhiko Mochizuki
      * @date 26/03/2024
      */
-    private User createUser(User user) throws InoteExistingEmailException, InoteInvalidEmailFormat, InoteUserException {
+    private User createUser(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteInvalidPasswordFormatException, InoteRoleNotFoundException {
 
         Pattern compiledPattern;
         Matcher matcher;
@@ -135,14 +132,14 @@ public class UserServiceImpl implements UserService {
         compiledPattern = Pattern.compile(REGEX_EMAIL_PATTERN);
         matcher = compiledPattern.matcher(user.getEmail());
         if (!matcher.matches()) {
-            throw new InoteInvalidEmailFormat();
+            throw new InoteInvalidEmailException();
         }
 
         // Password format checking
         compiledPattern = Pattern.compile(REGEX_PASSWORD_FORMAT);
         matcher = compiledPattern.matcher(user.getPassword());
         if (!matcher.matches()) {
-            throw new InoteInvalidEmailFormat();
+            throw new InoteInvalidPasswordFormatException();
         }
 
         // Verification of any existing registration
@@ -157,7 +154,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(mdpCrypte);
 
         // Role affectation
-        Role role = this.roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new InoteUserException("The asked role doesn't exists in database"));
+        Role role = this.roleRepository.findByName(RoleEnum.USER).orElseThrow(InoteRoleNotFoundException::new);
         user.setRole(role);
 
         return this.userRepository.save(user);
@@ -193,7 +190,7 @@ public class UserServiceImpl implements UserService {
      *
      * @param email
      */
-    public void changePassword(Map<String, String> email) throws InoteInvalidEmailFormat, InoteUserException, UsernameNotFoundException{
+    public void changePassword(Map<String, String> email) throws InoteInvalidEmailException {
         User user = this.loadUserByUsername(email.get("email"));
         this.validationService.createAndSave(user);
     }

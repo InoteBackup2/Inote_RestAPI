@@ -1,6 +1,6 @@
 package fr.inote.inoteApi.service.impl;
 
-import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailFormat;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.User;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Random;
 
 @Transactional
@@ -42,7 +41,7 @@ public class ValidationServiceImpl implements ValidationService {
      * @date 2024-03-26
      */
     @Override
-    public Validation createAndSave(User user) throws InoteInvalidEmailFormat, InoteUserException {
+    public Validation createAndSave(User user) throws InoteInvalidEmailException {
         Validation validation = Validation.builder()
                 .user(user)
                 .creation(Instant.now())

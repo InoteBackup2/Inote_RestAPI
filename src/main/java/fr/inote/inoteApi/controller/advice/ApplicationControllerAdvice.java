@@ -5,7 +5,6 @@ import java.util.Map;
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -99,20 +98,6 @@ public class ApplicationControllerAdvice {
     }
 
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteInvalidEmailFormat.class)
-    public @ResponseBody ProblemDetail InoteInvalidEmailFormat(final InoteInvalidEmailFormat exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-
-
-    @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(value = InoteValidationNotFoundException.class)
     public @ResponseBody ProblemDetail InoteValidationNotFoundException(final InoteValidationNotFoundException exception) {
 
@@ -149,8 +134,32 @@ public class ApplicationControllerAdvice {
     }
 
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = UsernameNotFoundException.class)
-    public @ResponseBody ProblemDetail UsernameNotFoundException(final UsernameNotFoundException exception) {
+    @ExceptionHandler(value = InoteInvalidEmailException.class)
+    public @ResponseBody ProblemDetail InoteInvalidEmailException(final InoteInvalidEmailException exception) {
+
+        log.error(exception.getMessage(), exception);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
+        problemDetail.setProperty("Error", exception.getMessage());
+
+        return problemDetail;
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = InoteInvalidPasswordFormatException.class)
+    public @ResponseBody ProblemDetail InoteInvalidPasswordFormatException(final InoteInvalidPasswordFormatException exception) {
+
+        log.error(exception.getMessage(), exception);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
+        problemDetail.setProperty("Error", exception.getMessage());
+
+        return problemDetail;
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = InoteRoleNotFoundException.class)
+    public @ResponseBody ProblemDetail InoteRoleNotFoundException(final InoteRoleNotFoundException exception) {
 
         log.error(exception.getMessage(), exception);
 

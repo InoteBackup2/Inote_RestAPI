@@ -1,15 +1,15 @@
 package fr.inote.inoteApi.service.impl;
 
-import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailFormat;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.service.NotificationService;
+
 import static fr.inote.inoteApi.crossCutting.constants.EmailAdress.NO_REPLY_EMAIL;
 
 import static fr.inote.inoteApi.crossCutting.constants.RegexPatterns.REGEX_EMAIL_PATTERN;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
 
-import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
      * @date 26-03-2024
      */
     @Override
-    public void sendValidation_byEmail(Validation validation) throws MailException, InoteInvalidEmailFormat {
+    public void sendValidation_byEmail(Validation validation) throws MailException, InoteInvalidEmailException {
         this.sendEmail(
                 NO_REPLY_EMAIL,
                 validation.getUser().getEmail(),
@@ -73,9 +73,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     /* private methods */
     private void sendEmail(String from,
-            String to,
-            String subject,
-            String content) throws MailException, InoteInvalidEmailFormat {
+                           String to,
+                           String subject,
+                           String content) throws MailException, InoteInvalidEmailException {
 
         Pattern compiledPattern;
         Matcher matcher;
@@ -84,12 +84,12 @@ public class NotificationServiceImpl implements NotificationService {
         compiledPattern = Pattern.compile(REGEX_EMAIL_PATTERN);
         matcher = compiledPattern.matcher(from);
         if (!matcher.matches()) {
-            throw new InoteInvalidEmailFormat();
+            throw new InoteInvalidEmailException();
         }
 
         matcher = compiledPattern.matcher(to);
         if (!matcher.matches()) {
-            throw new InoteInvalidEmailFormat();
+            throw new InoteInvalidEmailException();
         }
 
         SimpleMailMessage mail = new SimpleMailMessage();

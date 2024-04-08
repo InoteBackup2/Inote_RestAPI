@@ -1,6 +1,5 @@
 package fr.inote.inoteApi.integrationTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -10,11 +9,13 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
+import fr.inote.inoteApi.repository.JwtRepository;
 import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -45,6 +47,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -80,6 +85,9 @@ public class AuthController_IT {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtRepository jwtRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -125,6 +133,7 @@ public class AuthController_IT {
                 .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
                 .build();
 
+        this.jwtRepository.deleteAll();
         this.validationRepository.deleteAll();
         this.userRepository.deleteAll();
     }
@@ -250,7 +259,7 @@ public class AuthController_IT {
     }
 
     @Test
-    @DisplayName("Sign in user with good credentials")
+    @DisplayName("Sign user with good credentials")
     void IT_signIn_ShouldSuccess_whenCredentialsAreCorrect() throws Exception {
         final String[] messageContainingCode = new String[1];
         // Arrange
@@ -294,9 +303,6 @@ public class AuthController_IT {
         signInBodyContent.put("username", this.userDtoRef.username());
         signInBodyContent.put("password", this.userDtoRef.password());
 
-       
-       
-
         response = this.mockMvc.perform(
                 post(Endpoint.SIGN_IN)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -327,10 +333,11 @@ public class AuthController_IT {
     }
 
     @Test
-    @DisplayName("Change password request with existing username")
-    void changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
+    @DisplayName("Change password of existing user")
+    void IT_changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
+        //Arrange
         final String[] messageContainingCode = new String[1];
-        // Arrange
+
         this.mockMvc.perform(
                 post(Endpoint.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -355,7 +362,6 @@ public class AuthController_IT {
         Map<String, String> bodyRequest = new HashMap<>();
         bodyRequest.put("code", extractedCode);
 
-
         ResultActions response = this.mockMvc.perform(
                 post(Endpoint.ACTIVATION)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -364,35 +370,50 @@ public class AuthController_IT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-
         //Act
-        Map<String,String> bodyContent = new HashMap<>();
-        bodyContent.put("email",this.userDtoRef.username());
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("email", this.userDtoRef.username());
         response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(this.objectMapper.writeValueAsString(bodyContent)));
+                .content(this.objectMapper.writeValueAsString(usernameMap)));
 
         //Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
 
     @Test
-    @DisplayName("Change password of non existing user")
-    void changePassword_ShouldFail_WhenUserNotExists() thergerows JsonProcessingException, Exception{
-        
-        // Act
-        Map<String,String> emailMap = new HashMap<>();
-        emailMap.put("email","nobodyKnowsMe@unknow.com");
+    @DisplayName("Attempt to change password of a non existing user")
+    void IT_changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
 
-        ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(emailMap)));
+        //Arrange
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("email", "UnknowUser@neant.com");
 
-        // Assert
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD
+        )
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(usernameMap)));
+
+        //Assert
         response
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 
+    @Test
+    @DisplayName("Attempt to change password with bad formated email")
+    void changePassword_ShouldFail_WhenEmailIsBadFormated() throws Exception {
+        //Arrange
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("email", "UnknowUser@@neant.com");
+
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD
+        )
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(usernameMap)));
+
+        //Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
