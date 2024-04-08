@@ -374,4 +374,22 @@ public class AuthController_IT {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
+
+    @Test
+    @DisplayName("Change password of non existing user")
+    void changePassword_ShouldFail_WhenUserNotExists() throws JsonProcessingException, Exception{
+        
+        // Act
+        Map<String,String> emailMap = new HashMap<>();
+        emailMap.put("email","nobodyKnowsMe@unknow.com");
+
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(emailMap)));
+
+        // Assert
+        response
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
 }
