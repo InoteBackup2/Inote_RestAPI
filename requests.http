@@ -3,31 +3,30 @@ POST http://localhost:8080/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name":"sddsfdsfsf",
-    "username":"sdfsdfsfsfsfsfsfaa@vegeta.com",
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
     "password":"booqsfqfq4666HHHYFj$"
 }
 
-//#
+
 #### Activation de l'inscription
-#POST http://localhost:8080/api/activation HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "code":"612631"
-#}
-#
-#
+POST http://localhost:8080/api/auth/activation HTTP/1.1
+Content-Type: application/json
+
+{
+    "code":"280323"
+}
+
 #### Connexion
-#POST http://localhost:8080/api/sign_in HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "username":"boo@vegeta.com",
-#    "password":"boo"
-#}
-#
-## ### Inscription d'un admin
+POST http://localhost:8080/api/auth/sign_in HTTP/1.1
+Content-Type: application/json
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+### Inscription d'un admin
 ## POST http://localhost:8080/api/inscription HTTP/1.1
 ## Content-Type: application/json
 #

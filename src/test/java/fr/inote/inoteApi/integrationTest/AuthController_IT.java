@@ -46,6 +46,8 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 //@SpringBootTest(
 //                // Loads a web application context and provides a mock web environment.
@@ -146,8 +148,7 @@ public class AuthController_IT {
         // Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers
-                        .content()
+                .andExpect(content()
                         .string(MessagesEn.REGISTER_OK_MAIL_SENDED));
         await()
                 .atMost(2, SECONDS)
@@ -226,7 +227,7 @@ public class AuthController_IT {
         // Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
     }
 
@@ -245,5 +246,62 @@ public class AuthController_IT {
         // Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Sign user with good credentials")
+    void IT_signIn_ShouldSuccess_whenCredentialsAreCorrect() throws Exception {
+        final String[] messageContainingCode = new String[1];
+        // Arrange
+        this.mockMvc.perform(
+                post(Endpoint.REGISTER)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+        await()
+                .atMost(2, SECONDS)
+                .untilAsserted(() -> {
+                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                    assertThat(receivedMessages.length).isEqualTo(1);
+
+                    MimeMessage receivedMessage = receivedMessages[0];
+
+                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                });
+
+        final String reference = "activation code : ";
+        int startSubtring = messageContainingCode[0].indexOf(reference);
+        int startIndexOfCode = startSubtring + reference.length();
+        int endIndexOfCode = startIndexOfCode + 6;
+        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+        Map<String, String> bodyRequest = new HashMap<>();
+        bodyRequest.put("code", extractedCode);
+
+        // Act
+        ResultActions response = this.mockMvc.perform(
+                post(Endpoint.ACTIVATION)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
+
+        // Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+
+        // Act
+        Map<String, String> signInBodyContent = new HashMap<>();
+        signInBodyContent.put("username", this.userDtoRef.username());
+        signInBodyContent.put("password", this.userDtoRef.password());
+
+        response = this.mockMvc.perform(
+                post(Endpoint.SIGN_IN)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(signInBodyContent)));
+
+        //Assert
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.bearer").isNotEmpty())
+                .andExpect(jsonPath("$.refresh").isNotEmpty());
     }
 }
