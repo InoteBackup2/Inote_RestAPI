@@ -1,18 +1,23 @@
 package fr.inote.inoteApi.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
+import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
+import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteExistingEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
+import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.AuthenticationDto;
+import fr.inote.inoteApi.dto.UserDto;
+import fr.inote.inoteApi.entity.Role;
+import fr.inote.inoteApi.entity.User;
+import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,28 +26,18 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteExistingEmailException;
-import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
-import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.UserDto;
-import fr.inote.inoteApi.service.impl.UserServiceImpl;
-import fr.inote.inoteApi.entity.Role;
-import fr.inote.inoteApi.entity.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Unit tests of AuthController layer
@@ -229,4 +224,48 @@ public class AuthControllerTest {
                         .json(mockResponse.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @DisplayName("Change password of existing user")
+    void changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
+
+        //Arrange
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("username", REFERENCE_USER_EMAIL);
+
+        doNothing().when(this.userService).changePassword(usernameMap);
+
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(usernameMap)));
+
+        //Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+    }
+
+    @Test
+    @DisplayName("Attempt to change password of a non existing user")
+    void changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
+        //Arrange
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("username", "UnknowUser@neant.com");
+
+        doThrow(UsernameNotFoundException.class).when(this.userService).changePassword(anyMap());
+
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD
+        )
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(usernameMap)));
+
+        //Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+
+    }
+
 }

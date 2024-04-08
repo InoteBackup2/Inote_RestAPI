@@ -20,6 +20,7 @@ import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
      * @date 26/03/2024
      */
     @Override
-    public User register(User user) throws InoteUserException, InoteExistingEmailException {
+    public User register(User user) throws InoteExistingEmailException, InoteInvalidEmailFormat, InoteUserException {
         User userToRegister = this.createUser(user);
         this.validationService.createAndSave(userToRegister);
         return userToRegister;
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
      * @author atsuhiko Mochizuki
      * @date 26/03/2024
      */
-    private User createUser(User user) throws InoteUserException, InoteExistingEmailException {
+    private User createUser(User user) throws InoteExistingEmailException, InoteInvalidEmailFormat, InoteUserException {
 
         Pattern compiledPattern;
         Matcher matcher;
@@ -134,14 +135,14 @@ public class UserServiceImpl implements UserService {
         compiledPattern = Pattern.compile(REGEX_EMAIL_PATTERN);
         matcher = compiledPattern.matcher(user.getEmail());
         if (!matcher.matches()) {
-            throw new InoteUserException(EMAIL_ERROR_INVALID_EMAIL_FORMAT);
+            throw new InoteInvalidEmailFormat();
         }
 
         // Password format checking
         compiledPattern = Pattern.compile(REGEX_PASSWORD_FORMAT);
         matcher = compiledPattern.matcher(user.getPassword());
         if (!matcher.matches()) {
-            throw new InoteUserException(EMAIL_ERROR_INVALID_PASSWORD_FORMAT);
+            throw new InoteInvalidEmailFormat();
         }
 
         // Verification of any existing registration
@@ -187,15 +188,15 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.save(activatedUser);
     }
 
-// /**
-// * Change password user
-// *
-// * @param email
-// */
-// public void changePassword(Map<String, String> email) {
-// User user = this.loadUserByUsername(email.get("email"));
-// this.validationService.save(user);
-// }
+    /**
+     * Change password user
+     *
+     * @param email
+     */
+    public void changePassword(Map<String, String> email) throws InoteInvalidEmailFormat, InoteUserException, UsernameNotFoundException{
+        User user = this.loadUserByUsername(email.get("email"));
+        this.validationService.createAndSave(user);
+    }
 
 // /**
 // * Update the new password in database

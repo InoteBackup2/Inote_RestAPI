@@ -1,9 +1,12 @@
 package fr.inote.inoteApi.service;
 
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailFormat;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
+
+import java.util.InvalidPropertiesFormatException;
 
 /**
  * The interface Validation service.
@@ -44,7 +47,7 @@ public interface ValidationService {
      * @author atsuhiko Mochizuki
      * @date 2024-03-26
      */
-    Validation createAndSave(User user) throws InoteUserException;
+    Validation createAndSave(User user) throws InoteInvalidEmailFormat, InoteUserException;
 
     /**
      * Get the validation in database from code

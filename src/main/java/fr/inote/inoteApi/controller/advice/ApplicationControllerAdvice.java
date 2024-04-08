@@ -2,17 +2,15 @@ package fr.inote.inoteApi.controller.advice;
 
 import java.util.Map;
 
-import fr.inote.inoteApi.crossCutting.exceptions.InoteUserNotFoundException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationExpiredException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
+import fr.inote.inoteApi.crossCutting.exceptions.*;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import fr.inote.inoteApi.crossCutting.exceptions.InoteExistingEmailException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -101,6 +99,20 @@ public class ApplicationControllerAdvice {
     }
 
     @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = InoteInvalidEmailFormat.class)
+    public @ResponseBody ProblemDetail InoteInvalidEmailFormat(final InoteInvalidEmailFormat exception) {
+
+        log.error(exception.getMessage(), exception);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
+        problemDetail.setProperty("Error", exception.getMessage());
+
+        return problemDetail;
+    }
+
+
+
+    @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(value = InoteValidationNotFoundException.class)
     public @ResponseBody ProblemDetail InoteValidationNotFoundException(final InoteValidationNotFoundException exception) {
 
@@ -136,15 +148,17 @@ public class ApplicationControllerAdvice {
         return problemDetail;
     }
 
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    public @ResponseBody ProblemDetail UsernameNotFoundException(final UsernameNotFoundException exception) {
 
+        log.error(exception.getMessage(), exception);
 
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
+        problemDetail.setProperty("Error", exception.getMessage());
 
-
-
-
-
-
-
+        return problemDetail;
+    }
 
     /**
      * Default Exception manager

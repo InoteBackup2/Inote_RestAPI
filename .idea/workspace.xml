@@ -4,8 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="IT_signIn_ShouldSuccess_whenCredentialsAreCorrect PASSED">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="IT_signIn_ShouldFail_whenCredentialsAreNotCorrect PASSED">
+      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/exceptions/InoteInvalidEmailFormat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requests.http" beforeDir="false" afterPath="$PROJECT_DIR$/requests.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/advice/ApplicationControllerAdvice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/advice/ApplicationControllerAdvice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/constants/Endpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/constants/Endpoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/ValidationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/ValidationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/NotificationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/ValidationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/ValidationServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/ValidationServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/ValidationServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,9 +32,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
         <option value="Record" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -33,7 +50,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -53,15 +70,20 @@
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "HTTP Request.requests | Activation de l'inscription.executor": "Run",
     "HTTP Request.requests | Connexion.executor": "Run",
+    "HTTP Request.requests | Inscription d'un admin.executor": "Run",
     "HTTP Request.requests | Register an user with \"USER\" default role.executor": "Run",
     "JUnit.All tests.executor": "Run",
     "JUnit.AuthControllerTest.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
+    "JUnit.AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist.executor": "Run",
+    "JUnit.AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor": "Debug",
     "JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist.executor": "Run",
+    "JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect.executor": "Run",
+    "JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotPresent.executor": "Run",
     "JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect.executor": "Run",
     "JUnit.AuthController_IT.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthController_IT.executor": "Run",
@@ -84,7 +106,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.InoteApiApplication.executor": "Run",
+    "Spring Boot.InoteApiApplication.executor": "Debug",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/media/atsuhiko/Données/Développement/Inote/Inote_RestAPI",
@@ -112,11 +134,8 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect">
-    <configuration name="requests | Activation de l'inscription" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Activation de l'inscription" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Connexion" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="Connexion" runType="Run single request">
+  <component name="RunManager" selected="JUnit.AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist">
+    <configuration name="requests | Inscription d'un admin" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="4" requestIdentifier="Inscription d'un admin" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
@@ -127,6 +146,38 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="changePassword_ShouldFail_WhenUsernameNotExist" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="changePassword_ShouldSuccess_WhenUsernameExists" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -147,7 +198,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotPresent" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
         <pattern>
@@ -157,23 +208,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
-      <option name="METHOD_NAME" value="IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
-      <option name="METHOD_NAME" value="IT_signIn_ShouldSuccess_whenCredentialsAreCorrect" />
+      <option name="METHOD_NAME" value="IT_signIn_ShouldFail_whenCredentialsAreNotPresent" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -188,21 +223,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="HTTP Request.requests | Activation de l'inscription" />
-      <item itemvalue="HTTP Request.requests | Connexion" />
+      <item itemvalue="HTTP Request.requests | Inscription d'un admin" />
       <item itemvalue="JUnit.All tests" />
+      <item itemvalue="JUnit.AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist" />
+      <item itemvalue="JUnit.AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists" />
       <item itemvalue="JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext" />
-      <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" />
-      <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect" />
+      <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotPresent" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" />
+        <item itemvalue="JUnit.AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist" />
+        <item itemvalue="JUnit.AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists" />
+        <item itemvalue="HTTP Request.requests | Inscription d'un admin" />
         <item itemvalue="JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext" />
-        <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect" />
-        <item itemvalue="HTTP Request.requests | Connexion" />
-        <item itemvalue="HTTP Request.requests | Activation de l'inscription" />
+        <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotPresent" />
       </list>
     </recent_temporary>
   </component>
@@ -224,7 +259,7 @@
       <workItem from="1712241937642" duration="1241000" />
       <workItem from="1712302450783" duration="2154000" />
       <workItem from="1712305627895" duration="18273000" />
-      <workItem from="1712561395743" duration="10408000" />
+      <workItem from="1712561395743" duration="16446000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -346,7 +381,23 @@
       <option name="project" value="LOCAL" />
       <updated>1712571655347</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="signIn_ShouldFail_WhenUserNotExistsInSecurityContext PASSED">
+      <option name="closed" value="true" />
+      <created>1712571923680</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1712571923680</updated>
+    </task>
+    <task id="LOCAL-00017" summary="IT_signIn_ShouldFail_whenCredentialsAreNotCorrect PASSED">
+      <option name="closed" value="true" />
+      <created>1712572142839</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1712572142840</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,7 +418,9 @@
     <MESSAGE value="user activation : all tests PASSED" />
     <MESSAGE value="signIn_ShouldSuccess_WhenExistInSecurityContext PASSED" />
     <MESSAGE value="IT_signIn_ShouldSuccess_whenCredentialsAreCorrect PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="IT_signIn_ShouldSuccess_whenCredentialsAreCorrect PASSED" />
+    <MESSAGE value="signIn_ShouldFail_WhenUserNotExistsInSecurityContext PASSED" />
+    <MESSAGE value="IT_signIn_ShouldFail_whenCredentialsAreNotCorrect PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="IT_signIn_ShouldFail_whenCredentialsAreNotCorrect PASSED" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -413,14 +466,19 @@
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java</url>
-          <line>197</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
           <line>118</line>
           <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
+          <line>135</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
+          <line>134</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -70,14 +70,14 @@ Content-Type: application/json
 #Content-Type: application/json
 #
 #
-#### Demande de modification de mot de passe
-#POST http://localhost:8080/api/change-password HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "email":"sangoku@gmail.com"
-#}
-#
+### Demande de modification de mot de passe
+POST http://localhost:8080//api/auth/change_password HTTP/1.1
+Content-Type: application/json
+
+{
+    "email":"notExist@gmail.com"
+}
+
 #### Envoi nouveau mot de passe
 #POST http://localhost:8080/api/new-password HTTP/1.1
 #Content-Type: application/json

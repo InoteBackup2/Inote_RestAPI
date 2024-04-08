@@ -308,44 +308,7 @@ public class AuthController_IT {
     @Test
     @DisplayName("Sign user with bad credentials")
     void IT_signIn_ShouldFail_whenCredentialsAreNotCorrect() throws Exception {
-//        final String[] messageContainingCode = new String[1];
-//        // Arrange
-//        this.mockMvc.perform(
-//                post(Endpoint.REGISTER)
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-//        await()
-//                .atMost(2, SECONDS)
-//                .untilAsserted(() -> {
-//                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-//                    assertThat(receivedMessages.length).isEqualTo(1);
-//
-//                    MimeMessage receivedMessage = receivedMessages[0];
-//
-//                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-//                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-//                });
-//
-//        final String reference = "activation code : ";
-//        int startSubtring = messageContainingCode[0].indexOf(reference);
-//        int startIndexOfCode = startSubtring + reference.length();
-//        int endIndexOfCode = startIndexOfCode + 6;
-//        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-//        Map<String, String> bodyRequest = new HashMap<>();
-//        bodyRequest.put("code", extractedCode);
-//
-//        // Act
-//        ResultActions response = this.mockMvc.perform(
-//                post(Endpoint.ACTIVATION)
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
-//
-//        // Assert
-//        response
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
-//
-//        // Act
+        // Act
         Map<String, String> signInBodyContent = new HashMap<>();
         signInBodyContent.put("username", "JamesWebb@triton.com");
         signInBodyContent.put("password", "fjOM487$?8dd");

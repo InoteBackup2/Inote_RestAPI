@@ -207,7 +207,7 @@ public class UserServiceImplTest {
 
     @Test
     @DisplayName("Register an non-existing user with good parameter")
-    void register_shouldSuccess_whenUserNotExistAndGoodParameters() throws InoteUserException, NoSuchMethodException, InoteExistingEmailException {
+    void register_shouldSuccess_whenUserNotExistAndGoodParameters() throws InoteUserException, NoSuchMethodException, InoteExistingEmailException, InoteInvalidEmailFormat {
         Method privateMethod_createUser = UserServiceImpl.class.getDeclaredMethod("createUser", User.class);
         privateMethod_createUser.setAccessible(true);
 

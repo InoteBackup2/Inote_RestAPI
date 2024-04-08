@@ -105,6 +105,8 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.REGISTER).permitAll()
                                 .requestMatchers(POST, Endpoint.ACTIVATION).permitAll()
                                 .requestMatchers(POST, Endpoint.SIGN_IN).permitAll()
+                                .requestMatchers(POST, Endpoint.CHANGE_PASSWORD).permitAll()
+
                                 /*.requestMatchers(POST, "/activation").permitAll()
                                 .requestMatchers(POST, "/sign_in").permitAll()
                                 .requestMatchers(POST, "/refresh-token").permitAll()
