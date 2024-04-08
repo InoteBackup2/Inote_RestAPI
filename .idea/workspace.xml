@@ -112,14 +112,11 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext">
+  <component name="RunManager" selected="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect">
     <configuration name="requests | Activation de l'inscription" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Activation de l'inscription" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="requests | Connexion" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="Connexion" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Register an user with &quot;USER&quot; default role" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" requestIdentifier="Register an user with &quot;USER&quot; default role" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
@@ -145,6 +142,22 @@
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
       <option name="METHOD_NAME" value="signIn_ShouldFail_WhenUserNotExistsInSecurityContext" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -177,19 +190,19 @@
     <list>
       <item itemvalue="HTTP Request.requests | Activation de l'inscription" />
       <item itemvalue="HTTP Request.requests | Connexion" />
-      <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
       <item itemvalue="JUnit.All tests" />
       <item itemvalue="JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext" />
+      <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" />
       <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect" />
         <item itemvalue="JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext" />
         <item itemvalue="JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect" />
         <item itemvalue="HTTP Request.requests | Connexion" />
         <item itemvalue="HTTP Request.requests | Activation de l'inscription" />
-        <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
       </list>
     </recent_temporary>
   </component>
