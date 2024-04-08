@@ -2,7 +2,6 @@ package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;

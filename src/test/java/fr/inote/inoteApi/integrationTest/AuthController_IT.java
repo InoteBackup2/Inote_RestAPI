@@ -9,7 +9,6 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Role;
@@ -27,7 +26,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -47,9 +45,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -101,7 +96,6 @@ public class AuthController_IT {
     private User userRef;
 
     private UserDto userDtoRef;
-    ;
 
     private Role roleRef;
     private Validation validationRef;
@@ -182,7 +176,7 @@ public class AuthController_IT {
                 this.userRef.getUsername(),
                 this.userRef.getPassword());
         assertThatCode(() -> {
-                    Role role = this.roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new InoteUserException("Role not found in database"));
+                    Role role = this.roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new InoteUserException());
                     this.userRef.setRole(role);
                     this.userRepository.save(this.userRef);
                 }

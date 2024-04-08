@@ -7,12 +7,10 @@ import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.AuthenticationDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.User;
-import fr.inote.inoteApi.service.UserService;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -136,7 +134,7 @@ public class AuthController {
      * @param email
      */
     @PostMapping(path = Endpoint.CHANGE_PASSWORD)
-    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) throws InoteInvalidEmailException {
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) {
         try {
             this.userService.changePassword(email);
         } catch (UsernameNotFoundException ex) {

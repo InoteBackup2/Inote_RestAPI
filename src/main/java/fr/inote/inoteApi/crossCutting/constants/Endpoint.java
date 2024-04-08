@@ -1,7 +1,5 @@
 package fr.inote.inoteApi.crossCutting.constants;
 
-import java.net.URI;
-
 public class Endpoint {
     public static final String REGISTER = "/api/auth/register";
     public static final String ACTIVATION = "/api/auth/activation";

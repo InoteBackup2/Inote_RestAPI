@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -181,7 +180,7 @@ public class AuthControllerTest {
 
         doAnswer(invocation -> {
             //String value = invocation.getArgument(0);
-            ((Authentication) mockInterface).setAuthenticated(true);
+            mockInterface.setAuthenticated(true);
             return true;
         }).when(mockInterface).isAuthenticated();
 
@@ -212,8 +211,7 @@ public class AuthControllerTest {
         when(this.authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockInterface);
 
         doAnswer(invocation -> {
-            String value = invocation.getArgument(0);
-            ((Authentication) mockInterface).setAuthenticated(false);
+            mockInterface.setAuthenticated(false);
             return false;
         })
                 .when(mockInterface)

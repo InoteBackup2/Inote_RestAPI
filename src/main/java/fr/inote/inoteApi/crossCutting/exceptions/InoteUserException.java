@@ -1,7 +1,7 @@
 package fr.inote.inoteApi.crossCutting.exceptions;
 
 public class InoteUserException extends Exception {
-    public InoteUserException(String message) {
+    public InoteUserException() {
         super("Inote anomaly detected");
     }
 }

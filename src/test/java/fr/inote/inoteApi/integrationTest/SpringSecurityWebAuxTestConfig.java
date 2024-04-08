@@ -1,6 +1,5 @@
 package fr.inote.inoteApi.integrationTest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;

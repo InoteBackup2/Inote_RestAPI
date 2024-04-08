@@ -60,7 +60,7 @@ public class JwtServiceImpl implements JwtService {
         return this.jwtRepository.findByContentValueAndDeactivatedAndExpired(
                 value,
                 false,
-                false).orElseThrow(() -> new InoteUserException("Invalid or Unknow token"));
+                false).orElseThrow(() -> new InoteUserException());
     }
 
     /**

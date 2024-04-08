@@ -18,7 +18,6 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
 import javax.mail.internet.MimeMessage;

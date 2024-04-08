@@ -35,5 +35,5 @@ public interface UserService extends UserDetailsService {
      * @return
      */
 
-    public User activation(Map<String, String> activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException;
+    User activation(Map<String, String> activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException;
 }

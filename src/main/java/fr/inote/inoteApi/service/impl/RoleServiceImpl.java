@@ -49,7 +49,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Role loadAdminRole() throws InoteUserException {
-        return this.roleRepository.findByName(RoleEnum.ADMIN).orElseThrow(() -> new InoteUserException("Unknow role in Inote application"));
+        return this.roleRepository.findByName(RoleEnum.ADMIN).orElseThrow(() -> new InoteUserException());
     }
 
     /**
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Role loadManagerRole() throws InoteUserException {
-        return this.roleRepository.findByName(RoleEnum.MANAGER).orElseThrow(() -> new InoteUserException("Unknow role in Inote application"));
+        return this.roleRepository.findByName(RoleEnum.MANAGER).orElseThrow(() -> new InoteUserException());
     }
 
     /**
@@ -73,6 +73,6 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Role loadUserRole() throws InoteUserException {
-        return this.roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new InoteUserException("Unknow role in Inote application"));
+        return this.roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new InoteUserException());
     }
 }
