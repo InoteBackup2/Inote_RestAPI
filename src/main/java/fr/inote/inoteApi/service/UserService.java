@@ -3,6 +3,7 @@ package fr.inote.inoteApi.service;
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Map;
 
@@ -44,4 +45,15 @@ public interface UserService extends UserDetailsService {
      * @param password to be checked
      */
     void checkPasswordSecurityRequirements(String password) throws InoteInvalidPasswordFormatException;
+
+    /**
+     * Update the new password in database
+     * After receiving his activation code by email, the user sends his new password, along with his email address and the code.
+     * If the email corresponds to the validation referred to by the activation code,
+     * the user's new password, if it meets security requirements,
+     * is encoded and replaces the previous one.
+     *
+     * @param email containing user email
+     */
+    void newPassword(String email, String newPassword, String code) throws InoteValidationNotFoundException, UsernameNotFoundException, InoteInvalidPasswordFormatException;
 }

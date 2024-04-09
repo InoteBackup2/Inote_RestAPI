@@ -223,17 +223,18 @@ public class UserServiceImpl implements UserService {
      *
      * @param email containing user email
      */
-    public void newPassword(Map<String, String> email) throws InoteValidationNotFoundException, UsernameNotFoundException {
+    public void newPassword(String email, String newPassword, String code) throws InoteValidationNotFoundException, UsernameNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException{
 
-        User user = this.loadUserByUsername(email.get("email"));
+        User user = this.loadUserByUsername(email);
 
         final Validation validation =
-                validationService.getValidationFromCode(email.get("code"));
+                validationService.getValidationFromCode(code);
 
         if (validation.getUser().getEmail().equals(user.getEmail())) {
-            String EncrytedPassword = this.passwordEncoder.encode(email.get("password"));
+            this.checkPasswordSecurityRequirements(newPassword);
+            String EncrytedPassword = this.passwordEncoder.encode(newPassword);
             user.setPassword(EncrytedPassword);
-//            this.utilisateurRepository.save(user);
+            this.userRepository.save(user);
         }
     }
 

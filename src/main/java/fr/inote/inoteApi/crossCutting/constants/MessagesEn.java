@@ -23,4 +23,5 @@ public class MessagesEn {
 
     //ROLES
     public static final String ROLE_ERROR_NOT_FOUND = "The asked role doesn't exists in database";
+    public static final String NEW_PASSWORD_SUCCESS = "The new password user affectation has been success";
 }

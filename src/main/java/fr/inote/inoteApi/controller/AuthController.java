@@ -5,6 +5,7 @@ import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.AuthenticationDto;
+import fr.inote.inoteApi.dto.NewPasswordDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
@@ -147,11 +148,25 @@ public class AuthController {
 
     /**
      * Validate the new password with activation code provided on change password request
-     * @param activationCode
+     *
+     * @param newPasswordDto informationsSendedInBodeRequest
      */
     @PostMapping(path = Endpoint.NEW_PASSWORD)
-    public void newPassword(@RequestBody Map<String, String> activationCode) {
-//        this.userService.newPassword(activationCode);
+    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException {
+        try {
+            this.userService.newPassword(
+                    newPasswordDto.email(),
+                    newPasswordDto.password(),
+                    newPasswordDto.code()
+            );
+        } catch (UsernameNotFoundException | InoteValidationNotFoundException |
+                 InoteInvalidPasswordFormatException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(MessagesEn.NEW_PASSWORD_SUCCESS, HttpStatus.OK);
+
+
     }
 
 

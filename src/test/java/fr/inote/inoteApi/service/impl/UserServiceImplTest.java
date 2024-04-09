@@ -55,8 +55,8 @@ public class UserServiceImplTest {
     @Mock
     private ValidationService validationService;
 
-    @Mock
-    private UserServiceImpl userServiceForInvoke;
+//    @Mock
+//    private UserServiceImpl userServiceForInvoke;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -297,7 +297,7 @@ public class UserServiceImplTest {
 
         // Act
         assertThatCode(() -> {
-           this.userService.checkPasswordSecurityRequirements("aA1$shkfkh_A86s36erff3s3w8ez6?!");
+            this.userService.checkPasswordSecurityRequirements("aA1$shkfkh_A86s36erff3s3w8ez6?!");
         }).doesNotThrowAnyException();
     }
 
@@ -332,6 +332,50 @@ public class UserServiceImplTest {
         //too many caracters
         assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
             this.userService.checkPasswordSecurityRequirements("1Aa$113??adrssdhfhdskfjksdhjkfhdsjkhfjkdshkjfhdsjkhfksdhkfhdskhfkdshkjfhskjhfkjshkdfhdsjkhfksdhfhsdjkhfjkdshkf");
+        });
+    }
+
+    @Test
+    @DisplayName("set a new password to an user")
+    void newPassword_ShouldSuccess_WhenUserAndValidationExistsAndNewPasswordIsEnoughSecure() throws InoteInvalidPasswordFormatException, InoteValidationNotFoundException {
+        // Arrange
+        when(this.validationService.getValidationFromCode(any(String.class))).thenReturn(this.validationRef);
+        when(this.passwordEncoder.encode(any(String.class))).thenReturn("As789?!fsfsfsfsfsfs");
+        when(this.userRepository.save(any(User.class))).thenReturn(this.userRef);
+        when(this.userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(this.userRef));
+
+        //Act
+        assertThatCode(() -> {
+            this.userService.newPassword(
+                    this.userRef.getEmail(),
+                    this.userRef.getPassword(),
+                    "123465");
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("set new password user when user is not referenced in db")
+    void newPassword_ShouldFail_WhenUserNotExists(){
+        assertThatExceptionOfType(UsernameNotFoundException.class).isThrownBy(()->{
+            this.userService.newPassword(
+                    "unknow@gmail.com",
+                    this.userRef.getPassword(),
+                    "123465");
+        });
+    }
+
+    @Test
+    @DisplayName("set new password when code not corresponding to existing validation")
+    void newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation() throws InoteValidationNotFoundException {
+        when(this.userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(this.userRef));
+        when(this.validationService.getValidationFromCode(any(String.class))).thenThrow(InoteValidationNotFoundException.class);
+
+
+        assertThatExceptionOfType(InoteValidationNotFoundException.class).isThrownBy(()->{
+            this.userService.newPassword(
+                    this.userRef.getEmail(),
+                    this.userRef.getPassword(),
+                    "7798798794664646565464645646546465464");
         });
     }
 }
