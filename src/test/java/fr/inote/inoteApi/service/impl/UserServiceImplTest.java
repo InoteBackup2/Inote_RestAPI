@@ -378,4 +378,23 @@ public class UserServiceImplTest {
                     "7798798794664646565464645646546465464");
         });
     }
+
+
+    @Test
+    @DisplayName("set new password when desired new password is not enough secured")
+    void newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured() throws InoteInvalidPasswordFormatException, InoteValidationNotFoundException {
+        when(this.userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(this.userRef));
+        when(this.validationService.getValidationFromCode(any(String.class))).thenReturn(this.validationRef);
+
+
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(()->{
+            this.userService.newPassword(
+                    this.userRef.getEmail(),
+                    "1234",
+                    this.validationRef.getCode());
+        });
+    }
+
+
+
 }

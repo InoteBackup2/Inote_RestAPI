@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
      *
      * @param email containing user email
      */
-    public void newPassword(String email, String newPassword, String code) throws InoteValidationNotFoundException, UsernameNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException{
+    public void newPassword(String email, String newPassword, String code) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException{
 
         User user = this.loadUserByUsername(email);
 

@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="refactoring checkPasswordSecurityRequirements">
-      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/NewPasswordDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/constants/MessagesEn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/constants/MessagesEn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/UserService.java" afterDir="false" />
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation PASSED">
       <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java" afterDir="false" />
     </list>
@@ -91,6 +86,7 @@
     "JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldSuccess_WhenSecurityRequirementsSatisfied.executor": "Run",
     "JUnit.UserServiceImplTest.executor": "Run",
     "JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation.executor": "Run",
+    "JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured.executor": "Run",
     "JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenUserNotExists.executor": "Run",
     "JUnit.UserServiceImplTest.newPassword_ShouldSuccess_WhenUserAndValidationExistsAndNewPasswordIsEnoughSecure.executor": "Run",
     "JUnit.UserServiceImplTest.register_shouldSuccess_whenUserNotExistAndGoodParameters.executor": "Run",
@@ -130,7 +126,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation">
+  <component name="RunManager" selected="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -139,22 +135,6 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UserServiceImplTest.checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.service.impl.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.service.impl" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.service.impl.UserServiceImplTest" />
-      <option name="METHOD_NAME" value="checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -186,6 +166,22 @@
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.service.impl" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.service.impl.UserServiceImplTest" />
       <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.service.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.service.impl" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.service.impl.UserServiceImplTest" />
+      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -233,20 +229,20 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.All tests" />
-      <item itemvalue="JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied" />
       <item itemvalue="JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldSuccess_WhenSecurityRequirementsSatisfied" />
       <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation" />
+      <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
       <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenUserNotExists" />
       <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldSuccess_WhenUserAndValidationExistsAndNewPasswordIsEnoughSecure" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
         <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation" />
         <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenUserNotExists" />
         <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldSuccess_WhenUserAndValidationExistsAndNewPasswordIsEnoughSecure" />
         <item itemvalue="JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldSuccess_WhenSecurityRequirementsSatisfied" />
-        <item itemvalue="JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied" />
       </list>
     </recent_temporary>
   </component>
@@ -269,7 +265,7 @@
       <workItem from="1712302450783" duration="2154000" />
       <workItem from="1712305627895" duration="18273000" />
       <workItem from="1712561395743" duration="10051000" />
-      <workItem from="1712648935155" duration="7143000" />
+      <workItem from="1712648935155" duration="7534000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -407,7 +403,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712652895030</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation PASSED">
+      <option name="closed" value="true" />
+      <created>1712656320187</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1712656320187</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -431,7 +435,8 @@
     <MESSAGE value="all test passes after merge" />
     <MESSAGE value="refactoring" />
     <MESSAGE value="refactoring checkPasswordSecurityRequirements" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring checkPasswordSecurityRequirements" />
+    <MESSAGE value="newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation PASSED" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -517,12 +522,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java</url>
-          <line>348</line>
+          <line>347</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java</url>
-          <line>372</line>
+          <line>374</line>
           <option name="timeStamp" value="39" />
         </line-breakpoint>
       </breakpoints>
