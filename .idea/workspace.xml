@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired PASSED">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +86,7 @@
     "JUnit.EndPointsTest_IT.register_shouldFail_whenUserExist.executor": "Run",
     "JUnit.EndPointsTest_IT.register_shouldSuccess_whenUserNotExist.executor": "Debug",
     "JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb.executor": "Run",
+    "JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired.executor": "Run",
     "JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired.executor": "Run",
     "JUnit.RoleRepositoryTest.findByName_shouldReturnOptionalOfRole_whenAskedRoleIsInDb.executor": "Run",
     "JUnit.RoleServiceImplTest.insertRolesInDb_shouldReturnAnArrayWithNumberOfRoleApp.executor": "Run",
@@ -136,7 +138,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb">
+  <component name="RunManager" selected="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -181,22 +183,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthController_IT.IT_newPassword_ShouldFail_WhenValidationNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
-      <option name="METHOD_NAME" value="IT_newPassword_ShouldFail_WhenValidationNotExists" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
@@ -208,6 +194,22 @@
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.crossCutting.security.impl" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImplTest" />
       <option name="METHOD_NAME" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.crossCutting.security.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.crossCutting.security.impl" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImplTest" />
+      <option name="METHOD_NAME" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -241,18 +243,18 @@
       <item itemvalue="JUnit.All tests" />
       <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
       <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
-      <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenValidationNotExists" />
       <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb" />
+      <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
       <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
         <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb" />
         <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired" />
         <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
         <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
-        <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenValidationNotExists" />
       </list>
     </recent_temporary>
   </component>
@@ -485,7 +487,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712675130744</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED">
+      <option name="closed" value="true" />
+      <created>1712675505158</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1712675505158</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -493,7 +503,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="register_shouldFail_whenUserExist PASSED" />
     <MESSAGE value="MAJ - all tests PASSED" />
     <MESSAGE value="getValidationFromCode_ShouldSuccess_WhenValidationExists PASSED" />
     <MESSAGE value="getValidationFromCode_ShouldFail_WhenValidationNotExists PASSED" />
@@ -518,7 +527,8 @@
     <MESSAGE value="newPassword_ShouldFail_WhenPasswordNotEnoughSecured PASSED" />
     <MESSAGE value="IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured PASSED" />
     <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired PASSED" />
+    <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [

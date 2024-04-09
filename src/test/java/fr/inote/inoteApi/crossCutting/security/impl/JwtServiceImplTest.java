@@ -383,5 +383,27 @@ class JwtServiceImplTest {
     }
 
 
+    @Test
+    @DisplayName("refresh connection with bad token value")
+    void refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired() throws InoteExpiredRefreshTokenException {
+
+        // Arrange
+        this.jwtRef.getRefreshToken().setExpirationDate(Instant.now().minus(2,ChronoUnit.MINUTES));
+        this.jwtRef.getRefreshToken().setExpirationStatus(true);
+        when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.of(this.jwtRef));
+
+        // Act & Assert
+        Map<String, String> refreshTokenGivenWhenSignedIn = new HashMap<>();
+        refreshTokenGivenWhenSignedIn.put(REFRESH, "12345689");
+        assertThatExceptionOfType(InoteExpiredRefreshTokenException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue(refreshTokenGivenWhenSignedIn));
+    }
+
+
+
+
+
+
+
+
 
 }
