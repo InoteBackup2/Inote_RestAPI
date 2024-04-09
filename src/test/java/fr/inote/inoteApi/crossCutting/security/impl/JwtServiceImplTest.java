@@ -39,8 +39,7 @@ import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static fr.inote.inoteApi.crossCutting.security.JwtService.VALIDITY_TOKEN_TIME_IN_MINUTES;
 import static java.lang.Thread.sleep;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.mockito.Mockito.*;
 
@@ -342,7 +341,7 @@ class JwtServiceImplTest {
 
     @Test
     @DisplayName("refresh connection with token value")
-    void refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired() throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired() throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
 
         // Arrange
         when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.of(this.jwtRef));
@@ -369,4 +368,20 @@ class JwtServiceImplTest {
         assertThat(returnValue.get(REFRESH)).isNotNull();
         assertThat(returnValue.get(REFRESH).length()).isEqualTo(UUID.randomUUID().toString().length());
     }
+
+    @Test
+    @DisplayName("refresh connection with bad token value")
+    void refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb() throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+
+        // Arrange
+        when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.empty());
+
+        // Act & Assert
+        Map<String, String> refreshTokenGivenWhenSignedIn = new HashMap<>();
+        refreshTokenGivenWhenSignedIn.put(REFRESH, "12345689");
+        assertThatExceptionOfType(InoteJwtNotFoundException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue(refreshTokenGivenWhenSignedIn));
+    }
+
+
+
 }
