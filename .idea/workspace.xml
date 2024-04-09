@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="All test PASSED">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/NotificationServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,86 +48,86 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "HTTP Request.requests | Activation de l'inscription.executor": "Run",
-    "HTTP Request.requests | Connexion.executor": "Run",
-    "HTTP Request.requests | Register an user with \"USER\" default role.executor": "Run",
-    "JUnit.All tests.executor": "Run",
-    "JUnit.AuthControllerTest.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
-    "JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
-    "JUnit.AuthControllerTest.changePassword_ShouldFail_WhenEmailIsBadFormated.executor": "Run",
-    "JUnit.AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist.executor": "Run",
-    "JUnit.AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists.executor": "Run",
-    "JUnit.AuthControllerTest.executor": "Run",
-    "JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists.executor": "Run",
-    "JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor": "Run",
-    "JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor": "Debug",
-    "JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
-    "JUnit.AuthController_IT.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
-    "JUnit.AuthController_IT.IT_changePassword_ShouldFail_WhenUsernameNotExist.executor": "Run",
-    "JUnit.AuthController_IT.IT_changePassword_ShouldSuccess_WhenUsernameExists.executor": "Run",
-    "JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist.executor": "Run",
-    "JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect.executor": "Run",
-    "JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect.executor": "Run",
-    "JUnit.AuthController_IT.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
-    "JUnit.AuthController_IT.executor": "Run",
-    "JUnit.EndPointsTest_IT.executor": "Run",
-    "JUnit.EndPointsTest_IT.register_shouldFail_whenUserExist.executor": "Run",
-    "JUnit.EndPointsTest_IT.register_shouldSuccess_whenUserNotExist.executor": "Debug",
-    "JUnit.RoleRepositoryTest.findByName_shouldReturnOptionalOfRole_whenAskedRoleIsInDb.executor": "Run",
-    "JUnit.RoleServiceImplTest.insertRolesInDb_shouldReturnAnArrayWithNumberOfRoleApp.executor": "Run",
-    "JUnit.UserServiceImplTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
-    "JUnit.UserServiceImplTest.activation_ShouldFail_whenUserIsNotPresent.executor": "Run",
-    "JUnit.UserServiceImplTest.activation_ShouldFail_whenValidationIsExpired.executor": "Run",
-    "JUnit.UserServiceImplTest.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
-    "JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied.executor": "Run",
-    "JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldSuccess_WhenSecurityRequirementsSatisfied.executor": "Run",
-    "JUnit.UserServiceImplTest.executor": "Run",
-    "JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation.executor": "Run",
-    "JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured.executor": "Run",
-    "JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenUserNotExists.executor": "Run",
-    "JUnit.UserServiceImplTest.newPassword_ShouldSuccess_WhenUserAndValidationExistsAndNewPasswordIsEnoughSecure.executor": "Run",
-    "JUnit.UserServiceImplTest.register_shouldSuccess_whenUserNotExistAndGoodParameters.executor": "Run",
-    "JUnit.ValidationServiceImplTest.getValidationFromCode_ShouldFail_WhenValidationNotExists.executor": "Run",
-    "JUnit.ValidationServiceImplTest.getValidationFromCode_ShouldSuccess_WhenValidationExists.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.InoteApiApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/atsuhiko/Données/Développement/Inote/Inote_RestAPI",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;HTTP Request.requests | Activation de l'inscription.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.requests | Connexion.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.requests | Register an user with \&quot;USER\&quot; default role.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All tests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.changePassword_ShouldFail_WhenEmailIsBadFormated.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.changePassword_ShouldFail_WhenUsernameNotExist.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.IT_changePassword_ShouldFail_WhenUsernameNotExist.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.IT_changePassword_ShouldSuccess_WhenUsernameExists.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.activation_ShouldSuccess_whenCodeIsCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthController_IT.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.EndPointsTest_IT.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.EndPointsTest_IT.register_shouldFail_whenUserExist.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.EndPointsTest_IT.register_shouldSuccess_whenUserNotExist.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.RoleRepositoryTest.findByName_shouldReturnOptionalOfRole_whenAskedRoleIsInDb.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.RoleServiceImplTest.insertRolesInDb_shouldReturnAnArrayWithNumberOfRoleApp.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.activation_ShouldFail_whenCodeIsNotCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.activation_ShouldFail_whenUserIsNotPresent.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.activation_ShouldFail_whenValidationIsExpired.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.activation_ShouldSuccess_whenCodeIsCorrect.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.checkPasswordSecurityRequirements_ShouldSuccess_WhenSecurityRequirementsSatisfied.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenUserNotExists.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.newPassword_ShouldSuccess_WhenUserAndValidationExistsAndNewPasswordIsEnoughSecure.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceImplTest.register_shouldSuccess_whenUserNotExistAndGoodParameters.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ValidationServiceImplTest.getValidationFromCode_ShouldFail_WhenValidationNotExists.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ValidationServiceImplTest.getValidationFromCode_ShouldSuccess_WhenValidationExists.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.InoteApiApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/atsuhiko/Données/Développement/Inote/Inote_RestAPI&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "h2",
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;h2&quot;,
+      &quot;mysql&quot;
     ],
-    "com.intellij.ide.scratch.LRUPopupBuilder$1/": [
-      "H2"
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/&quot;: [
+      &quot;H2&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists">
+  <component name="RunManager" selected="JUnit.All tests">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -458,25 +457,25 @@
     <MESSAGE value="All test PASSED" />
     <option name="LAST_COMMIT_MESSAGE" value="All test PASSED" />
   </component>
-  <component name="WfRunsListSearchHistory"><![CDATA[{
-  "history": [
+  <component name="WfRunsListSearchHistory">{
+  &quot;history&quot;: [
     {
-      "currentBranchFilter": true
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     }
   ],
-  "lastFilter": {
-    "branch": "main",
-    "currentBranchFilter": true
+  &quot;lastFilter&quot;: {
+    &quot;branch&quot;: &quot;main&quot;,
+    &quot;currentBranchFilter&quot;: true
   }
-}]]></component>
+}</component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>

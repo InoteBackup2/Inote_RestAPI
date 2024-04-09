@@ -57,8 +57,8 @@ public class NotificationServiceImpl implements NotificationService {
                                 Inote notification service
                                 %s
 
-                                Hello %s, you have made on %s a request to create an account.
-                                To activate your account, please enter the following activation code in the dedicated field:
+                                Hello %s, you have made on %s a request that requires an activation code.
+                                Please enter the following code in asked field:
                                 activation code : %s
 
                                 Inote wishes you a good day!
