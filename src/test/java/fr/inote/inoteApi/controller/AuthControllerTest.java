@@ -302,7 +302,7 @@ public class AuthControllerTest {
     @DisplayName("Change password of existing user")
     void newPassword_ShouldSuccess_WhenUserExists() throws Exception {
         // Arrange
-        doNothing().when(this.userService).newPassword(any(String.class), any(String.class),any(String.class));
+        doNothing().when(this.userService).newPassword(any(String.class), any(String.class), any(String.class));
 
         //Act
         NewPasswordDto newPasswordDto = new NewPasswordDto(
@@ -312,12 +312,35 @@ public class AuthControllerTest {
 
         //Act
         ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(newPasswordDto)))
 
-        // Assert
-        .andExpect(MockMvcResultMatchers.status().isOk())
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(MessagesEn.NEW_PASSWORD_SUCCESS));
 
     }
+
+    @Test
+    @DisplayName("Change password of non existing user")
+    void newPassword_ShouldFail_WhenUserExists() throws Exception {
+        // Arrange
+        doThrow(UsernameNotFoundException.class).when(this.userService).newPassword(any(String.class), any(String.class), any(String.class));
+
+        //Act
+        NewPasswordDto newPasswordDto = new NewPasswordDto(
+                this.validationRef.getUser().getEmail(),
+                this.validationRef.getCode(),
+                this.validationRef.getUser().getPassword());
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+
 }

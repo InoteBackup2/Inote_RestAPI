@@ -152,7 +152,7 @@ public class AuthController {
      * @param newPasswordDto informationsSendedInBodeRequest
      */
     @PostMapping(path = Endpoint.NEW_PASSWORD)
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException {
+    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException{
         try {
             this.userService.newPassword(
                     newPasswordDto.email(),
