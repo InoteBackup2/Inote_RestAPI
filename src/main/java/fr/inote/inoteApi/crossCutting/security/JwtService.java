@@ -1,6 +1,10 @@
 package fr.inote.inoteApi.crossCutting.security;
 
+import fr.inote.inoteApi.crossCutting.exceptions.InoteExpiredRefreshTokenException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteJwtNotFoundException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
+
+import java.util.Map;
 
 public interface JwtService {
     long VALIDITY_TOKEN_TIME_IN_MINUTES = 1;
@@ -12,4 +16,6 @@ public interface JwtService {
      * @return the JWT
      */
     Jwt findValidToken(String value) throws InoteUserException;
+
+    public Map<String, String> refreshConnectionWithRefreshTokenValue(Map<String, String> mapOfTokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException;
 }

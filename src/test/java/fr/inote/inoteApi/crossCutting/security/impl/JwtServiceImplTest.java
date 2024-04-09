@@ -1,13 +1,17 @@
 package fr.inote.inoteApi.crossCutting.security.impl;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteExpiredRefreshTokenException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteJwtNotFoundException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.security.Jwt;
 import fr.inote.inoteApi.crossCutting.security.RefreshToken;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.JwtRepository;
+import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.service.UserService;
+import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,7 +19,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -24,15 +31,17 @@ import java.lang.reflect.Method;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static fr.inote.inoteApi.crossCutting.security.JwtService.VALIDITY_TOKEN_TIME_IN_MINUTES;
 import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.mockito.Mockito.*;
 
 /**
@@ -51,7 +60,11 @@ class JwtServiceImplTest {
     private JwtRepository jwtRepository;
 
     @Mock
+    private UserRepository userRepository;
+
+    @Mock
     private UserService userService;
+
 
     @InjectMocks
     private JwtServiceImpl jwtService;
@@ -90,7 +103,7 @@ class JwtServiceImplTest {
 
         this.refreshToken = RefreshToken.builder()
                 .expirationStatus(false)
-                .contentValue("oiHhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .contentValue("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU2FuZ29rdSIsImV4cCI6MTg2OTY3NTk5Niwic3ViIjoic2FuZ29rdUBpbm90ZS5mciJ9.ni8Z4Wiyo6-noIme2ydnP1vHl6joC0NkfQ-lxF501vY")
                 .creationDate(Instant.now())
                 .expirationDate(Instant.now().plus(10, ChronoUnit.MINUTES))
                 .build();
@@ -265,7 +278,7 @@ class JwtServiceImplTest {
     @Test
     @DisplayName("Generate a token from user with correct user")
     void generateJwt_shouldSuccess_whenUserIsCorrect() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InterruptedException {
-         Map<String, String> jwtTest;
+        Map<String, String> jwtTest;
 
         Method privateMethod_generateToken = JwtServiceImpl.class.getDeclaredMethod("generateJwt", User.class);
         privateMethod_generateToken.setAccessible(true);
@@ -276,7 +289,7 @@ class JwtServiceImplTest {
         Instant instantOfCreation = Instant.now();
         sleep(1000);
         jwtTest = (Map<String, String>) privateMethod_generateToken.invoke(this.jwtService, this.userRef);
-       
+
 
         Claims claims = (Claims) privateMethod_getAllClaims.invoke(this.jwtService, jwtTest.get("bearer"));
         assertThat(claims.get("name")).isEqualTo(this.userRef.getName());
@@ -313,7 +326,7 @@ class JwtServiceImplTest {
 
     @Test
     @DisplayName("Generate Map containing token and refreshToken whith non existing user in db")
-    void generate_shouldThrowException_whenUserNotExistsInDb(){
+    void generate_shouldThrowException_whenUserNotExistsInDb() {
         this.userRef.setEmail("loch@ness.sc");
         when(this.userService.loadUserByUsername(any(String.class))).thenThrow(UsernameNotFoundException.class);
 
@@ -327,5 +340,33 @@ class JwtServiceImplTest {
         verify(this.userService, times(1)).loadUserByUsername(any(String.class));
     }
 
+    @Test
+    @DisplayName("refresh connection with token value")
+    void refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired() throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
+        // Arrange
+        when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.of(this.jwtRef));
+
+        Mockito.doAnswer((Answer<Stream>) invocation -> {
+            String param = (String) invocation.getArgument(0);
+            List<Jwt> jwts = new ArrayList<>();
+            jwts.add(jwtRef);
+            return jwts.stream();
+        }).when(this.jwtRepository).findJwtWithUserEmail(Mockito.anyString());
+
+        when(this.jwtRepository.save(any(Jwt.class))).thenReturn(this.jwtRef);
+        when(this.userService.loadUserByUsername(any(String.class))).thenReturn(this.userRef);
+
+        // Act
+        Map<String, String> refreshTokenGivenWhenSignedIn = new HashMap<>();
+        refreshTokenGivenWhenSignedIn.put(REFRESH, this.jwtRef.getRefreshToken().getContentValue());
+        Map<String, String> returnValue = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshTokenGivenWhenSignedIn);
+
+        // Assert
+        assertThat(returnValue.get(BEARER)).isNotNull();
+        assertThat(returnValue.get(BEARER).length()).isEqualTo(145);
+
+        assertThat(returnValue.get(REFRESH)).isNotNull();
+        assertThat(returnValue.get(REFRESH).length()).isEqualTo(UUID.randomUUID().toString().length());
+    }
 }

@@ -169,6 +169,18 @@ public class ApplicationControllerAdvice {
         return problemDetail;
     }
 
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = InoteJwtNotFoundException.class)
+    public @ResponseBody ProblemDetail InoteJwtNotFoundException(final InoteJwtNotFoundException exception) {
+
+        log.error(exception.getMessage(), exception);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
+        problemDetail.setProperty("Error", exception.getMessage());
+
+        return problemDetail;
+    }
+
     /**
      * Default Exception manager
      *

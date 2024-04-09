@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -165,6 +166,17 @@ public class AuthController {
         }
 
         return new ResponseEntity<>(MessagesEn.NEW_PASSWORD_SUCCESS, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param refreshTokenRequest
+     * @return
+     */
+    @PostMapping(path = Endpoint.REFRESH_TOKEN)
+    public @ResponseBody Map<String, String> refreshToken(@RequestBody Map<String, String> refreshTokenRequest) {
+//        return this.jwtService.refreshToken(refreshTokenRequest);
+        return null;
     }
 
 

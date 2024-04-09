@@ -1,5 +1,8 @@
 package fr.inote.inoteApi.crossCutting.security.impl;
 
+import fr.inote.inoteApi.crossCutting.constants.HttpRequestBody;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteExpiredRefreshTokenException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteJwtNotFoundException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.security.Jwt;
 import fr.inote.inoteApi.crossCutting.security.RefreshToken;
@@ -25,13 +28,15 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
+
 @Slf4j
 @Transactional
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private final String BEARER = "bearer";
-    private final String REFRESH = "refresh";
+
     private final String INVALID_TOKEN = "Invalid token";
     // Reference for encryption
     // @Value("${jwt.encryptionKey}")
@@ -92,7 +97,7 @@ public class JwtServiceImpl implements JwtService {
         /* create the jwt and store in db for activation before expirationDate */
         final Jwt jwt = Jwt
                 .builder()
-                .contentValue(jwtMap.get(BEARER))
+                .contentValue(jwtMap.get(HttpRequestBody.BEARER))
                 .deactivated(false)
                 .expired(false)
                 .user(user)
@@ -290,20 +295,32 @@ public class JwtServiceImpl implements JwtService {
         log.info("Inactive/expired tokens suppression at {}", Instant.now());
         this.jwtRepository.deleteAllByExpiredAndDeactivated(true, true);
     }
-//
-//    /**
-//     * Generate a refresh token
-//     *
-//     * @param refreshTokenRequest
-//     * @return a Map containing the refresh token
-//     */
-//    public Map<String, String> refreshToken(Map<String, String> refreshTokenRequest) {
-//        final Jwt jwt = this.jwtRepository.findJwtWithRefreshTokenValue(refreshTokenRequest.get(REFRESH))
-//                .orElseThrow(() -> new RuntimeException(INVALID_TOKEN));
-//        if (jwt.getRefreshToken().isExpirationStatus() || jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())) {
-//            throw new RuntimeException(INVALID_TOKEN);
-//        }
-//        this.disableTokens(jwt.getUser());
-//        return this.generate(jwt.getUser().getEmail());
-//    }
+
+    /**
+     * When the jwt is expired and rejected by the server during a request for access to a protected resource,
+     * the HTTP client can transmit its refresh token to the server.
+     * If this refresh token is valid, the server deletes all
+     * tokens concerning the user,
+     * generates a new token and its refresh token.
+     *
+     * @param mapOfTokenValue
+     * @return a Map containing the refresh token
+     */
+    public Map<String, String> refreshConnectionWithRefreshTokenValue(Map<String, String> mapOfTokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+
+        // find the first jwt with value of refreshToken
+        final Jwt jwt = this.jwtRepository.findJwtWithRefreshTokenValue(mapOfTokenValue.get(REFRESH))
+                .orElseThrow(InoteJwtNotFoundException::new);
+
+        // now, get refreshTokenStatus and check if is valid
+        if (jwt.getRefreshToken().isExpirationStatus() || jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())) {
+            throw new InoteExpiredRefreshTokenException();
+        }
+
+        // All related user tokens desactivation, include refreshToken
+        this.disableTokens(jwt.getUser());
+
+        // Generation of new token + refresh token
+        return this.generate(jwt.getUser().getEmail());
+    }
 }
