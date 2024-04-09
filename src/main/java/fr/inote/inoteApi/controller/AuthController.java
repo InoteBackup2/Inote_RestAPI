@@ -4,9 +4,7 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.AuthenticationDto;
-import fr.inote.inoteApi.dto.NewPasswordDto;
-import fr.inote.inoteApi.dto.UserDto;
+import fr.inote.inoteApi.dto.*;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 
 
 /**
@@ -169,14 +170,20 @@ public class AuthController {
     }
 
     /**
+     * Refresh connection with refresh token
      *
-     * @param refreshTokenRequest
-     * @return
+     * @param refreshConnectionDto the value of refresh token
+     * @return the value of new bearer and refresh token
      */
     @PostMapping(path = Endpoint.REFRESH_TOKEN)
-    public @ResponseBody Map<String, String> refreshToken(@RequestBody Map<String, String> refreshTokenRequest) {
-//        return this.jwtService.refreshToken(refreshTokenRequest);
-        return null;
+    public @ResponseBody SignInResponseDto refreshConnectionWithRefreshTokenValue(@RequestBody RefreshConnectionDto refreshConnectionDto) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+
+        Map<String,String> response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
+
+        return new SignInResponseDto(
+                response.get(BEARER),
+                response.get(REFRESH)
+        );
     }
 
 

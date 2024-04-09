@@ -17,5 +17,5 @@ public interface JwtService {
      */
     Jwt findValidToken(String value) throws InoteUserException;
 
-    public Map<String, String> refreshConnectionWithRefreshTokenValue(Map<String, String> mapOfTokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException;
+    public Map<String, String> refreshConnectionWithRefreshTokenValue(String tokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException;
 }

@@ -303,13 +303,13 @@ public class JwtServiceImpl implements JwtService {
      * tokens concerning the user,
      * generates a new token and its refresh token.
      *
-     * @param mapOfTokenValue
+     * @param tokenValue
      * @return a Map containing the refresh token
      */
-    public Map<String, String> refreshConnectionWithRefreshTokenValue(Map<String, String> mapOfTokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+    public Map<String, String> refreshConnectionWithRefreshTokenValue(String tokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
 
         // find the first jwt with value of refreshToken
-        final Jwt jwt = this.jwtRepository.findJwtWithRefreshTokenValue(mapOfTokenValue.get(REFRESH))
+        final Jwt jwt = this.jwtRepository.findJwtWithRefreshTokenValue(tokenValue)
                 .orElseThrow(InoteJwtNotFoundException::new);
 
         // now, get refreshTokenStatus and check if is valid

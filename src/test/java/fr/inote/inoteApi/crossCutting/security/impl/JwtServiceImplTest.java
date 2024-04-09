@@ -357,9 +357,7 @@ class JwtServiceImplTest {
         when(this.userService.loadUserByUsername(any(String.class))).thenReturn(this.userRef);
 
         // Act
-        Map<String, String> refreshTokenGivenWhenSignedIn = new HashMap<>();
-        refreshTokenGivenWhenSignedIn.put(REFRESH, this.jwtRef.getRefreshToken().getContentValue());
-        Map<String, String> returnValue = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshTokenGivenWhenSignedIn);
+        Map<String, String> returnValue = this.jwtService.refreshConnectionWithRefreshTokenValue(this.jwtRef.getRefreshToken().getContentValue());
 
         // Assert
         assertThat(returnValue.get(BEARER)).isNotNull();
@@ -377,9 +375,7 @@ class JwtServiceImplTest {
         when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.empty());
 
         // Act & Assert
-        Map<String, String> refreshTokenGivenWhenSignedIn = new HashMap<>();
-        refreshTokenGivenWhenSignedIn.put(REFRESH, "12345689");
-        assertThatExceptionOfType(InoteJwtNotFoundException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue(refreshTokenGivenWhenSignedIn));
+        assertThatExceptionOfType(InoteJwtNotFoundException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue("1234"));
     }
 
 
@@ -393,9 +389,7 @@ class JwtServiceImplTest {
         when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.of(this.jwtRef));
 
         // Act & Assert
-        Map<String, String> refreshTokenGivenWhenSignedIn = new HashMap<>();
-        refreshTokenGivenWhenSignedIn.put(REFRESH, "12345689");
-        assertThatExceptionOfType(InoteExpiredRefreshTokenException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue(refreshTokenGivenWhenSignedIn));
+        assertThatExceptionOfType(InoteExpiredRefreshTokenException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue("123456"));
     }
 
 

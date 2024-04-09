@@ -384,5 +384,11 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("Refresh connection with correct refresh token value")
+    void refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect(){
+
+    }
+
 
 }

@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED">
+      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/RefreshConnectionDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/SignInResponseDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/JwtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +23,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Record" />
         <option value="Class" />
+        <option value="Record" />
       </list>
     </option>
   </component>
@@ -138,7 +144,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired">
+  <component name="RunManager" selected="JUnit.All tests">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -495,7 +501,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712675505158</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED">
+      <option name="closed" value="true" />
+      <created>1712676262605</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1712676262605</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -503,7 +517,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="MAJ - all tests PASSED" />
     <MESSAGE value="getValidationFromCode_ShouldSuccess_WhenValidationExists PASSED" />
     <MESSAGE value="getValidationFromCode_ShouldFail_WhenValidationNotExists PASSED" />
     <MESSAGE value="activation_ShouldSuccess_whenCodeIsCorrect PASSED" />
@@ -528,7 +541,8 @@
     <MESSAGE value="IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured PASSED" />
     <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired PASSED" />
     <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED" />
+    <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [
@@ -559,42 +573,42 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>125</line>
+          <line>126</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>121</line>
+          <line>122</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>122</line>
+          <line>123</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>139</line>
+          <line>140</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>140</line>
+          <line>141</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>142</line>
+          <line>143</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>144</line>
+          <line>145</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
-          <line>146</line>
+          <line>147</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -621,11 +635,6 @@
           <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/UserServiceImplTest.java</url>
           <line>374</line>
           <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java</url>
-          <line>360</line>
-          <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java</url>
