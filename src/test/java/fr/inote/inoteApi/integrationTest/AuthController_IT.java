@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.integrationTest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -48,6 +50,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -498,6 +501,22 @@ public class AuthController_IT {
                 // Assert
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(MessagesEn.NEW_PASSWORD_SUCCESS));
-
     }
+
+    @Test
+    @DisplayName("Change password of non existing user")
+    void IT_newPassword_ShouldFail_WhenUserExists() throws Exception {
+        NewPasswordDto newPasswordDto = new NewPasswordDto(
+                this.validationRef.getUser().getEmail(),
+                this.validationRef.getCode(),
+                this.validationRef.getUser().getPassword());
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 }
