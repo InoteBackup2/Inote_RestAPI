@@ -7,12 +7,14 @@ import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.dto.NewPasswordDto;
+import fr.inote.inoteApi.dto.RefreshConnectionDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -29,9 +31,11 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,16 +46,18 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
+import static java.util.UUID.randomUUID;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -682,5 +688,81 @@ public class AuthController_IT {
 
                 // Assert
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Refresh connection with correct refresh token value")
+    void IT_refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect() throws Exception {
+        // Arrange
+        final String[] messageContainingCode = new String[1];
+        // User registration request
+        this.mockMvc.perform(
+                post(Endpoint.REGISTER)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+        // Activation code recuperation
+        await()
+                .atMost(2, SECONDS)
+                .untilAsserted(() -> {
+                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                    assertThat(receivedMessages.length).isEqualTo(1);
+
+                    MimeMessage receivedMessage = receivedMessages[0];
+
+                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                });
+
+        final String reference = "activation code : ";
+        int startSubtring = messageContainingCode[0].indexOf(reference);
+        int startIndexOfCode = startSubtring + reference.length();
+        int endIndexOfCode = startIndexOfCode + 6;
+        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+        Map<String, String> bodyRequest = new HashMap<>();
+        bodyRequest.put("code", extractedCode);
+
+        // Account activation
+        ResultActions response = this.mockMvc.perform(
+                post(Endpoint.ACTIVATION)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
+
+
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+
+        // connection
+        Map<String, String> signInBodyContent = new HashMap<>();
+        signInBodyContent.put("username", this.userDtoRef.username());
+        signInBodyContent.put("password", this.userDtoRef.password());
+
+        response = this.mockMvc.perform(
+                post(Endpoint.SIGN_IN)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(signInBodyContent)));
+
+        MvcResult mvcResult = response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String returnedResponse = mvcResult.getResponse().getContentAsString();
+        String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+        String refresh = JsonPath.parse(returnedResponse).read("$.refresh");
+        assertThat(bearer.length()).isEqualTo(145);
+        assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
+
+        // Act
+        RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto(refresh);
+        response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
+        response
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+        returnedResponse = response.andReturn().getResponse().getContentAsString();
+        bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+        refresh = JsonPath.parse(returnedResponse).read("$.refresh");
+        assertThat(bearer.length()).isEqualTo(145);
+        assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
     }
 }

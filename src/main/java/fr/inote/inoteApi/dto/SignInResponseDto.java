@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public record SignInResponseDto(
         String bearer,
-        String refreshToken
+        String refresh
 
 ) {
 }
