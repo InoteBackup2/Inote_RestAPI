@@ -299,7 +299,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("Change password of existing user")
+    @DisplayName("set new password of existing user")
     void newPassword_ShouldSuccess_WhenUserExists() throws Exception {
         // Arrange
         doNothing().when(this.userService).newPassword(any(String.class), any(String.class), any(String.class));
@@ -322,8 +322,8 @@ public class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("Change password of non existing user")
-    void newPassword_ShouldFail_WhenUserExists() throws Exception {
+    @DisplayName("set new password of non existing user")
+    void newPassword_ShouldFail_WhenUserNotExists() throws Exception {
         // Arrange
         doThrow(UsernameNotFoundException.class).when(this.userService).newPassword(any(String.class), any(String.class), any(String.class));
 
@@ -332,6 +332,48 @@ public class AuthControllerTest {
                 this.validationRef.getUser().getEmail(),
                 this.validationRef.getCode(),
                 this.validationRef.getUser().getPassword());
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("set new password with non-referenced validation by code")
+    void newPassword_ShouldFail_WhenValidationNotExists() throws Exception {
+        // Arrange
+        doThrow(InoteValidationNotFoundException.class).when(this.userService).newPassword(any(String.class), any(String.class), any(String.class));
+
+        //Act
+        NewPasswordDto newPasswordDto = new NewPasswordDto(
+                this.validationRef.getUser().getEmail(),
+                "0000000000000000000",
+                this.validationRef.getUser().getPassword());
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("set new password with password not enough secured")
+    void newPassword_ShouldFail_WhenPasswordNotEnoughSecured() throws Exception {
+        // Arrange
+        doThrow(InoteInvalidPasswordFormatException.class).when(this.userService).newPassword(any(String.class), any(String.class), any(String.class));
+
+        //Act
+        NewPasswordDto newPasswordDto = new NewPasswordDto(
+                this.validationRef.getUser().getEmail(),
+                this.validationRef.getCode(),
+                "1234");
 
         //Act
         ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)

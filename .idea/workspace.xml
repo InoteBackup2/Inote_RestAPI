@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="newPassword_ShouldFail_WhenUserExists PASSED">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="IT_newPassword_ShouldFail_WhenUserExists PASSED">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +64,7 @@
     "JUnit.AuthControllerTest.changePassword_ShouldSuccess_WhenUsernameExists.executor": "Run",
     "JUnit.AuthControllerTest.executor": "Run",
     "JUnit.AuthControllerTest.newPassword_ShouldFail_WhenUserExists.executor": "Run",
+    "JUnit.AuthControllerTest.newPassword_ShouldFail_WhenValidationNotExists.executor": "Run",
     "JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor": "Debug",
@@ -76,6 +79,7 @@
     "JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect.executor": "Run",
     "JUnit.AuthController_IT.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthController_IT.executor": "Run",
+    "JUnit.AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists.executor": "Run",
     "JUnit.EndPointsTest_IT.executor": "Run",
     "JUnit.EndPointsTest_IT.register_shouldFail_whenUserExist.executor": "Run",
     "JUnit.EndPointsTest_IT.register_shouldSuccess_whenUserNotExist.executor": "Debug",
@@ -129,7 +133,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenUserExists">
+  <component name="RunManager" selected="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -142,7 +146,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthControllerTest.newPassword_ShouldFail_WhenUserExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
         <pattern>
@@ -152,13 +156,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
-      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenUserExists" />
+      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthControllerTest.newPassword_ShouldFail_WhenValidationNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
         <pattern>
@@ -168,7 +172,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
-      <option name="METHOD_NAME" value="newPassword_ShouldSuccess_WhenUserExists" />
+      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenValidationNotExists" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -190,7 +194,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthController_IT.IT_newPassword_ShouldSuccess_WhenUserExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthController_IT.IT_newPassword_ShouldFail_WhenValidationNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
         <pattern>
@@ -200,23 +204,23 @@
       </extension>
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
-      <option name="METHOD_NAME" value="IT_newPassword_ShouldSuccess_WhenUserExists" />
+      <option name="METHOD_NAME" value="IT_newPassword_ShouldFail_WhenValidationNotExists" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.service.impl.*" />
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.service.impl" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.service.impl.UserServiceImplTest" />
-      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenValidationNotExists" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -232,20 +236,20 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.All tests" />
-      <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenUserExists" />
+      <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
+      <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenValidationNotExists" />
       <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenUserExists" />
-      <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldSuccess_WhenUserExists" />
-      <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists" />
-      <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
+      <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenValidationNotExists" />
+      <item itemvalue="JUnit.AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
+        <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenValidationNotExists" />
+        <item itemvalue="JUnit.AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists" />
+        <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenValidationNotExists" />
         <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenUserExists" />
-        <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenUserExists" />
-        <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldSuccess_WhenUserExists" />
-        <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists" />
-        <item itemvalue="JUnit.UserServiceImplTest.newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
       </list>
     </recent_temporary>
   </component>
@@ -446,7 +450,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712665405608</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="IT_newPassword_ShouldFail_WhenUserExists PASSED">
+      <option name="closed" value="true" />
+      <created>1712665559405</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1712665559405</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -475,7 +487,8 @@
     <MESSAGE value="All test PASSED" />
     <MESSAGE value="sendValidation_byEmail refactoring OK" />
     <MESSAGE value="newPassword_ShouldFail_WhenUserExists PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="newPassword_ShouldFail_WhenUserExists PASSED" />
+    <MESSAGE value="IT_newPassword_ShouldFail_WhenUserExists PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="IT_newPassword_ShouldFail_WhenUserExists PASSED" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [

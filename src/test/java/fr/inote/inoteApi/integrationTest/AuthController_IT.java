@@ -11,6 +11,7 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.dto.NewPasswordDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Role;
@@ -418,10 +419,8 @@ public class AuthController_IT {
     }
 
     @Test
-    @DisplayName("Change password of existing user")
+    @DisplayName("set new password of existing user")
     void IT_newPassword_ShouldSuccess_WhenUserExists() throws Exception {
-
-
         // User registration request
         final String[] messageContainingCode = new String[1];
         this.mockMvc.perform(
@@ -504,8 +503,8 @@ public class AuthController_IT {
     }
 
     @Test
-    @DisplayName("Change password of non existing user")
-    void IT_newPassword_ShouldFail_WhenUserExists() throws Exception {
+    @DisplayName("set new password of non existing user")
+    void IT_newPassword_ShouldFail_WhenUserNotExists() throws Exception {
         NewPasswordDto newPasswordDto = new NewPasswordDto(
                 this.validationRef.getUser().getEmail(),
                 this.validationRef.getCode(),
@@ -519,4 +518,86 @@ public class AuthController_IT {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("set new password with non-referenced validation by code")
+    void IT_newPassword_ShouldFail_WhenValidationNotExists() throws Exception {
+        // User registration request
+        final String[] messageContainingCode = new String[1];
+        this.mockMvc.perform(
+                post(Endpoint.REGISTER)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+
+        // activation code recuperation by email
+        await()
+                .atMost(2, SECONDS)
+                .untilAsserted(() -> {
+                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                    assertThat(receivedMessages.length).isEqualTo(1);
+
+                    MimeMessage receivedMessage = receivedMessages[0];
+
+                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                });
+
+        String reference = "activation code : ";
+        int startSubtring = messageContainingCode[0].indexOf(reference);
+        int startIndexOfCode = startSubtring + reference.length();
+        int endIndexOfCode = startIndexOfCode + 6;
+        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+        Map<String, String> bodyRequest = new HashMap<>();
+        bodyRequest.put("code", extractedCode);
+
+        // Activation code sending
+        ResultActions response = this.mockMvc.perform(
+                post(Endpoint.ACTIVATION)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+
+        // Change password request
+        Map<String, String> usernameMap = new HashMap<>();
+        usernameMap.put("email", this.userDtoRef.username());
+        response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(usernameMap)));
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        // activation code recuperation
+        await()
+                .atMost(2, SECONDS)
+                .untilAsserted(() -> {
+                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                    assertThat(receivedMessages.length).isEqualTo(2);
+
+                    MimeMessage receivedMessage = receivedMessages[0];
+
+                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                });
+
+        reference = "activation code : ";
+        startSubtring = messageContainingCode[0].indexOf(reference);
+        startIndexOfCode = startSubtring + reference.length();
+        endIndexOfCode = startIndexOfCode + 6;
+        extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+
+
+        //Act
+        NewPasswordDto newPasswordDto = new NewPasswordDto(
+                this.userDtoRef.username(),
+                "1111111",
+                "klfbeUB22@@@?sdjfJJ");
+
+        response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }
