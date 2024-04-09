@@ -165,8 +165,6 @@ public class AuthController {
         }
 
         return new ResponseEntity<>(MessagesEn.NEW_PASSWORD_SUCCESS, HttpStatus.OK);
-
-
     }
 
 

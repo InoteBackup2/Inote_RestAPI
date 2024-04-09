@@ -1,17 +1,21 @@
 package fr.inote.inoteApi.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteExistingEmailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidPasswordFormatException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.AuthenticationDto;
+import fr.inote.inoteApi.dto.NewPasswordDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
+import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +32,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.test.web.client.ResponseActions;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +74,7 @@ public class AuthControllerTest {
     private UserServiceImpl userService;
 
     private User userRef;
+    private Validation validationRef;
 
 
     @BeforeEach
@@ -78,6 +86,13 @@ public class AuthControllerTest {
                 .name(REFERENCE_USER_NAME)
                 .password(REFERENCE_USER_PASSWORD)
                 .role(roleForTest)
+                .build();
+
+        this.validationRef = Validation.builder()
+                .code("123456")
+                .user(this.userRef)
+                .creation(Instant.now())
+                .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
                 .build();
     }
 
@@ -281,5 +296,28 @@ public class AuthControllerTest {
         //Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Change password of existing user")
+    void newPassword_ShouldSuccess_WhenUserExists() throws Exception {
+        // Arrange
+        doNothing().when(this.userService).newPassword(any(String.class), any(String.class),any(String.class));
+
+        //Act
+        NewPasswordDto newPasswordDto = new NewPasswordDto(
+                this.validationRef.getUser().getEmail(),
+                this.validationRef.getCode(),
+                this.validationRef.getUser().getPassword());
+
+        //Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+
+        // Assert
+        .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.NEW_PASSWORD_SUCCESS));
+
     }
 }
