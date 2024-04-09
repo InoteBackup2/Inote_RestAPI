@@ -287,4 +287,51 @@ public class UserServiceImplTest {
         verify(this.validationService, times(1)).getValidationFromCode(any(String.class));
 
     }
+
+    @Test
+    @DisplayName("Check password with security requirements satisfied")
+    void checkPasswordSecurityRequirements_ShouldSuccess_WhenSecurityRequirementsSatisfied() throws NoSuchMethodException {
+
+        Method privateMethod_checkPasswordSecurityRequirements = UserServiceImpl.class.getDeclaredMethod("checkPasswordSecurityRequirements", String.class);
+        privateMethod_checkPasswordSecurityRequirements.setAccessible(true);
+
+        // Act
+        assertThatCode(() -> {
+           this.userService.checkPasswordSecurityRequirements("aA1$shkfkh_A86s36erff3s3w8ez6?!");
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Check password with security requirements unsatisfied")
+    void checkPasswordSecurityRequirements_ShouldFail_WhenSecurityRequirementsAreNotSatisfied() throws NoSuchMethodException {
+        //No uppercase letter
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
+            this.userService.checkPasswordSecurityRequirements("12345678$a");
+        });
+
+        //No lowercase letter
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
+            this.userService.checkPasswordSecurityRequirements("12345678$A");
+        });
+
+        //No special character
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
+            this.userService.checkPasswordSecurityRequirements("12345678Aa");
+        });
+
+        //No digit
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
+            this.userService.checkPasswordSecurityRequirements("??????????Aa");
+        });
+
+        //no minimum number caracters
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
+            this.userService.checkPasswordSecurityRequirements("1Aa$");
+        });
+
+        //too many caracters
+        assertThatExceptionOfType(InoteInvalidPasswordFormatException.class).isThrownBy(() -> {
+            this.userService.checkPasswordSecurityRequirements("1Aa$113??adrssdhfhdskfjksdhjkfhdsjkhfjkdshkjfhdsjkhfksdhkfhdskhfkdshkjfhskjhfkjshkdfhdsjkhfksdhfhsdjkhfjkdshkf");
+        });
+    }
 }

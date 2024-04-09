@@ -8,7 +8,7 @@ public class RegexPatterns {
      * - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
      * - Can contain special characters
      */
-    public static final String REGEX_PASSWORD_FORMAT = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
+    public static final String REGEX_PASSWORD_FORMAT = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W]).{8,64})";
 }
 
 

@@ -65,6 +65,24 @@ public class UserServiceImpl implements UserService {
     /* public methods* /
 
     /**
+     * Ensure that password is 8 to 64 characters long and contains a mix of upper and lower case
+     * characters, one numeric and one special character
+     *
+     * @param password to be checked
+     * @throws InoteInvalidPasswordFormatException
+     */
+    public void checkPasswordSecurityRequirements(String password) throws InoteInvalidPasswordFormatException {
+        Pattern compiledPattern;
+        Matcher matcher;
+
+        compiledPattern = Pattern.compile(REGEX_PASSWORD_FORMAT);
+        matcher = compiledPattern.matcher(password);
+        if (!matcher.matches()) {
+            throw new InoteInvalidPasswordFormatException();
+        }
+    }
+
+    /**
      * Retrieve an identified user
      * <p>
      *
@@ -136,11 +154,12 @@ public class UserServiceImpl implements UserService {
         }
 
         // Password format checking
-        compiledPattern = Pattern.compile(REGEX_PASSWORD_FORMAT);
-        matcher = compiledPattern.matcher(user.getPassword());
-        if (!matcher.matches()) {
-            throw new InoteInvalidPasswordFormatException();
-        }
+//        compiledPattern = Pattern.compile(REGEX_PASSWORD_FORMAT);
+//        matcher = compiledPattern.matcher(user.getPassword());
+//        if (!matcher.matches()) {
+//            throw new InoteInvalidPasswordFormatException();
+//        }
+        this.checkPasswordSecurityRequirements(user.getPassword());
 
         // Verification of any existing registration
         Optional<User> utilisateurOptional = this.userRepository.findByEmail(user.getEmail());
@@ -195,24 +214,28 @@ public class UserServiceImpl implements UserService {
         this.validationService.createAndSave(user);
     }
 
-// /**
-// * Update the new password in database
-// *
-// * @param email containing user email
-// */
-// public void newPassword(Map<String, String> email) {
+    /**
+     * Update the new password in database
+     * After receiving his activation code by email, the user sends his new password, along with his email address and the code.
+     * If the email corresponds to the validation referred to by the activation code,
+     * the user's new password, if it meets security requirements,
+     * is encoded and replaces the previous one.
+     *
+     * @param email containing user email
+     */
+    public void newPassword(Map<String, String> email) throws InoteValidationNotFoundException, UsernameNotFoundException {
 
-// User user = this.loadUserByUsername(email.get("email"));
+        User user = this.loadUserByUsername(email.get("email"));
 
-// final Validation validation =
-// validationService.getValidationFromCode(email.get("code"));
+        final Validation validation =
+                validationService.getValidationFromCode(email.get("code"));
 
-// if (validation.getUser().getEmail().equals(user.getEmail())) {
-// String EncrytedPassword = this.passwordEncoder.encode(email.get("password"));
-// user.setPassword(EncrytedPassword);
-// this.utilisateurRepository.save(user);
-// }
-// }
+        if (validation.getUser().getEmail().equals(user.getEmail())) {
+            String EncrytedPassword = this.passwordEncoder.encode(email.get("password"));
+            user.setPassword(EncrytedPassword);
+//            this.utilisateurRepository.save(user);
+        }
+    }
 
 // /**
 // * Get all users
@@ -228,4 +251,6 @@ public class UserServiceImpl implements UserService {
 // }
 // return users;
 // }
+
+
 }

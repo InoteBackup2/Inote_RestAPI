@@ -145,5 +145,14 @@ public class AuthController {
         return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED, HttpStatus.OK);
     }
 
+    /**
+     * Validate the new password with activation code provided on change password request
+     * @param activationCode
+     */
+    @PostMapping(path = Endpoint.NEW_PASSWORD)
+    public void newPassword(@RequestBody Map<String, String> activationCode) {
+//        this.userService.newPassword(activationCode);
+    }
+
 
 }

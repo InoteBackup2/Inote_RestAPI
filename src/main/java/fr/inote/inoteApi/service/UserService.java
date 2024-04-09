@@ -22,8 +22,8 @@ public interface UserService extends UserDetailsService {
      * @param user the user to register
      *             <p>
      * @return the user
+     * @throws InoteExistingEmailException
      * @author Atsuhiko Mochizuki
-     * @throws InoteExistingEmailException 
      * @date 26/03/2024
      */
     User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException;
@@ -36,4 +36,12 @@ public interface UserService extends UserDetailsService {
      */
 
     User activation(Map<String, String> activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException;
+
+    /**
+     * Ensure that password is 8 to 64 characters long and contains a mix of upper and lower case characters,
+     * one numeric and one special character.
+     *
+     * @param password to be checked
+     */
+    void checkPasswordSecurityRequirements(String password) throws InoteInvalidPasswordFormatException;
 }

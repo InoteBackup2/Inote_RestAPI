@@ -78,16 +78,16 @@ Content-Type: application/json
     "email":"zozo@vegeta.com"
 }
 
-#### Envoi nouveau mot de passe
-#POST http://localhost:8080/api/new-password HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "email":"sangoku@gmail.com",
-#    "code":"821921",
-#    "password": "chichi"
-#}
-#
+### Envoi nouveau mot de passe
+POST http://localhost:8080/api/new-password HTTP/1.1
+Content-Type: application/json
+
+{
+    "email":"sangoku@gmail.com",
+    "code":"821921",
+    "password": "chichi"
+}
+
 #### Envoyer un avis
 #POST http://localhost:8080/api/comment HTTP/1.1
 #Authorization: Bearer eyJGciOiJIUzI1NiJ9.eyJub20iOiJhZG1pbiIsInN1YiI6InZlZ2V0YUB2ZWdldGEudmVnIiwiZXhwIjoxNzEwMjM0Njc0fQ.AV7Qw5-9VyyFVtug-vi8uz1OIQVwvdlnJvIH-4-mKP0
