@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteExistingEmailException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidPasswordFormatException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
+import fr.inote.inoteApi.crossCutting.exceptions.*;
+import fr.inote.inoteApi.crossCutting.security.Jwt;
+import fr.inote.inoteApi.crossCutting.security.RefreshToken;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.AuthenticationDto;
-import fr.inote.inoteApi.dto.NewPasswordDto;
-import fr.inote.inoteApi.dto.UserDto;
+import fr.inote.inoteApi.dto.*;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
@@ -43,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -76,6 +74,10 @@ public class AuthControllerTest {
     private User userRef;
     private Validation validationRef;
 
+    private RefreshToken refreshTokenRef;
+
+    private Jwt jwtRef;
+
 
     @BeforeEach
     void init() {
@@ -93,6 +95,22 @@ public class AuthControllerTest {
                 .user(this.userRef)
                 .creation(Instant.now())
                 .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
+                .build();
+
+        this.refreshTokenRef = RefreshToken.builder()
+                .expirationStatus(false)
+                .contentValue("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU2FuZ29rdSIsImV4cCI6MTg2OTY3NTk5Niwic3ViIjoic2FuZ29rdUBpbm90ZS5mciJ9.ni8Z4Wiyo6-noIme2ydnP1vHl6joC0NkfQ-lxF501vY")
+                .creationDate(Instant.now())
+                .expirationDate(Instant.now().plus(10, ChronoUnit.MINUTES))
+                .build();
+
+        jwtRef = Jwt.builder()
+                .id(1)
+                .user(this.userRef)
+                .contentValue("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
+                .deactivated(false)
+                .expired(false)
+                .refreshToken(this.refreshTokenRef)
                 .build();
     }
 
@@ -386,7 +404,23 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Refresh connection with correct refresh token value")
-    void refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect(){
+    void refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect() throws Exception {
+        // Arrange
+        Map<String, String> refreshToken = new HashMap<>();
+        refreshToken.put(REFRESH, this.jwtRef.getRefreshToken().getContentValue());
+        when(this.jwtServiceImpl.refreshConnectionWithRefreshTokenValue(any(String.class))).thenReturn(refreshToken);
+
+        // Act
+        RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto(this.jwtRef
+                .getRefreshToken()
+                .getContentValue());
+
+        ResultActions response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
+
+        response
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
 

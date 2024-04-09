@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED">
-      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/RefreshConnectionDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/SignInResponseDto.java" afterDir="false" />
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="add RefreshConnectionDto and SignInResponseDto">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/JwtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/SignInResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/SignInResponseDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +69,7 @@
     "JUnit.AuthControllerTest.newPassword_ShouldFail_WhenUserExists.executor": "Run",
     "JUnit.AuthControllerTest.newPassword_ShouldFail_WhenValidationNotExists.executor": "Run",
     "JUnit.AuthControllerTest.newPassword_ShouldSuccess_WhenUserExists.executor": "Run",
+    "JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect.executor": "Debug",
     "JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor": "Debug",
     "JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
@@ -144,7 +142,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All tests">
+  <component name="RunManager" selected="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -157,7 +155,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
         <pattern>
@@ -167,7 +165,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
-      <option name="METHOD_NAME" value="newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
+      <option name="METHOD_NAME" value="refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -247,7 +245,7 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.All tests" />
-      <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
+      <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
       <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
       <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb" />
       <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
@@ -256,11 +254,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
         <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
         <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb" />
         <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired" />
         <item itemvalue="JUnit.AuthController_IT.IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured" />
-        <item itemvalue="JUnit.AuthControllerTest.newPassword_ShouldFail_WhenPasswordNotEnoughSecured" />
       </list>
     </recent_temporary>
   </component>
@@ -509,7 +507,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712676262605</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="add RefreshConnectionDto and SignInResponseDto">
+      <option name="closed" value="true" />
+      <created>1712677819110</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1712677819110</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -517,7 +523,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="getValidationFromCode_ShouldSuccess_WhenValidationExists PASSED" />
     <MESSAGE value="getValidationFromCode_ShouldFail_WhenValidationNotExists PASSED" />
     <MESSAGE value="activation_ShouldSuccess_whenCodeIsCorrect PASSED" />
     <MESSAGE value="activation_ShouldFail_whenCodeIsNotCorrect PASSED" />
@@ -542,7 +547,8 @@
     <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenFirstJwtIsRetrievedAndRefreshTokenIsNotExpired PASSED" />
     <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenContentValueNotExistInDb PASSED" />
     <MESSAGE value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired PASSED" />
+    <MESSAGE value="add RefreshConnectionDto and SignInResponseDto" />
+    <option name="LAST_COMMIT_MESSAGE" value="add RefreshConnectionDto and SignInResponseDto" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [
@@ -640,6 +646,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java</url>
           <line>323</line>
           <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>
+          <line>180</line>
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

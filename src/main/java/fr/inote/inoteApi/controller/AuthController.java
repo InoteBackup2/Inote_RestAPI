@@ -10,6 +10,7 @@ import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -176,14 +177,13 @@ public class AuthController {
      * @return the value of new bearer and refresh token
      */
     @PostMapping(path = Endpoint.REFRESH_TOKEN)
-    public @ResponseBody SignInResponseDto refreshConnectionWithRefreshTokenValue(@RequestBody RefreshConnectionDto refreshConnectionDto) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+    public @ResponseBody ResponseEntity<SignInResponseDto> refreshConnectionWithRefreshTokenValue(@RequestBody RefreshConnectionDto refreshConnectionDto) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
 
         Map<String,String> response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
-
-        return new SignInResponseDto(
+        SignInResponseDto signInResponseDto = new SignInResponseDto(
                 response.get(BEARER),
-                response.get(REFRESH)
-        );
+                response.get(REFRESH));
+        return new ResponseEntity<>(signInResponseDto,HttpStatus.CREATED);
     }
 
 
