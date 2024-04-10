@@ -767,82 +767,14 @@ public class AuthController_IT {
     }
 
     @Test
-    @DisplayName("Refresh connection with correct refresh token value")
-    void IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsBad() throws Exception {
-        // Arrange
-        final String[] messageContainingCode = new String[1];
-        // User registration request
-        this.mockMvc.perform(
-                post(Endpoint.REGISTER)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-        // Activation code recuperation
-        await()
-                .atMost(2, SECONDS)
-                .untilAsserted(() -> {
-                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                    assertThat(receivedMessages.length).isEqualTo(1);
+    @DisplayName("Refresh connection with bad refresh token value")
+    void IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect() throws Exception {
 
-                    MimeMessage receivedMessage = receivedMessages[0];
-
-                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                });
-
-        final String reference = "activation code : ";
-        int startSubtring = messageContainingCode[0].indexOf(reference);
-        int startIndexOfCode = startSubtring + reference.length();
-        int endIndexOfCode = startIndexOfCode + 6;
-        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-        Map<String, String> bodyRequest = new HashMap<>();
-        bodyRequest.put("code", extractedCode);
-
-        // Account activation
-        ResultActions response = this.mockMvc.perform(
-                post(Endpoint.ACTIVATION)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-
-        response
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
-
-        // connection
-        Map<String, String> signInBodyContent = new HashMap<>();
-        signInBodyContent.put("username", this.userDtoRef.username());
-        signInBodyContent.put("password", this.userDtoRef.password());
-
-        response = this.mockMvc.perform(
-                post(Endpoint.SIGN_IN)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-
-        MvcResult mvcResult = response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        String returnedResponse = mvcResult.getResponse().getContentAsString();
-        String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-        String refresh = JsonPath.parse(returnedResponse).read("$.refresh");
-        assertThat(bearer.length()).isEqualTo(145);
-        assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
-
-        // Act
-        RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto(refresh);
-        response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+        RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("badValue");
+        ResultActions response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
         response
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-        returnedResponse = response.andReturn().getResponse().getContentAsString();
-        bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-        refresh = JsonPath.parse(returnedResponse).read("$.refresh");
-        assertThat(bearer.length()).isEqualTo(145);
-        assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
-
-
-
 }
