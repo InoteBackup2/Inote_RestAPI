@@ -78,7 +78,7 @@ class CommentServiceImplTest {
         this.commentDtoRef = new CommentDto("Application should provide most functionalities");
 
         this.commentRef = Comment.builder()
-                .message(this.commentDtoRef.message())
+                .message(this.commentDtoRef.msg())
                 .build();
     }
 
@@ -95,11 +95,11 @@ class CommentServiceImplTest {
         when(this.commentRepository.save(any(Comment.class))).thenReturn(this.commentRef);
 
         // Act & assert
-        Comment commentForTest = this.commentService.createComment(this.commentDtoRef);
+        Comment commentForTest = this.commentService.createComment(this.commentDtoRef.msg());
 //        assertThat(commentForTest.getUser()).isEqualTo(this.userRef);
         //Voir Ici! Pourquoi il ne retourne pas le user lors de la sauvegarde?
         fail();
-        assertThat(commentForTest.getMessage()).isEqualTo(this.commentDtoRef.message());
+        assertThat(commentForTest.getMessage()).isEqualTo(this.commentDtoRef.msg());
 
     }
 
@@ -107,7 +107,7 @@ class CommentServiceImplTest {
     @DisplayName("Create comment when user is not connected")
     void createComment_ShouldFail_whenUserIsNotConnected() {
         // Act & assert
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> this.commentService.createComment(this.commentDtoRef));
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> this.commentService.createComment(this.commentDtoRef.msg()));
     }
 
     @Test
@@ -122,17 +122,17 @@ class CommentServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
 
         // Act & assert
-        CommentDto commentDto1 = new CommentDto("");
+        String commentDto1 = new String("");
         assertThatExceptionOfType(InoteEmptyMessageCommentException.class)
                 .isThrownBy(() -> this.commentService.createComment(commentDto1));
 
-        CommentDto commentDto2 = new CommentDto(" ");
+        String commentDto2 = new String(" ");
         assertThatExceptionOfType(InoteEmptyMessageCommentException.class)
                 .isThrownBy(() -> this.commentService.createComment(commentDto2));
 
         CommentDto commentDto3 = new CommentDto(null);
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> this.commentService.createComment(commentDto3));
+                .isThrownBy(() -> this.commentService.createComment(commentDto3.msg()));
     }
 
 

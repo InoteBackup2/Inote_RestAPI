@@ -1,7 +1,6 @@
 package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
-import fr.inote.inoteApi.dto.CommentDto;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.CommentRepository;
@@ -19,15 +18,15 @@ public class CommentServiceImpl implements CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public Comment createComment(CommentDto commentDto) throws InoteEmptyMessageCommentException {
+    public Comment createComment(String msg) throws InoteEmptyMessageCommentException {
         // Get current user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (commentDto.message().isBlank() || commentDto.message().isEmpty()) {
+        if ( msg.isBlank()|| msg.isEmpty()) {
             throw new InoteEmptyMessageCommentException();
         }
         Comment commentToWrite = Comment.builder()
                 .user(user)
-                .message(commentDto.message())
+                .message(msg)
                 .build();
         return this.commentRepository.save(commentToWrite);
     }
