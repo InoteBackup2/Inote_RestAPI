@@ -178,8 +178,13 @@ public class AuthController {
      */
     @PostMapping(path = Endpoint.REFRESH_TOKEN)
     public @ResponseBody ResponseEntity<SignInResponseDto> refreshConnectionWithRefreshTokenValue(@RequestBody RefreshConnectionDto refreshConnectionDto) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+        Map<String,String> response;
+        try{
+             response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
+        }catch(InoteJwtNotFoundException ex){
+            return new ResponseEntity<>( null, HttpStatus.BAD_REQUEST);
+        }
 
-        Map<String,String> response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
         SignInResponseDto signInResponseDto = new SignInResponseDto(
                 response.get(BEARER),
                 response.get(REFRESH));

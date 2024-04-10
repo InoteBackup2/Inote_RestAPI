@@ -424,5 +424,22 @@ public class AuthControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Refresh connection with bad refresh token value")
+    void refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsBad() throws Exception {
+        // Arrange
+        when(this.jwtServiceImpl.refreshConnectionWithRefreshTokenValue(any(String.class))).thenThrow(InoteJwtNotFoundException.class);
+
+        // Act
+        RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("bad_refresh_token_value");
+
+        ResultActions response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
+        // Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 
 }
