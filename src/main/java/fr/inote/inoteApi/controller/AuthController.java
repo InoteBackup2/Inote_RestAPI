@@ -191,5 +191,11 @@ public class AuthController {
         return new ResponseEntity<>(signInResponseDto,HttpStatus.CREATED);
     }
 
-
+    /**
+     * user signout
+     */
+    @PostMapping(path = Endpoint.SIGN_OUT)
+    public void signOut() throws InoteJwtNotFoundException {
+        this.jwtService.signOut();
+    }
 }

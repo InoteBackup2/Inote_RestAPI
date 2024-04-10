@@ -18,4 +18,12 @@ public interface JwtService {
     Jwt findValidToken(String value) throws InoteUserException;
 
     public Map<String, String> refreshConnectionWithRefreshTokenValue(String tokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException;
+
+    /**
+     * Signout of the user
+     * <p>
+     * Retrieve the authenticated user and his token with his email.
+     * The token is deactivated and saved in database.
+     */
+    void signOut() throws InoteJwtNotFoundException;
 }

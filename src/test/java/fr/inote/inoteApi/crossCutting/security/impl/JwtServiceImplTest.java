@@ -19,10 +19,14 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -64,6 +68,8 @@ class JwtServiceImplTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    SecurityContextHolder securityContextHolder;
 
     @InjectMocks
     private JwtServiceImpl jwtService;
@@ -384,7 +390,7 @@ class JwtServiceImplTest {
     void refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired() throws InoteExpiredRefreshTokenException {
 
         // Arrange
-        this.jwtRef.getRefreshToken().setExpirationDate(Instant.now().minus(2,ChronoUnit.MINUTES));
+        this.jwtRef.getRefreshToken().setExpirationDate(Instant.now().minus(2, ChronoUnit.MINUTES));
         this.jwtRef.getRefreshToken().setExpirationStatus(true);
         when(this.jwtRepository.findJwtWithRefreshTokenValue(any(String.class))).thenReturn(Optional.of(this.jwtRef));
 
@@ -392,12 +398,21 @@ class JwtServiceImplTest {
         assertThatExceptionOfType(InoteExpiredRefreshTokenException.class).isThrownBy(() -> this.jwtService.refreshConnectionWithRefreshTokenValue("123456"));
     }
 
+    @Test
+    @DisplayName("SignOut when user is effectively connected")
+    void SignOut_ShouldSuccess_whenValidTokenExists() throws InoteJwtNotFoundException {
+        // Arrange
+        Authentication auth = mock(Authentication.class);
+        when(auth.getPrincipal()).thenReturn(this.userRef);
 
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
 
+        when(this.jwtRepository.findTokenWithEmailAndStatusToken(anyString(), anyBoolean(),anyBoolean())).thenReturn(Optional.of(this.jwtRef));
+        when(this.jwtRepository.save(any(Jwt.class))).thenReturn(this.jwtRef);
 
-
-
-
-
-
+        //Act & assert
+        assertThatCode(()-> this.jwtService.signOut()).doesNotThrowAnyException();
+    }
 }

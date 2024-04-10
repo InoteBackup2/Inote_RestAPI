@@ -159,7 +159,7 @@ public class JwtServiceImpl implements JwtService {
     /**
      * Get claim in token
      *
-     * @param token to be parses
+     * @param token    to be parses
      * @param function ti be call from claim
      * @return the desired claim
      */
@@ -199,7 +199,6 @@ public class JwtServiceImpl implements JwtService {
      * Generate a jwt from an user
      *
      * @param user to affect to jwt
-     *
      * @return map with key "bearer" and value the token value
      */
     private Map<String, String> generateJwt(User user) {
@@ -257,15 +256,17 @@ public class JwtServiceImpl implements JwtService {
 
     /**
      * Signout of the user
+     * <p>
+     * Retrieve the authenticated user and his token with his email.
+     * The token is deactivated and saved in database.
      */
-    public void signOut() {
+    public void signOut() throws InoteJwtNotFoundException {
         // Get current user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         Jwt jwt = this.jwtRepository.findTokenWithEmailAndStatusToken(
                 user.getEmail(),
                 false,
-                false).orElseThrow(() -> new RuntimeException(INVALID_TOKEN));
+                false).orElseThrow(InoteJwtNotFoundException::new);
         jwt.setExpired(true);
         jwt.setDeactivated(true);
         this.jwtRepository.save(jwt);
