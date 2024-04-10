@@ -28,4 +28,6 @@ public class MessagesEn {
     public static final String TOKEN_ERROR_NOT_FOUND = "Token was not found";
     public static final String TOKEN_ERROR_REFRESH_TOKEN_EXPIRED = "The refresh token is expired";
 
+    // COMMENT
+    public static final String COMMENT_ERROR_MESSAGE_IS_EMPTY = "The comment you wish to post contains no message.";
 }

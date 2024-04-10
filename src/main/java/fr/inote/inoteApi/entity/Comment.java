@@ -18,6 +18,7 @@ public class Comment {
     private Integer id;
     private String message;
     private String status;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 }

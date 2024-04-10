@@ -181,6 +181,20 @@ public class ApplicationControllerAdvice {
         return problemDetail;
     }
 
+    @ResponseStatus(NOT_ACCEPTABLE)
+    @ExceptionHandler(value = InoteEmptyMessageCommentException.class)
+    public @ResponseBody ProblemDetail InoteEmptyMessageCommentException(final InoteEmptyMessageCommentException exception) {
+
+        log.error(exception.getMessage(), exception);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, exception.getMessage());
+        problemDetail.setProperty("Error", exception.getMessage());
+
+        return problemDetail;
+    }
+
+
+
     /**
      * Default Exception manager
      *
