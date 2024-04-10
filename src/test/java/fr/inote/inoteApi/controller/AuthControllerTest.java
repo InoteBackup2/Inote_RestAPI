@@ -471,5 +471,18 @@ public class AuthControllerTest {
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @DisplayName("SignOut an non existing user")
+    void signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound() throws Exception {
+        // Arrange
+        doThrow(InoteJwtNotFoundException.class).when(this.jwtServiceImpl).signOut();
+
+        // Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.SIGN_OUT));
+
+        // Assert
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 
 }

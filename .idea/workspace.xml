@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="signOut_ShouldSuccess_WhenUserIsConnected PASSED">
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" afterDir="false" />
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +77,7 @@
     "JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor": "Debug",
     "JUnit.AuthControllerTest.signOut_ShouldSuccess_WhenUserIsConnected.executor": "Run",
+    "JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound.executor": "Run",
     "JUnit.AuthController_IT.IT_activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_changePassword_ShouldFail_WhenUsernameNotExist.executor": "Run",
@@ -151,10 +153,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected">
-    <configuration name="requests | Account activation" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Account activation" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound">
     <configuration name="requests | User sign in" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="User sign in" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -189,6 +188,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
@@ -214,21 +229,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="HTTP Request.requests | Account activation" />
       <item itemvalue="HTTP Request.requests | User sign in" />
       <item itemvalue="HTTP Request.requests | User sign out" />
       <item itemvalue="JUnit.All tests" />
       <item itemvalue="JUnit.AuthControllerTest.signOut_ShouldSuccess_WhenUserIsConnected" />
+      <item itemvalue="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" />
       <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" />
         <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected" />
         <item itemvalue="JUnit.AuthControllerTest.signOut_ShouldSuccess_WhenUserIsConnected" />
         <item itemvalue="HTTP Request.requests | User sign out" />
         <item itemvalue="HTTP Request.requests | User sign in" />
-        <item itemvalue="HTTP Request.requests | Account activation" />
       </list>
     </recent_temporary>
   </component>
@@ -253,7 +268,7 @@
       <workItem from="1712561395743" duration="10051000" />
       <workItem from="1712648935155" duration="8692000" />
       <workItem from="1712733659360" duration="8814000" />
-      <workItem from="1712743510068" duration="3473000" />
+      <workItem from="1712743510068" duration="4710000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -551,7 +566,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712746761287</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED">
+      <option name="closed" value="true" />
+      <created>1712747309298</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1712747309298</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -559,7 +582,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="signIn_ShouldSuccess_WhenExistInSecurityContext PASSED" />
     <MESSAGE value="changePassword all tests PASSED" />
     <MESSAGE value="all test passes after merge" />
     <MESSAGE value="refactoring" />
@@ -584,7 +606,8 @@
     <MESSAGE value="SignOut_ShouldSuccess_whenValidTokenExists PASSED" />
     <MESSAGE value="SignOut_ShouldFail_whenValidTokenNotFound PASSED" />
     <MESSAGE value="signOut_ShouldSuccess_WhenUserIsConnected PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="signOut_ShouldSuccess_WhenUserIsConnected PASSED" />
+    <MESSAGE value="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
