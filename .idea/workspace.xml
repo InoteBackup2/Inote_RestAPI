@@ -66,6 +66,7 @@
     "HTTP Request.requests | Activation de l'inscription.executor": "Run",
     "HTTP Request.requests | Connexion.executor": "Run",
     "HTTP Request.requests | Deconnexion.executor": "Run",
+    "HTTP Request.requests | Envoyer un avis.executor": "Run",
     "HTTP Request.requests | Inscription d'un admin.executor": "Run",
     "HTTP Request.requests | Register an user with \"USER\" default role.executor": "Run",
     "HTTP Request.requests | User sign in.executor": "Run",
@@ -182,7 +183,16 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.InoteApiApplication">
+    <configuration name="requests | Account activation" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Account activation" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="requests | Envoyer un avis" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="4" requestIdentifier="Envoyer un avis" runType="Run single request">
+      <method v="2" />
+    </configuration>
     <configuration name="requests | Register an user with &quot;USER&quot; default role" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" requestIdentifier="Register an user with &quot;USER&quot; default role" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="requests | User sign in" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="User sign in" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
@@ -241,38 +251,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.CommentControllerTest" />
-      <option name="METHOD_NAME" value="create_shouldFail_whenMessageIsEmptyOrBlank" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.CommentControllerTest" />
-      <option name="METHOD_NAME" value="create_shouldSuccess_whenMessageIsNotEmpty" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="InoteApi" />
       <extension name="coverage">
@@ -284,22 +262,6 @@
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.CommentController_IT" />
       <option name="METHOD_NAME" value="IT_create_shouldSuccess_whenMessageIsNotEmpty" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.service.impl.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.service.impl" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.service.impl.CommentServiceImplTest" />
-      <option name="METHOD_NAME" value="createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -354,21 +316,21 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="HTTP Request.requests | Account activation" />
+      <item itemvalue="HTTP Request.requests | Envoyer un avis" />
       <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
+      <item itemvalue="HTTP Request.requests | User sign in" />
       <item itemvalue="JUnit.All tests" />
-      <item itemvalue="JUnit.CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank" />
-      <item itemvalue="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" />
       <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
-      <item itemvalue="JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.requests | Envoyer un avis" />
+        <item itemvalue="HTTP Request.requests | User sign in" />
+        <item itemvalue="HTTP Request.requests | Account activation" />
         <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
         <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
-        <item itemvalue="JUnit.CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank" />
-        <item itemvalue="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" />
-        <item itemvalue="JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank" />
       </list>
     </recent_temporary>
   </component>
@@ -395,7 +357,7 @@
       <workItem from="1712733659360" duration="8814000" />
       <workItem from="1712743510068" duration="8849000" />
       <workItem from="1712755510342" duration="4023000" />
-      <workItem from="1712760102806" duration="11654000" />
+      <workItem from="1712760102806" duration="12046000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -733,7 +695,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712767351185</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="endPoint createComment fail">
+      <option name="closed" value="true" />
+      <created>1712774547422</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1712774547423</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
