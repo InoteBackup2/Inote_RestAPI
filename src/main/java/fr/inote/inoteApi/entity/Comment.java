@@ -19,6 +19,6 @@ public class Comment {
     private String message;
     private String status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 }

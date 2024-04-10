@@ -9,6 +9,7 @@ import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.CommentRepository;
+import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.service.CommentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,8 +38,10 @@ import static org.assertj.core.api.Assertions.*;
 class CommentServiceImplTest {
     @Mock
     private CommentRepository commentRepository;
+    @Mock
+    private UserRepository userRepository;
     @InjectMocks
-    private CommentService commentService = new CommentServiceImpl(commentRepository);
+    private CommentService commentService = new CommentServiceImpl(commentRepository, userRepository);
 
     private Jwt jwtRef;
     private User userRef;

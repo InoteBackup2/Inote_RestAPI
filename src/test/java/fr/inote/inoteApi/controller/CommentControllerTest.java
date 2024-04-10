@@ -87,7 +87,6 @@ public class CommentControllerTest {
     private CommentServiceImpl commentService;
 
 
-
     private CommentDto commentDtoRef;
 
     private Comment commentRef;
@@ -118,12 +117,12 @@ public class CommentControllerTest {
         when(this.commentService.createComment(any(String.class))).thenReturn(this.commentRef);
 
         // Send request, print response, check returned status and content type
-       ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-               .contentType(MediaType.APPLICATION_JSON_VALUE)
-               .content(this.objectMapper.writeValueAsString(this.commentDtoRef)))
-               .andDo(print())
-               .andExpect(MockMvcResultMatchers.status().isCreated())
-               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.commentDtoRef)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // Get serialized results
         MvcResult result = response.andReturn();
@@ -136,6 +135,25 @@ public class CommentControllerTest {
         assertThat(returnedComment).isEqualTo(this.commentRef);
     }
 
+    @Test
+    @DisplayName("Create a comment with message empty or blank")
+    void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
+        // Arrange
+        when(this.commentService.createComment(any(String.class))).thenThrow(InoteEmptyMessageCommentException.class);
+        CommentDto commentDto_empty = new CommentDto("");
+        CommentDto commentDto_blank = new CommentDto("      ");
 
+        // Act & assert
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(commentDto_empty)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
 
+        response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(commentDto_blank)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+    }
 }

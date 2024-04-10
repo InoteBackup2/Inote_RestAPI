@@ -38,12 +38,13 @@ public class CommentController {
 
     @PostMapping(Endpoint.CREATE_COMMENT)
     public ResponseEntity<Comment> create(@RequestBody CommentDto commentDto) throws InoteEmptyMessageCommentException {
-        Comment returnValue;
+        Comment returnValue= null;
         try{
             returnValue = this.commentService.createComment(commentDto.msg());
         }catch(InoteEmptyMessageCommentException ex){
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+//            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+//        returnValue.setStatus("gg");
+        return new ResponseEntity<>(returnValue,HttpStatus.OK);
     }
 }
