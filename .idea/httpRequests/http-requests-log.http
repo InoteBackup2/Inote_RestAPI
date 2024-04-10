@@ -1,3 +1,571 @@
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-10T125608.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 78
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"sangoku@kame-house.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T125213.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"552800"
+}
+
+<> 2024-04-10T125200.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 104
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"sangoku",
+    "username":"sangoku@kame-house.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T125132.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiem96byIsImV4cCI6MTcxMjc0NTY1NCwic3ViIjoiem96b0B2ZWdldGEuY29tIn0.jok-_q1q0DKY2J9wyCgAHlnOlCKZUumFeQxZHIlLmGM
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-10T124012.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T123954.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"583860"
+}
+
+<> 2024-04-10T123943.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T123906.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTI3NDU0NDAsInN1YiI6Inpvem9AdmVnZXRhLmNvbSIsIm5hbWUiOiJ6b3pvIn0.hHseHyQ5dAe-rEhkeDnxQK49eJcasGon0WwwYXTkq5s
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-10T123750.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T123620.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"682879"
+}
+
+<> 2024-04-10T123547.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T123526.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T122937.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"973434"
+}
+
+<> 2024-04-10T122931.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"437816"
+}
+
+<> 2024-04-10T122856.400.json
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T122851.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiem96byIsImV4cCI6MTcxMjc0NDQzNywic3ViIjoiem96b0B2ZWdldGEuY29tIn0.GITmkNrrLpGCwSWg6YXZBy8rfZWxhdQbbqyfbRwFli8
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiem96byIsImV4cCI6MTcxMjc0NDQzNywic3ViIjoiem96b0B2ZWdldGEuY29tIn0.GITmkNrrLpGCwSWg6YXZBy8rfZWxhdQbbqyfbRwFli8
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiem96byIsImV4cCI6MTcxMjc0NDQzNywic3ViIjoiem96b0B2ZWdldGEuY29tIn0.GITmkNrrLpGCwSWg6YXZBy8rfZWxhdQbbqyfbRwFli8
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T121938.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"437816"
+}
+
+<> 2024-04-10T121923.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T121905.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6b3pvQHZlZ2V0YS5jb20iLCJleHAiOjE3MTI3NDQxOTEsIm5hbWUiOiJ6b3pvIn0._l_7KoA4p0UmQmWzCsOUu62NbUvHCD50qSPFSNK09Lo
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6b3pvQHZlZ2V0YS5jb20iLCJleHAiOjE3MTI3NDQxOTEsIm5hbWUiOiJ6b3pvIn0._l_7KoA4p0UmQmWzCsOUu62NbUvHCD50qSPFSNK09Lo
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T121532.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"536805"
+}
+
+<> 2024-04-10T121522.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T121437.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6b3pvQHZlZ2V0YS5jb20iLCJleHAiOjE3MTI3NDI1MzAsIm5hbWUiOiJ6b3pvIn0.e6B8Pld0cClYgtPhoKD4DZ6pkak9ltJzWsNvyZr4ZE8
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-10T114814.401.json
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T114750.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"836112"
+}
+
+<> 2024-04-10T114741.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T114705.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T114444.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"569927"
+}
+
+<> 2024-04-10T114432.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T114410.201.txt
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6b3pvQHZlZ2V0YS5jb20iLCJleHAiOjE3MTI3NDE4NzAsIm5hbWUiOiJ6b3pvIn0.twjlkvIbLNANCnUXVNODkItkpHYte87gSPBTXMvdPHY
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-10T113824.401.json
+
+###
+
+POST http://localhost:8080/api/auth/sign_out
+Content-Type: application/json
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-04-10T113753.401.json
+
+###
+
+POST http://localhost:8080/api/auth/sign_in
+Content-Type: application/json
+Content-Length: 71
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username":"zozo@vegeta.com",
+  "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T113650.200.json
+
+###
+
+POST http://localhost:8080/api/auth/activation
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "code":"419107"
+}
+
+<> 2024-04-10T113636.200.txt
+
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+Content-Length: 94
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "name":"zozo",
+    "username":"zozo@vegeta.com",
+    "password":"booqsfqfq4666HHHYFj$"
+}
+
+<> 2024-04-10T113538.201.txt
+
+###
+
 POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 Content-Length: 94
@@ -190,634 +758,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 //#
 
 <> 2024-04-05T110045.201.txt
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 119
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "name":"sddsfdsfsf",
-    "username":"sdfsdfsfsfsfsfsfaa@vegeta.com",
-    "password":"booqsfqfq4666HHHYFj$"
-}
-
-//#
-
-<> 2024-04-05T105915.406.json
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 119
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "name":"sddsfdsfsf",
-    "username":"sdfsdfsfsfsfsfsfaa@vegeta.com",
-    "password":"booqsfqfq4666HHHYFj$"
-}
-
-//#
-
-<> 2024-04-05T105839.401.json
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 80
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "ezrzer",
-  "username": "erzrzr@zrzr.com",
-  "password": "rezrzer"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 80
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "ezrzer",
-  "username": "erzrzr@zrzr.com",
-  "password": "rezrzer"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 80
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "ezrzer",
-  "username": "erzrzr@zrzr.com",
-  "password": "rezrzer"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 75
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "dfkljdslfjs",
-  "username": "f@o.com",
-  "password": "sdfsf"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 75
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "dfkljdslfjs",
-  "username": "f@o.com",
-  "password": "sdfsf"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 52
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "",
-  "username": "",
-  "password": ""
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 52
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "",
-  "username": "",
-  "password": ""
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 52
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "",
-  "username": "",
-  "password": ""
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 52
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "",
-  "username": "",
-  "password": ""
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 69
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "yan",
-  "username": "yan@yan.com",
-  "password": "fff"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 69
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "yan",
-  "username": "yan@yan.com",
-  "password": "fff"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 69
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "yan",
-  "username": "yan@yan.com",
-  "password": "fff"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 69
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "yan",
-  "username": "yan@yan.com",
-  "password": "fff"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 69
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "yan",
-  "username": "yan@yan.com",
-  "password": "fff"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 94
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "name":"boo",
-    "email":"boo@vegeta.com",
-    "password":"booqsfqfq4666HHHYFj$"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 69
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "name": "yan",
-  "username": "yan@yan.com",
-  "password": "fff"
-}
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 94
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "name":"boo",
-    "email":"boo@vegeta.com",
-    "password":"booqsfqfq4666HHHYFj$"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 94
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "name":"boo",
-    "email":"boo@vegeta.com",
-    "password":"booqsfqfq4666HHHYFj$"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 65
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"ddd@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T124127.200.txt
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 66
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"esse@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T124116.400.txt
-
-###
-
-POST http://localhost:8080/api/auth/resgister
-Content-Type: application/json
-Content-Length: 66
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"esse@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/resgister
-Content-Type: application/json
-Content-Length: 66
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"esse@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 66
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"esse@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T124000.200.txt
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 64
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"ee@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T123732.200.txt
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 64
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"ee@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T123433.500.json
-
-###
-
-POST http://localhost:8080/api/auth/dsfdsfsregister
-Content-Type: application/json
-Content-Length: 64
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"ee@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T123424.404.json
-
-###
-
-POST http://localhost:8080/api/auth//register
-Content-Type: application/json
-Content-Length: 64
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"ee@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T123410.400.json
-
-###
-
-POST http://localhost:8080/api/auth//register
-Content-Type: application/json
-Content-Length: 76
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsqsdqsdqdqf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T123356.400.json
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 76
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsqsdqsdqdqf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-<> 2024-04-03T123338.500.json
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Length: 0
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 76
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsqsdqsdqdqf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 76
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsqsdqsdqdqf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 76
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsqsdqsdqdqf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 67
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 67
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 67
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
-
-###
-
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-Content-Length: 67
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "username":"sdfsf@vegeta.com",
-    "password":"dddddd"
-}
-
-//#
 
 ###
 

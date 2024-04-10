@@ -17,7 +17,8 @@ public class MessagesEn {
 
     // USER
     public static final String USER_ERROR_USER_NOT_FOUND = "User not found in database";
-    public static final String ACTIVATION_OF_USER_OK = "Use activation succeed";
+    public static final String ACTIVATION_OF_USER_OK = "User activation succeed";
+    public static final String USER_SIGNOUT_SUCCESS = "User deconnection success";
 
     //ROLES
     public static final String ROLE_ERROR_NOT_FOUND = "The asked role doesn't exists in database";
@@ -26,6 +27,5 @@ public class MessagesEn {
     // TOKEN
     public static final String TOKEN_ERROR_NOT_FOUND = "Token was not found";
     public static final String TOKEN_ERROR_REFRESH_TOKEN_EXPIRED = "The refresh token is expired";
-
 
 }

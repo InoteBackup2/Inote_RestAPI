@@ -155,7 +155,7 @@ public class AuthController {
      * @param newPasswordDto informationsSendedInBodeRequest
      */
     @PostMapping(path = Endpoint.NEW_PASSWORD)
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException{
+    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException {
         try {
             this.userService.newPassword(
                     newPasswordDto.email(),
@@ -178,24 +178,29 @@ public class AuthController {
      */
     @PostMapping(path = Endpoint.REFRESH_TOKEN)
     public @ResponseBody ResponseEntity<SignInResponseDto> refreshConnectionWithRefreshTokenValue(@RequestBody RefreshConnectionDto refreshConnectionDto) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
-        Map<String,String> response;
-        try{
-             response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
-        }catch(InoteJwtNotFoundException | InoteExpiredRefreshTokenException ex){
-            return new ResponseEntity<>( null, HttpStatus.BAD_REQUEST);
+        Map<String, String> response;
+        try {
+            response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
+        } catch (InoteJwtNotFoundException | InoteExpiredRefreshTokenException ex) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         SignInResponseDto signInResponseDto = new SignInResponseDto(
                 response.get(BEARER),
                 response.get(REFRESH));
-        return new ResponseEntity<>(signInResponseDto,HttpStatus.CREATED);
+        return new ResponseEntity<>(signInResponseDto, HttpStatus.CREATED);
     }
 
     /**
      * user signout
      */
     @PostMapping(path = Endpoint.SIGN_OUT)
-    public void signOut() throws InoteJwtNotFoundException {
-        this.jwtService.signOut();
+    public ResponseEntity<String> signOut() {
+        try {
+            this.jwtService.signOut();
+        } catch (InoteJwtNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(MessagesEn.USER_SIGNOUT_SUCCESS, HttpStatus.OK);
     }
 }

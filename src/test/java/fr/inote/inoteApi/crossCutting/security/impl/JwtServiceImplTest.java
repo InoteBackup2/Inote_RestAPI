@@ -415,4 +415,22 @@ class JwtServiceImplTest {
         //Act & assert
         assertThatCode(()-> this.jwtService.signOut()).doesNotThrowAnyException();
     }
+
+    @Test
+    @DisplayName("SignOut when user is not connected")
+    void SignOut_ShouldFail_whenValidTokenNotFound() {
+        // Arrange
+        Authentication auth = mock(Authentication.class);
+        when(auth.getPrincipal()).thenReturn(this.userRef);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(this.jwtRepository.findTokenWithEmailAndStatusToken(anyString(), anyBoolean(),anyBoolean())).thenReturn(Optional.empty());
+
+        //Act & assert
+        assertThatExceptionOfType(InoteJwtNotFoundException.class).isThrownBy(()-> this.jwtService.signOut());
+
+    }
 }

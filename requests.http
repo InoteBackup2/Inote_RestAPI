@@ -1,30 +1,43 @@
 ### Register an user with "USER" default role
+# Nota : In dev context, need stmp-dev running (smtp server simulation)
+# Run, as administrator (sudo in linux), smtp-dev/Rnwood.Smtp4dev binary
+# from Inote root project
+# Simulated Inbox mail is accessible at :
+# http://localhost:5000
 POST http://localhost:8080/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name":"zozo",
-    "username":"zozo@vegeta.com",
+    "name":"sangoku",
+    "username":"sangoku@kame-house.com",
     "password":"booqsfqfq4666HHHYFj$"
 }
 
-
-#### Activation de l'inscription
+#### Account activation
+# Nota : Pick the activation code in Validation table
+# or open fictionous mail box http://localhost:5000 (smtp-dev must be running)
 POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"998943"
+    "code":"552800"
 }
 
-#### Connexion
+#### User sign in
 POST http://localhost:8080/api/auth/sign_in HTTP/1.1
+# Nota : keep the Bearer, it must be in headers of all secured endpoints
 Content-Type: application/json
 
 {
-  "username":"zozo@vegeta.com",
+  "username":"sangoku@kame-house.com",
   "password":"booqsfqfq4666HHHYFj$"
 }
+
+### User sign out
+# Nota : put the bearer given by server when sign in
+POST http://localhost:8080/api/auth/sign_out HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw
+Content-Type: application/json
 
 ### Inscription d'un admin
 ## POST http://localhost:8080/api/inscription HTTP/1.1
@@ -64,12 +77,9 @@ Content-Type: application/json
 #    "password":"manager"
 #}
 #
-#### Deconnexion
-#POST http://localhost:8080/api/sign_out HTTP/1.1
-#Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZWdldGFAdmVnZXRhLnZlZyIsIm5vbSI6ImFkbWluIiwiZXhwIjoxNzEwMTY5MTg0fQ.-uwYZuuz0wRIShry-6ZR5XIh2pA_7easNMnr7B-xb9Y
-#Content-Type: application/json
-#
-#
+
+
+
 ### Demande de modification de mot de passe
 POST http://localhost:8080/api/auth/change_password HTTP/1.1
 Content-Type: application/json

@@ -458,5 +458,18 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("Signout a connected user")
+    void signOut_ShouldSuccess_WhenUserIsConnected() throws Exception {
+        // Arrange
+        doNothing().when(this.jwtServiceImpl).signOut();
+
+        // Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.SIGN_OUT));
+
+        // Assert
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 
 }

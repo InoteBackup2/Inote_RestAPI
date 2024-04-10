@@ -109,13 +109,9 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.NEW_PASSWORD).permitAll()
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
 
-                                /*.requestMatchers(POST, "/activation").permitAll()
-                                .requestMatchers(POST, "/sign_in").permitAll()
-                                .requestMatchers(POST, "/refresh-token").permitAll()
-                                .requestMatchers(POST, "/change-password").permitAll()
-                                .requestMatchers(POST, "/new-password").permitAll()*/
 
                                 // -> Secured endpoints
+
 //                                .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
 
                                 // -> By default must be authenticated
