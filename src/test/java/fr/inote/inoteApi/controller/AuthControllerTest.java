@@ -441,5 +441,22 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("Refresh connection with expired refresh token")
+    void refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired() throws Exception {
+        // Arrange
+        when(this.jwtServiceImpl.refreshConnectionWithRefreshTokenValue(any(String.class))).thenThrow(InoteExpiredRefreshTokenException.class);
+
+        // Act
+        RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("bad_refresh_token_value");
+
+        ResultActions response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
+        // Assert
+        response
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 
 }

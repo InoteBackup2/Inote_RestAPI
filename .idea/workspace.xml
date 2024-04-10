@@ -141,7 +141,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect">
+  <component name="RunManager" selected="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -150,6 +150,22 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -218,22 +234,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="InoteApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.inote.inoteApi.crossCutting.security.impl.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.crossCutting.security.impl" />
-      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImplTest" />
-      <option name="METHOD_NAME" value="refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="InoteApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="InoteApi" />
@@ -244,20 +244,20 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.All tests" />
+      <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
       <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsBad" />
       <item itemvalue="JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect" />
       <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
       <item itemvalue="JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
-      <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
         <item itemvalue="JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect" />
         <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsBad" />
         <item itemvalue="JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
         <item itemvalue="JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect" />
-        <item itemvalue="JUnit.JwtServiceImplTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired" />
       </list>
     </recent_temporary>
   </component>

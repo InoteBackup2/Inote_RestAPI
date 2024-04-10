@@ -181,7 +181,7 @@ public class AuthController {
         Map<String,String> response;
         try{
              response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
-        }catch(InoteJwtNotFoundException ex){
+        }catch(InoteJwtNotFoundException | InoteExpiredRefreshTokenException ex){
             return new ResponseEntity<>( null, HttpStatus.BAD_REQUEST);
         }
 
