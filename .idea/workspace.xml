@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound PASSED">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +60,7 @@
     "HTTP Request.requests | Register an user with \"USER\" default role.executor": "Run",
     "HTTP Request.requests | User sign in.executor": "Run",
     "HTTP Request.requests | User sign out.executor": "Run",
-    "JUnit.All tests.executor": "Coverage",
+    "JUnit.All tests.executor": "Run",
     "JUnit.AuthControllerTest.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
     "JUnit.AuthControllerTest.changePassword_ShouldFail_WhenEmailIsBadFormated.executor": "Run",
@@ -92,6 +92,7 @@
     "JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected.executor": "Run",
+    "JUnit.AuthController_IT.IT_signOut_ShouldUnauthorized_whenBearerIdBad.executor": "Run",
     "JUnit.AuthController_IT.activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthController_IT.executor": "Run",
     "JUnit.AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists.executor": "Run",
@@ -153,10 +154,7 @@
       <recent name="fr.inote.inoteApi.crossCutting.exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound">
-    <configuration name="requests | User sign in" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="User sign in" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="JUnit.All tests">
     <configuration name="requests | User sign out" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="4" requestIdentifier="User sign out" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -220,6 +218,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="AuthController_IT.IT_signOut_ShouldUnauthorized_whenBearerIdBad" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="IT_signOut_ShouldUnauthorized_whenBearerIdBad" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="InoteApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="InoteApi" />
@@ -229,21 +243,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="HTTP Request.requests | User sign in" />
       <item itemvalue="HTTP Request.requests | User sign out" />
       <item itemvalue="JUnit.All tests" />
       <item itemvalue="JUnit.AuthControllerTest.signOut_ShouldSuccess_WhenUserIsConnected" />
       <item itemvalue="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" />
+      <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldUnauthorized_whenBearerIdBad" />
       <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldUnauthorized_whenBearerIdBad" />
         <item itemvalue="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" />
         <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldSuccess_whenUserIsConnected" />
         <item itemvalue="JUnit.AuthControllerTest.signOut_ShouldSuccess_WhenUserIsConnected" />
         <item itemvalue="HTTP Request.requests | User sign out" />
-        <item itemvalue="HTTP Request.requests | User sign in" />
       </list>
     </recent_temporary>
   </component>
@@ -268,7 +282,7 @@
       <workItem from="1712561395743" duration="10051000" />
       <workItem from="1712648935155" duration="8692000" />
       <workItem from="1712733659360" duration="8814000" />
-      <workItem from="1712743510068" duration="4710000" />
+      <workItem from="1712743510068" duration="5016000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -574,7 +588,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712747309298</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound PASSED">
+      <option name="closed" value="true" />
+      <created>1712751208734</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1712751208734</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -582,7 +604,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="changePassword all tests PASSED" />
     <MESSAGE value="all test passes after merge" />
     <MESSAGE value="refactoring" />
     <MESSAGE value="refactoring checkPasswordSecurityRequirements" />
@@ -607,7 +628,8 @@
     <MESSAGE value="SignOut_ShouldFail_whenValidTokenNotFound PASSED" />
     <MESSAGE value="signOut_ShouldSuccess_WhenUserIsConnected PASSED" />
     <MESSAGE value="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="IT_signOut_ShouldSuccess_whenUserIsConnected PASSED" />
+    <MESSAGE value="signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound PASSED" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -713,11 +735,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/JwtFilter.java</url>
           <line>92</line>
           <option name="timeStamp" value="71" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/impl/JwtServiceImpl.java</url>
-          <line>264</line>
-          <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java</url>

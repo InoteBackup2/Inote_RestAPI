@@ -841,4 +841,66 @@ public class AuthController_IT {
         // Assert
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @DisplayName("Signout user with bad Bearer")
+    void IT_signOut_ShouldUnauthorized_whenBearerIdBad() throws Exception {
+        final String[] messageContainingCode = new String[1];
+        // Arrange
+        this.mockMvc.perform(
+                post(Endpoint.REGISTER)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+        await()
+                .atMost(2, SECONDS)
+                .untilAsserted(() -> {
+                    MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                    assertThat(receivedMessages.length).isEqualTo(1);
+
+                    MimeMessage receivedMessage = receivedMessages[0];
+
+                    messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                    assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                });
+
+        final String reference = "activation code : ";
+        int startSubtring = messageContainingCode[0].indexOf(reference);
+        int startIndexOfCode = startSubtring + reference.length();
+        int endIndexOfCode = startIndexOfCode + 6;
+        String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+        Map<String, String> bodyRequest = new HashMap<>();
+        bodyRequest.put("code", extractedCode);
+
+        ResultActions response = this.mockMvc.perform(
+                post(Endpoint.ACTIVATION)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(bodyRequest)));
+
+        response
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+        Map<String, String> signInBodyContent = new HashMap<>();
+        signInBodyContent.put("username", this.userDtoRef.username());
+        signInBodyContent.put("password", this.userDtoRef.password());
+
+        response = this.mockMvc.perform(
+                post(Endpoint.SIGN_IN)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(signInBodyContent)));
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.bearer").isNotEmpty())
+                .andExpect(jsonPath("$.refresh").isNotEmpty());
+
+        String returnedResponse = response.andReturn().getResponse().getContentAsString();
+        String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+        assertThat(bearer.length()).isEqualTo(145);
+
+        // Act
+        response = this.mockMvc.perform(post(Endpoint.SIGN_OUT).
+                header("authorization", "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw"));
+
+        // Assert
+        response.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
 }
