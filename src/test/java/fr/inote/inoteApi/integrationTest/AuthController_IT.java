@@ -830,11 +830,15 @@ public class AuthController_IT {
                 .andExpect(jsonPath("$.bearer").isNotEmpty())
                 .andExpect(jsonPath("$.refresh").isNotEmpty());
 
+        String returnedResponse = response.andReturn().getResponse().getContentAsString();
+        String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+        assertThat(bearer.length()).isEqualTo(145);
+
         // Act
-        response = this.mockMvc.perform(post(Endpoint.SIGN_OUT));
+        response = this.mockMvc.perform(post(Endpoint.SIGN_OUT).
+        header("authorization", "Bearer " + bearer));
 
         // Assert
         response.andExpect(MockMvcResultMatchers.status().isOk());
-
     }
 }
