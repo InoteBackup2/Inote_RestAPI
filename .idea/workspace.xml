@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="create_shouldSuccess_whenMessageIsNotEmpty PASSED">
-      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/CommentDtoResponse.java" afterDir="false" />
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="IT_create_shouldSuccess_whenMessageIsNotEmpty PASSED">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/CommentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/CommentDtoRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/CommentServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/CommentServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +101,7 @@
     "JUnit.AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists.executor": "Run",
     "JUnit.CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Debug",
     "JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
-    "JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
+    "JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty.executor": "Debug",
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank.executor": "Run",
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsNotConnected.executor": "Debug",
     "JUnit.CommentServiceImplTest.createComment_ShouldSuccess_whenUserIsConnected.executor": "Run",
@@ -361,7 +354,7 @@
       <workItem from="1712743510068" duration="8849000" />
       <workItem from="1712755510342" duration="4023000" />
       <workItem from="1712760102806" duration="12046000" />
-      <workItem from="1712834373119" duration="1843000" />
+      <workItem from="1712834373119" duration="2908000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -707,7 +700,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712774547423</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="IT_create_shouldSuccess_whenMessageIsNotEmpty PASSED">
+      <option name="closed" value="true" />
+      <created>1712836316848</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1712836316848</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -715,7 +716,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="newPassword_ShouldFail_WhenCodeNotCorrespondingToAnyValidation PASSED" />
     <MESSAGE value="newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured PASSED" />
     <MESSAGE value="All test PASSED" />
     <MESSAGE value="sendValidation_byEmail refactoring OK" />
@@ -740,7 +740,8 @@
     <MESSAGE value="IT_signOut_ShouldUnauthorized_whenBearerIdBad + ALL TEST PASSED" />
     <MESSAGE value="createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank PASSED" />
     <MESSAGE value="create_shouldSuccess_whenMessageIsNotEmpty PASSED" />
-    <option name="LAST_COMMIT_MESSAGE" value="create_shouldSuccess_whenMessageIsNotEmpty PASSED" />
+    <MESSAGE value="IT_create_shouldSuccess_whenMessageIsNotEmpty PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="IT_create_shouldSuccess_whenMessageIsNotEmpty PASSED" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -786,8 +787,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java</url>
-          <line>202</line>
-          <option name="timeStamp" value="103" />
+          <line>137</line>
+          <option name="timeStamp" value="104" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java</url>
+          <line>197</line>
+          <option name="timeStamp" value="105" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

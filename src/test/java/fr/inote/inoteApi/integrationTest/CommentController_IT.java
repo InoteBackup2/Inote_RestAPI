@@ -3,7 +3,6 @@ package fr.inote.inoteApi.integrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
@@ -97,11 +96,11 @@ public class CommentController_IT {
     private Role roleRef;
     private Validation validationRef;
 
+    private String bearerAuthorization;
+
     @BeforeEach
-    void setUp() throws FolderException {
+    void setUp() throws Exception {
         CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
-
-
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
         this.roleRef = Role.builder()
                 .name(RoleEnum.ADMIN)
@@ -132,13 +131,34 @@ public class CommentController_IT {
                 .id(1)
                 .message(this.commentDtoRequestRef.msg())
                 .build();
+
+        bearerAuthorization = connectUserAndReturnBearer();
+        System.out.println(bearerAuthorization);
     }
 
     @Test
     @DisplayName("Create a comment with message not empty")
     void IT_create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
+        // Act
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                        .header("authorization", "Bearer " + this.bearerAuthorization)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        // Get serialized results
+        MvcResult result = response.andReturn();
+        String serializedResult = result.getResponse().getContentAsString();
+
+        // Deserialization results
+        CommentDtoResponse returnedComment = this.objectMapper.readValue(serializedResult, CommentDtoResponse.class);
+
+        /*Assert*/
+        assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
+    }
+
+    public String connectUserAndReturnBearer() throws Exception {
         final String[] messageContainingCode = new String[1];
-        // Arrange
         this.mockMvc.perform(
                 post(Endpoint.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -163,13 +183,11 @@ public class CommentController_IT {
         Map<String, String> bodyRequest = new HashMap<>();
         bodyRequest.put("code", extractedCode);
 
-        // Act
+
         ResultActions response = this.mockMvc.perform(
                 post(Endpoint.ACTIVATION)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-        // Assert
         response
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
@@ -190,27 +208,6 @@ public class CommentController_IT {
         String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
         assertThat(bearer.length()).isEqualTo(145);
 
-        // Act
-        response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                        .header("authorization", "Bearer " + bearer)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
-
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-
-        // Get serialized results
-        MvcResult result = response.andReturn();
-        String serializedResult = result.getResponse().getContentAsString();
-
-        // Deserialization results
-        CommentDtoResponse returnedComment = this.objectMapper.readValue(serializedResult, CommentDtoResponse.class);
-
-        /*Assert*/
-
-        assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
-
-
+        return bearer;
     }
-
 }
