@@ -8,19 +8,14 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
-import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
 import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Comment;
-import fr.inote.inoteApi.entity.Role;
-import fr.inote.inoteApi.entity.User;
-import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.repository.JwtRepository;
-import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
-import fr.inote.inoteApi.service.impl.NotificationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,18 +32,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.internet.MimeMessage;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
-import static fr.inote.inoteApi.ConstantsForTests.REFERENCE_USER_PASSWORD;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -58,11 +51,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 public class CommentController_IT {
+
     @RegisterExtension
     static final GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
             .withConfiguration(GreenMailConfiguration.aConfig().withUser("duke", "springboot"))
             .withPerMethodLifecycle(false);
-
     private MockMvc mockMvc;
 
     @Autowired
@@ -78,68 +71,41 @@ public class CommentController_IT {
     private JwtRepository jwtRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ValidationRepository validationRepository;
-
-    @Autowired
-    private NotificationServiceImpl notificationService;
-
     private CommentDtoRequest commentDtoRequestRef;
     private Comment commentRef;
-
-    private User userRef;
-
     private UserDto userDtoRef;
-
-    private Role roleRef;
-    private Validation validationRef;
-
     private String bearerAuthorization;
 
     @BeforeEach
     void setUp() throws Exception {
+        // purge mail Inbox
         CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
+
+        // load context with Security
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
-        this.roleRef = Role.builder()
-                .name(RoleEnum.ADMIN)
-                .build();
 
-        this.userRef = User.builder()
-                .password(REFERENCE_USER_PASSWORD)
-                .role(this.roleRef)
-                .email(REFERENCE_USER_EMAIL)
-                .name(REFERENCE_USER_NAME)
-                .build();
-
+        // reference for compare creation
         this.userDtoRef = new UserDto(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
-
-        this.validationRef = Validation.builder()
-                .code("123456")
-                .user(this.userRef)
-                .creation(Instant.now())
-                .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
-                .build();
-
-        this.jwtRepository.deleteAll();
-        this.validationRepository.deleteAll();
-        this.userRepository.deleteAll();
-
         this.commentDtoRequestRef = new CommentDtoRequest("Application should provide most functionalities");
         this.commentRef = Comment.builder()
                 .id(1)
                 .message(this.commentDtoRequestRef.msg())
                 .build();
 
+        // Database cleaning
+        this.jwtRepository.deleteAll();
+        this.validationRepository.deleteAll();
+        this.userRepository.deleteAll();
+
+        // User connection & token recuperation
         bearerAuthorization = connectUserAndReturnBearer();
-        System.out.println(bearerAuthorization);
     }
 
     @Test
     @DisplayName("Create a comment with message not empty")
     void IT_create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
-        // Act
+        /* Act */
         ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .header("authorization", "Bearer " + this.bearerAuthorization)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -157,6 +123,28 @@ public class CommentController_IT {
         assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
     }
 
+    @Test
+    @DisplayName("Create a comment with message empty or blank")
+    void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
+
+        CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
+        CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
+
+        // Act & assert
+        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                        .header("authorization", "Bearer " + this.bearerAuthorization)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(commentDto_Request_empty)))
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+
+        response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                        .header("authorization", "Bearer " + this.bearerAuthorization)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(this.objectMapper.writeValueAsString(commentDto_Request_blank)))
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+    }
+
+    /* -----Utils------ */
     public String connectUserAndReturnBearer() throws Exception {
         final String[] messageContainingCode = new String[1];
         this.mockMvc.perform(
@@ -176,8 +164,8 @@ public class CommentController_IT {
                 });
 
         final String reference = "activation code : ";
-        int startSubtring = messageContainingCode[0].indexOf(reference);
-        int startIndexOfCode = startSubtring + reference.length();
+        int startSubstring = messageContainingCode[0].indexOf(reference);
+        int startIndexOfCode = startSubstring + reference.length();
         int endIndexOfCode = startIndexOfCode + 6;
         String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
         Map<String, String> bodyRequest = new HashMap<>();
