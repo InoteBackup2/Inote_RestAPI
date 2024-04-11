@@ -1,6 +1,5 @@
 package fr.inote.inoteApi.integrationTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -23,7 +22,6 @@ import fr.inote.inoteApi.repository.JwtRepository;
 import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
-import fr.inote.inoteApi.service.impl.NotificationServiceImpl;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +31,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -51,15 +47,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
-import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
 import static java.util.UUID.randomUUID;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -115,9 +108,7 @@ public class AuthController_IT {
         @Autowired
         private ValidationRepository validationRepository;
 
-        @Autowired
-        private NotificationServiceImpl notificationService;
-
+        
         /* TEST VARIABLES */
         /* ============================================================ */
         /*
@@ -128,8 +119,7 @@ public class AuthController_IT {
          * -> Will be configured initialized before each test
          */
         private MockMvc mockMvc;
-        private String bearerAuthorization;
-
+       
         private User userRef = User.builder()
                         .password(REFERENCE_USER_PASSWORD)
                         .role(this.roleRef)
@@ -435,14 +425,13 @@ public class AuthController_IT {
         @Test
         @DisplayName("set new password of existing user")
         void IT_newPassword_ShouldSuccess_WhenUserExists() throws Exception {
-                // User registration request
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-
-                // activation code recuperation by email
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -463,22 +452,18 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                // Activation code sending
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-                // Change password request
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", this.userDtoRef.username());
-                response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)));
-                response
+                                .content(this.objectMapper.writeValueAsString(usernameMap)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 // activation code recuperation
@@ -500,17 +485,15 @@ public class AuthController_IT {
                 endIndexOfCode = startIndexOfCode + 6;
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
-                // Act
+                /* Act & assert */
                 NewPasswordDto newPasswordDto = new NewPasswordDto(
                                 this.userDtoRef.username(),
                                 extractedCode,
                                 "klfbeUB22@@@?sdjfJJ");
 
-                response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-
-                                // Assert
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(MockMvcResultMatchers.content().string(MessagesEn.NEW_PASSWORD_SUCCESS));
         }
@@ -518,30 +501,29 @@ public class AuthController_IT {
         @Test
         @DisplayName("set new password of non existing user")
         void IT_newPassword_ShouldFail_WhenUserNotExists() throws Exception {
+                /* Act & assert */
                 NewPasswordDto newPasswordDto = new NewPasswordDto(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
 
                 // Act
-                ResultActions response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-                                // Assert
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
         @DisplayName("set new password with non-referenced validation by code")
         void IT_newPassword_ShouldFail_WhenValidationNotExists() throws Exception {
-                // User registration request
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
 
-                // activation code recuperation by email
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -562,25 +544,20 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                // Activation code sending
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-                // Change password request
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", this.userDtoRef.username());
-                response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)));
-                response
+                                .content(this.objectMapper.writeValueAsString(usernameMap)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-                // activation code recuperation
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -599,31 +576,28 @@ public class AuthController_IT {
                 endIndexOfCode = startIndexOfCode + 6;
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
-                // Act
+                /* Act & assert */
                 NewPasswordDto newPasswordDto = new NewPasswordDto(
                                 this.userDtoRef.username(),
                                 "1111111",
                                 "klfbeUB22@@@?sdjfJJ");
 
-                response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-
-                                // Assert
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
         @DisplayName("set new password with not enough secured password")
         void IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured() throws Exception {
-                // User registration request
+
                 final String[] messageContainingCode = new String[1];
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-
-                // activation code recuperation by email
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -644,25 +618,20 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                // Activation code sending
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-                // Change password request
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", this.userDtoRef.username());
-                response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)));
-                response
+                                .content(this.objectMapper.writeValueAsString(usernameMap)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-                // activation code recuperation
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -681,31 +650,29 @@ public class AuthController_IT {
                 endIndexOfCode = startIndexOfCode + 6;
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
-                // Act
+                /* Act & assert */
                 NewPasswordDto newPasswordDto = new NewPasswordDto(
                                 this.userDtoRef.username(),
                                 extractedCode,
                                 "1234");
 
-                response = this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-
-                                // Assert
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
         @DisplayName("Refresh connection with correct refresh token value")
         void IT_refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect() throws Exception {
-                // Arrange
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
-                // User registration request
+
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-                // Activation code recuperation
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -726,17 +693,13 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                // Account activation
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-                // connection
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", this.userDtoRef.username());
                 signInBodyContent.put("password", this.userDtoRef.password());
@@ -744,11 +707,11 @@ public class AuthController_IT {
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                MvcResult mvcResult = response.andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andReturn();
+                MvcResult mvcResult = response.andReturn();
 
                 String returnedResponse = mvcResult.getResponse().getContentAsString();
                 String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
@@ -756,16 +719,19 @@ public class AuthController_IT {
                 assertThat(bearer.length()).isEqualTo(145);
                 assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
 
-                // Act
+                /* Act */
                 RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto(refresh);
-                response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+                MvcResult result = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
-                response
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
-                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated())
+                                .andReturn();
+
+                returnedResponse = result.getResponse().getContentAsString();
                 bearer = JsonPath.parse(returnedResponse).read("$.bearer");
                 refresh = JsonPath.parse(returnedResponse).read("$.refresh");
+
+                /* Assert */
                 assertThat(bearer.length()).isEqualTo(145);
                 assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
         }
@@ -773,24 +739,24 @@ public class AuthController_IT {
         @Test
         @DisplayName("Refresh connection with bad refresh token value")
         void IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect() throws Exception {
-
+                /* Act & assert */
                 RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("badValue");
-                ResultActions response = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
+                this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)));
-                response
+                                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
         @DisplayName("Signout user effectivly connected")
         void IT_signOut_ShouldSuccess_whenUserIsConnected() throws Exception {
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
-                // Arrange
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -812,48 +778,47 @@ public class AuthController_IT {
                 bodyRequest.put("code", extractedCode);
 
                 // Act
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                // Assert
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", this.userDtoRef.username());
                 signInBodyContent.put("password", this.userDtoRef.password());
 
-                response = this.mockMvc.perform(
+                MvcResult result = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-                response.andExpect(MockMvcResultMatchers.status().isOk())
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty());
+                                .andExpect(jsonPath("$.refresh").isNotEmpty())
+                                .andReturn();
 
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String returnedResponse = result.getResponse().getContentAsString();
                 String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
                 assertThat(bearer.length()).isEqualTo(145);
 
-                // Act
-                response = this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer " + bearer));
-
-                // Assert
-                response.andExpect(MockMvcResultMatchers.status().isOk());
+                /* Act & assert */
+                this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer " + bearer))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
         @Test
         @DisplayName("Signout user with bad Bearer")
         void IT_signOut_ShouldUnauthorized_whenBearerIdBad() throws Exception {
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
-                // Arrange
+
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -871,39 +836,37 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
-
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", this.userDtoRef.username());
                 signInBodyContent.put("password", this.userDtoRef.password());
 
-                response = this.mockMvc.perform(
+                MvcResult result = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-                response.andExpect(MockMvcResultMatchers.status().isOk())
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty());
+                                .andExpect(jsonPath("$.refresh").isNotEmpty())
+                                .andReturn();
 
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String returnedResponse = result.getResponse().getContentAsString();
                 String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
                 assertThat(bearer.length()).isEqualTo(145);
 
-                // Act
-                response = this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer "
-                                + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw"));
-
-                // Assert
-                response.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                /*Act & assert */
+                this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer "
+                                + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw"))
+                                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
         }
 }
