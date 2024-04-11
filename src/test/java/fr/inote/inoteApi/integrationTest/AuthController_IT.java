@@ -72,8 +72,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @date 10/04/2024
  */
 
-/*The @SpringBootTest annotation is used for integration testing in Spring Boot applications.
- * It helps in bootstrapping the application context required for testing */
+/*
+ * The @SpringBootTest annotation is used for integration testing in Spring Boot
+ * applications.
+ * It helps in bootstrapping the application context required for testing
+ */
 @SpringBootTest
 
 /*
@@ -161,7 +164,7 @@ public class AuthController_IT {
                 this.jwtRepository.deleteAll();
                 this.validationRepository.deleteAll();
                 this.userRepository.deleteAll();
-                
+
                 // Clean mailBox
                 AuthController_IT.greenMail.purgeEmailFromAllMailboxes();
         }
@@ -198,14 +201,9 @@ public class AuthController_IT {
         }
 
         @Test
-        // @WithMockUser
         @DisplayName("Register an existing user in database")
         void IT_register_shouldFail_whenUserExist() throws Exception {
-                // Arrange
-                UserDto userDto = new UserDto(
-                                this.userRef.getName(),
-                                this.userRef.getUsername(),
-                                this.userRef.getPassword());
+                /* Arrange */
                 assertThatCode(() -> {
                         Role role = this.roleRepository.findByName(RoleEnum.USER)
                                         .orElseThrow(() -> new InoteUserException());
@@ -213,14 +211,13 @@ public class AuthController_IT {
                         this.userRepository.save(this.userRef);
                 }).doesNotThrowAnyException();
 
-                // Act
-                ResultActions response = this.mockMvc.perform(
-                                post("/api/auth/register")
+                /* Act & assert */
+                // Send request, print response, check returned status and primary checking
+                // (status code, content body type...)
+                this.mockMvc.perform(
+                                post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(userDto)));
-
-                // Assert
-                response
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
         }
 
