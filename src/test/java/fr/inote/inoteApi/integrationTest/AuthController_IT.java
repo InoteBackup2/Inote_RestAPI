@@ -224,7 +224,7 @@ public class AuthController_IT {
         @Test
         @DisplayName("Activate an user with good code")
         void IT_activation_ShouldSuccess_whenCodeIsCorrect() throws Exception {
-                
+
                 /* Arrange */
                 final String[] messageContainingCode = new String[1];
 
@@ -270,22 +270,21 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", "BadCode");
 
-                // Act
-                ResultActions response = this.mockMvc.perform(
+                /* Act & assert */
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                // Assert
-                response
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                                .andExpect(MockMvcResultMatchers.content()
+                                                .string(new InoteValidationNotFoundException().getMessage()));
         }
 
         @Test
         @DisplayName("Sign user with good credentials")
         void IT_signIn_ShouldSuccess_whenCredentialsAreCorrect() throws Exception {
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
-                // Arrange
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -310,32 +309,35 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                // Act
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                // Assert
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-                // Act
+                /* Act */
+                // Send request, print response, check returned status and content type
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", this.userDtoRef.username());
                 signInBodyContent.put("password", this.userDtoRef.password());
 
-                response = this.mockMvc.perform(
+                ResultActions response =  this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-
-                // Assert
-                response.andExpect(MockMvcResultMatchers.status().isOk())
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.bearer").isNotEmpty())
                                 .andExpect(jsonPath("$.refresh").isNotEmpty());
+                
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+                String refresh = JsonPath.parse(returnedResponse).read("$.refresh");
+                
+                /* Assert */
+                assertThat(bearer.length()).isEqualTo(145);
+                assertThat(refresh.length()).isEqualTo(UUID.randomUUID().toString().length());
         }
 
         @Test
