@@ -4,7 +4,7 @@ import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.crossCutting.security.Jwt;
 import fr.inote.inoteApi.crossCutting.security.RefreshToken;
-import fr.inote.inoteApi.dto.CommentDto;
+import fr.inote.inoteApi.dto.CommentDtoRequest;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -48,7 +48,7 @@ class CommentServiceImplTest {
     private RefreshToken refreshToken;
     private Comment commentRef;
 
-    private CommentDto commentDtoRef;
+    private CommentDtoRequest commentDtoRequestRef;
 
     @BeforeEach
     void setUp() {
@@ -78,10 +78,10 @@ class CommentServiceImplTest {
                 .refreshToken(this.refreshToken)
                 .build();
 
-        this.commentDtoRef = new CommentDto("Application should provide most functionalities");
+        this.commentDtoRequestRef = new CommentDtoRequest("Application should provide most functionalities");
 
         this.commentRef = Comment.builder()
-                .message(this.commentDtoRef.msg())
+                .message(this.commentDtoRequestRef.msg())
                 .build();
     }
 
@@ -98,11 +98,11 @@ class CommentServiceImplTest {
         when(this.commentRepository.save(any(Comment.class))).thenReturn(this.commentRef);
 
         // Act & assert
-        Comment commentForTest = this.commentService.createComment(this.commentDtoRef.msg());
+        Comment commentForTest = this.commentService.createComment(this.commentDtoRequestRef.msg());
 //        assertThat(commentForTest.getUser()).isEqualTo(this.userRef);
         //Voir Ici! Pourquoi il ne retourne pas le user lors de la sauvegarde?
         fail();
-        assertThat(commentForTest.getMessage()).isEqualTo(this.commentDtoRef.msg());
+        assertThat(commentForTest.getMessage()).isEqualTo(this.commentDtoRequestRef.msg());
 
     }
 
@@ -110,7 +110,7 @@ class CommentServiceImplTest {
     @DisplayName("Create comment when user is not connected")
     void createComment_ShouldFail_whenUserIsNotConnected() {
         // Act & assert
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> this.commentService.createComment(this.commentDtoRef.msg()));
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> this.commentService.createComment(this.commentDtoRequestRef.msg()));
     }
 
     @Test
@@ -133,9 +133,9 @@ class CommentServiceImplTest {
         assertThatExceptionOfType(InoteEmptyMessageCommentException.class)
                 .isThrownBy(() -> this.commentService.createComment(commentDto2));
 
-        CommentDto commentDto3 = new CommentDto(null);
+        CommentDtoRequest commentDtoRequest3 = new CommentDtoRequest(null);
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> this.commentService.createComment(commentDto3.msg()));
+                .isThrownBy(() -> this.commentService.createComment(commentDtoRequest3.msg()));
     }
 
 

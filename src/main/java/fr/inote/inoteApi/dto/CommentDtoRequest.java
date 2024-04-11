@@ -1,6 +1,6 @@
 package fr.inote.inoteApi.dto;
 
-public record CommentDto(
+public record CommentDtoRequest(
         String msg
 ) {
 }

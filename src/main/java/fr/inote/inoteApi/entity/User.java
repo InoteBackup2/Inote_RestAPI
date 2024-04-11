@@ -43,8 +43,7 @@ public class User implements UserDetails {
     @Builder.Default // Set default value when using Lombok @Builder annotation
     @Getter private boolean actif = false;
 
-    @ManyToOne
-    @JoinColumn(name = "id_role")
+    @OneToOne(cascade = CascadeType.ALL)
     private Role role;
 
 

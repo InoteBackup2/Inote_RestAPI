@@ -2,7 +2,8 @@ package fr.inote.inoteApi.controller;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.CommentDto;
+import fr.inote.inoteApi.dto.CommentDtoRequest;
+import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.service.CommentService;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
@@ -37,14 +38,14 @@ public class CommentController {
     }
 
     @PostMapping(Endpoint.CREATE_COMMENT)
-    public ResponseEntity<Comment> create(@RequestBody CommentDto commentDto) throws InoteEmptyMessageCommentException {
+    public ResponseEntity<CommentDtoResponse> create(@RequestBody CommentDtoRequest commentDtoRequest) throws InoteEmptyMessageCommentException {
         Comment returnValue= null;
         try{
-            returnValue = this.commentService.createComment(commentDto.msg());
+            returnValue = this.commentService.createComment(commentDtoRequest.msg());
         }catch(InoteEmptyMessageCommentException ex){
-//            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
-//        returnValue.setStatus("gg");
-        return new ResponseEntity<>(returnValue,HttpStatus.OK);
+        CommentDtoResponse returnDtoValue = new CommentDtoResponse(returnValue.getId(),returnValue.getMessage(),returnValue.getUser().getId());
+        return new ResponseEntity<>(returnDtoValue,HttpStatus.OK);
     }
 }

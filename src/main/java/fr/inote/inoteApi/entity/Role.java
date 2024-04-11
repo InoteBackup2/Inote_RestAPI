@@ -28,7 +28,7 @@ public class Role {
     @Enumerated(EnumType.STRING)    // @Enumerated is an annotation that indicates how an enumerated type should be persisted in the database.
     private RoleEnum name;
 
-    @OneToMany(mappedBy = "role")
-    private Set<User> users; // Use a Set collection to avoid duplication (doublons)
+//    @OneToMany(mappedBy = "role")
+//    private Set<User> users; // Use a Set collection to avoid duplication (doublons)
 
 }

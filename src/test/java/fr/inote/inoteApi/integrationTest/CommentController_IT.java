@@ -10,7 +10,8 @@ import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
-import fr.inote.inoteApi.dto.CommentDto;
+import fr.inote.inoteApi.dto.CommentDtoRequest;
+import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
@@ -26,11 +27,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -52,7 +50,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -90,7 +87,7 @@ public class CommentController_IT {
     @Autowired
     private NotificationServiceImpl notificationService;
 
-    private CommentDto commentDtoRef;
+    private CommentDtoRequest commentDtoRequestRef;
     private Comment commentRef;
 
     private User userRef;
@@ -130,10 +127,10 @@ public class CommentController_IT {
         this.validationRepository.deleteAll();
         this.userRepository.deleteAll();
 
-        this.commentDtoRef = new CommentDto("Application should provide most functionalities");
+        this.commentDtoRequestRef = new CommentDtoRequest("Application should provide most functionalities");
         this.commentRef = Comment.builder()
                 .id(1)
-                .message(this.commentDtoRef.msg())
+                .message(this.commentDtoRequestRef.msg())
                 .build();
     }
 
@@ -197,20 +194,21 @@ public class CommentController_IT {
         response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .header("authorization", "Bearer " + bearer)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(this.objectMapper.writeValueAsString(this.commentDtoRef)))
+                        .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
 
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
 
-//        // Get serialized results
-//        MvcResult result = response.andReturn();
-//        String serializedResult = result.getResponse().getContentAsString();
-//
-//        // Deserialization results
-//        Comment returnedComment = this.objectMapper.readValue(serializedResult, Comment.class);
-//
-//        /*Assert*/
-//        assertThat(returnedComment).isEqualTo(this.commentRef);
+        // Get serialized results
+        MvcResult result = response.andReturn();
+        String serializedResult = result.getResponse().getContentAsString();
+
+        // Deserialization results
+        CommentDtoResponse returnedComment = this.objectMapper.readValue(serializedResult, CommentDtoResponse.class);
+
+        /*Assert*/
+
+        assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
 
 
     }

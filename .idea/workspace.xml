@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="create_shouldSuccess_whenMessageIsNotEmpty PASSED">
-      <change afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/CommentDtoResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requests.http" beforeDir="false" afterPath="$PROJECT_DIR$/requests.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/CommentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/dto/CommentDtoRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Role.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/CommentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/CommentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/CommentServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/CommentServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -182,7 +181,7 @@
       <recent name="fr.inote.inoteApi.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.InoteApiApplication">
+  <component name="RunManager" selected="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty">
     <configuration name="requests | Account activation" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Account activation" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -321,16 +320,20 @@
       <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
       <item itemvalue="HTTP Request.requests | User sign in" />
       <item itemvalue="JUnit.All tests" />
+      <item itemvalue="JUnit.AuthControllerTest.signout_ShouldFail_whenJwtOfPrincipalUserIsNotFound" />
+      <item itemvalue="JUnit.AuthController_IT.IT_signOut_ShouldUnauthorized_whenBearerIdBad" />
+      <item itemvalue="JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsNotConnected" />
+      <item itemvalue="JUnit.CommentServiceImplTest.createComment_ShouldSuccess_whenUserIsConnected" />
       <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
         <item itemvalue="HTTP Request.requests | Envoyer un avis" />
         <item itemvalue="HTTP Request.requests | User sign in" />
         <item itemvalue="HTTP Request.requests | Account activation" />
         <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
-        <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
       </list>
     </recent_temporary>
   </component>
@@ -358,6 +361,7 @@
       <workItem from="1712743510068" duration="8849000" />
       <workItem from="1712755510342" duration="4023000" />
       <workItem from="1712760102806" duration="12046000" />
+      <workItem from="1712834373119" duration="1843000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -766,6 +770,10 @@
     {
       "branch": "main",
       "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
     }
   ],
   "lastFilter": {
@@ -777,9 +785,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java</url>
-          <line>47</line>
-          <option name="timeStamp" value="101" />
+          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java</url>
+          <line>202</line>
+          <option name="timeStamp" value="103" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
