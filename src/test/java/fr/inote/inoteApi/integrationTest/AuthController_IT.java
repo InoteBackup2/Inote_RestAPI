@@ -169,7 +169,7 @@ public class AuthController_IT {
                 AuthController_IT.greenMail.purgeEmailFromAllMailboxes();
         }
 
-        /* CONTROLLERS UNIT TEST */
+        /* CONTROLLERS INTEGRATION TEST */
         /* ============================================================ */
 
         @Test
@@ -224,12 +224,15 @@ public class AuthController_IT {
         @Test
         @DisplayName("Activate an user with good code")
         void IT_activation_ShouldSuccess_whenCodeIsCorrect() throws Exception {
+                
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
-                // Arrange
+
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -250,17 +253,15 @@ public class AuthController_IT {
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                // Act
-                ResultActions response = this.mockMvc.perform(
+                /* Act & assert */
+                // Send request, print response, check returned status and primary checking
+                // (status code, content body type...)
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                // Assert
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
-
         }
 
         @Test

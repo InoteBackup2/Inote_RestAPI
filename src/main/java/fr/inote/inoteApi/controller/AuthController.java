@@ -26,22 +26,25 @@ import java.util.Map;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 
-
 /**
  * Controller for routes related to user account
  */
 
-/* Nota:
- * The @RestController annotation is a specialized version of the @Controller annotation in Spring MVC.
- * It combines the functionality of the @Controller and @ResponseBody annotations, which simplifies
+/*
+ * Nota:
+ * The @RestController annotation is a specialized version of the @Controller
+ * annotation in Spring MVC.
+ * It combines the functionality of the @Controller and @ResponseBody
+ * annotations, which simplifies
  * the implementation of RESTful web services.
  * When a class is annotated with @RestController, the following points apply:
  * -> It acts as a controller, handling client requests.
- * -> The @ResponseBody annotation is automatically included, allowing the automatic serialization
- *    of the return object into the HttpResponse.
+ * -> The @ResponseBody annotation is automatically included, allowing the
+ * automatic serialization
+ * of the return object into the HttpResponse.
  */
 @RestController
-//@RequestMapping("/api/auth")
+// @RequestMapping("/api/auth")
 public class AuthController {
 
     /* Dependencies */
@@ -71,7 +74,7 @@ public class AuthController {
     private final UserServiceImpl userService;
     private final JwtServiceImpl jwtService;
 
-    /*DI*/
+    /* DI */
     @Autowired
     public AuthController(
             AuthenticationManager authenticationManager,
@@ -91,7 +94,8 @@ public class AuthController {
      * @date 28/03/2024
      */
     @PostMapping(Endpoint.REGISTER)
-    public ResponseEntity<String> register(@RequestBody UserDto userDto) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+    public ResponseEntity<String> register(@RequestBody UserDto userDto) throws InoteExistingEmailException,
+            InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
         User userToRegister = User.builder()
                 .email(userDto.username())
                 .name(userDto.name())
@@ -108,8 +112,14 @@ public class AuthController {
      * @param activationCode the activation code
      */
     @PostMapping(path = Endpoint.ACTIVATION)
-    public ResponseEntity<String> activation(@RequestBody Map<String, String> activationCode) throws InoteValidationNotFoundException, InoteUserNotFoundException, InoteValidationExpiredException {
-        this.userService.activation(activationCode);
+    public ResponseEntity<String> activation(@RequestBody Map<String, String> activationCode)
+            throws InoteValidationNotFoundException, InoteUserNotFoundException, InoteValidationExpiredException {
+        try {
+            this.userService.activation(activationCode);
+        } catch (InoteValidationNotFoundException | InoteValidationExpiredException | InoteUserNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(MessagesEn.ACTIVATION_OF_USER_OK, HttpStatus.OK);
     }
 
@@ -150,20 +160,21 @@ public class AuthController {
     }
 
     /**
-     * Validate the new password with activation code provided on change password request
+     * Validate the new password with activation code provided on change password
+     * request
      *
      * @param newPasswordDto informationsSendedInBodeRequest
      */
     @PostMapping(path = Endpoint.NEW_PASSWORD)
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException {
+    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto)
+            throws InoteValidationNotFoundException, InoteInvalidPasswordFormatException, UsernameNotFoundException {
         try {
             this.userService.newPassword(
                     newPasswordDto.email(),
                     newPasswordDto.password(),
-                    newPasswordDto.code()
-            );
-        } catch (UsernameNotFoundException | InoteValidationNotFoundException |
-                 InoteInvalidPasswordFormatException ex) {
+                    newPasswordDto.code());
+        } catch (UsernameNotFoundException | InoteValidationNotFoundException
+                | InoteInvalidPasswordFormatException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -177,7 +188,9 @@ public class AuthController {
      * @return the value of new bearer and refresh token
      */
     @PostMapping(path = Endpoint.REFRESH_TOKEN)
-    public @ResponseBody ResponseEntity<SignInResponseDto> refreshConnectionWithRefreshTokenValue(@RequestBody RefreshConnectionDto refreshConnectionDto) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+    public @ResponseBody ResponseEntity<SignInResponseDto> refreshConnectionWithRefreshTokenValue(
+            @RequestBody RefreshConnectionDto refreshConnectionDto)
+            throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
         Map<String, String> response;
         try {
             response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());

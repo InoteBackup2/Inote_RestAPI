@@ -82,7 +82,7 @@ public class CommentController2 {
         CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
     }
 
-    /* CONTROLLERS UNIT TEST */
+    /* CONTROLLERS INTEGRATION TEST */
     /* ============================================================ */
     
     // => Example
