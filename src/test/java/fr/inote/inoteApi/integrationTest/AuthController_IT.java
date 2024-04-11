@@ -322,7 +322,7 @@ public class AuthController_IT {
                 signInBodyContent.put("username", this.userDtoRef.username());
                 signInBodyContent.put("password", this.userDtoRef.password());
 
-                ResultActions response =  this.mockMvc.perform(
+                ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(signInBodyContent)))
@@ -330,11 +330,11 @@ public class AuthController_IT {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(jsonPath("$.bearer").isNotEmpty())
                                 .andExpect(jsonPath("$.refresh").isNotEmpty());
-                
+
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
                 String refresh = JsonPath.parse(returnedResponse).read("$.refresh");
-                
+
                 /* Assert */
                 assertThat(bearer.length()).isEqualTo(145);
                 assertThat(refresh.length()).isEqualTo(UUID.randomUUID().toString().length());
@@ -343,18 +343,17 @@ public class AuthController_IT {
         @Test
         @DisplayName("Sign user with bad credentials")
         void IT_signIn_ShouldFail_whenCredentialsAreNotCorrect() throws Exception {
-                // Act
+
+                /* Act & assert */
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", "JamesWebb@triton.com");
                 signInBodyContent.put("password", "fjOM487$?8dd");
 
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-
-                // Assert
-                response.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
         }
 
         @Test
