@@ -409,7 +409,7 @@ public class AuthController_IT {
         @Test
         @DisplayName("Attempt to change password of a non existing user")
         void IT_changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
-                 /* Act & assert*/
+                /* Act & assert */
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", "UnknowUser@neant.com");
 
@@ -422,16 +422,13 @@ public class AuthController_IT {
         @Test
         @DisplayName("Attempt to change password with bad formated email")
         void changePassword_ShouldFail_WhenEmailIsBadFormated() throws Exception {
-                // Arrange
+                /* Act & assert */
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", "UnknowUser@@neant.com");
 
-                ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)));
-
-                // Assert
-                response
+                                .content(this.objectMapper.writeValueAsString(usernameMap)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
