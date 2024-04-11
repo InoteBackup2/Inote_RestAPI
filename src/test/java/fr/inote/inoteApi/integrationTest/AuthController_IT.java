@@ -359,13 +359,14 @@ public class AuthController_IT {
         @Test
         @DisplayName("Change password of existing user")
         void IT_changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
-                // Arrange
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
 
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -383,43 +384,38 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
 
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-                response
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
-                // Act
+                /* Act */
+                // Send request, print response, check returned status and content type
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", this.userDtoRef.username());
-                response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)));
 
-                // Assert
-                response
+                this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(usernameMap)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
         @Test
         @DisplayName("Attempt to change password of a non existing user")
         void IT_changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
-
-                // Arrange
+                 /* Act & assert*/
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", "UnknowUser@neant.com");
 
-                ResultActions response = this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
+                this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)));
-
-                // Assert
-                response
+                                .content(this.objectMapper.writeValueAsString(usernameMap)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
