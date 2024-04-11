@@ -10,7 +10,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="validation")
+@Table(name = "validation")
 public class Validation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,8 @@ public class Validation {
     private Instant activation;
     private String code;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
+    //    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
     private User user;
 
 }

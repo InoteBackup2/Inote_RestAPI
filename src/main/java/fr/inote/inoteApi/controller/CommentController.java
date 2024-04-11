@@ -44,8 +44,11 @@ public class CommentController {
             returnValue = this.commentService.createComment(commentDtoRequest.msg());
         }catch(InoteEmptyMessageCommentException ex){
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+
         }
         CommentDtoResponse returnDtoValue = new CommentDtoResponse(returnValue.getId(),returnValue.getMessage(),returnValue.getUser().getId());
         return new ResponseEntity<>(returnDtoValue,HttpStatus.CREATED);
     }
+
+
 }

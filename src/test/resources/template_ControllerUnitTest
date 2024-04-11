@@ -1,0 +1,104 @@
+/**
+ * Unit tests of Controller layer
+ *
+ * @author atsuhiko Mochizuki
+ * @date 10/04/2024
+ */
+/* Dedicated for unit test mvc controllers:
+ * -disable full-auto configuration
+ * -apply config only relevant mvc tests
+ * -autoconfigure mockMvc instance (used to test the dispatcher servlet and your controllers)
+ */
+@WebMvcTest(.class)
+
+/* Enables all autoconfiguration related to MockMvc and ONLY MockMvc + none Spring security filters applied*/
+@AutoConfigureMockMvc(addFilters = false)
+
+/* Add Mockito functionalities to Junit 5*/
+@ExtendWith(MockitoExtension.class)
+public class CommentControllerTest {
+
+    /* DEPENDENCIES INJECTION*/
+    /*============================================================*/
+
+    /* MockMvc provides a convenient way to send requests to your application and inspect the
+     * responses, allowing you to verify the behavior of your controllers in isolation.
+     * -> Need to be autowired to be autoconfigured */
+    @Autowired
+    private MockMvc mockMvc;
+
+    /* ObjectMapper provide functionalities for read and write JSON data's*/
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    /* DEPENDENCIES MOCKING */
+    /*============================================================*/
+
+    /* REFERENCES FOR MOCKING*/
+    /*============================================================*/
+
+    /* FIXTURES */
+    /*============================================================*/
+
+    @BeforeEach
+    void init() {
+    }
+
+    /* EXAMPLE */
+//    @Test
+//    @DisplayName("Create a comment with message not empty")
+//    void create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
+//        /*Arrange*/
+//        when(this.commentService.createComment(anyString())).thenReturn(this.commentRef);
+//
+//        /*Act*/
+//        // Send request, print response, check returned status and content type
+//        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                        .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
+//                .andDo(print())
+//                .andExpect(MockMvcResultMatchers.status().isCreated())
+//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
+//
+//        // Get serialized results
+//        MvcResult result = response.andReturn();
+//        String contentAsString = result.getResponse().getContentAsString();
+//
+//        // Deserialization results
+//        CommentDtoResponse returnedComment = this.objectMapper.readValue(contentAsString, CommentDtoResponse.class);
+//
+//        /*Assert*/
+//        assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
+//
+//        /*Mocking invocation check*/
+//        verify(this.commentService, times(1)).createComment(anyString());
+//    }
+
+ 	/* CONTROLLERS UNIT TEST */
+    /*============================================================*/
+    @Test
+    @DisplayName("")
+    void name_Should_W() {
+
+        /*Arrange*/
+
+
+        /*Act*/
+        // Send request, print response, check returned status and primary checkings (status code, content body type...)
+
+		// Get serialized results
+
+		// Deserialization results
+
+
+        /*Assert*/
+
+
+        /*Mocking invocation check*/
+
+    }
+
+    /* UTILS */
+    /*============================================================*/
+
+}
