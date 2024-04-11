@@ -46,6 +46,6 @@ public class CommentController {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
         CommentDtoResponse returnDtoValue = new CommentDtoResponse(returnValue.getId(),returnValue.getMessage(),returnValue.getUser().getId());
-        return new ResponseEntity<>(returnDtoValue,HttpStatus.OK);
+        return new ResponseEntity<>(returnDtoValue,HttpStatus.CREATED);
     }
 }

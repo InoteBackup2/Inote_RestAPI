@@ -8,7 +8,6 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
 import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.dto.UserDto;
@@ -40,11 +39,8 @@ import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -110,7 +106,7 @@ public class CommentController_IT {
                         .header("authorization", "Bearer " + this.bearerAuthorization)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
         // Get serialized results
         MvcResult result = response.andReturn();
@@ -131,13 +127,13 @@ public class CommentController_IT {
         CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
 
         // Act & assert
-        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+        this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .header("authorization", "Bearer " + this.bearerAuthorization)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(this.objectMapper.writeValueAsString(commentDto_Request_empty)))
                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
 
-        response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+        this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .header("authorization", "Bearer " + this.bearerAuthorization)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(this.objectMapper.writeValueAsString(commentDto_Request_blank)))

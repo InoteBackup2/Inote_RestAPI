@@ -52,23 +52,17 @@ public class CommentControllerTest {
 
     @MockBean
     private AuthenticationManager authenticationManager;
-
-
     @MockBean
     private JwtServiceImpl jwtServiceImpl;
-
     @MockBean
     private UserServiceImpl userService;
-
     @MockBean
     private CommentRepository commentRepository;
-
     @MockBean
     private CommentServiceImpl commentService;
 
-
+    // test references
     private CommentDtoRequest commentDtoRequestRef;
-
     private Comment commentRef;
     private User userRef;
 
@@ -83,10 +77,10 @@ public class CommentControllerTest {
                 .role(roleForTest)
                 .build();
         this.commentDtoRequestRef = new CommentDtoRequest("Application should provide most functionalities");
-
         this.commentRef = Comment.builder()
                 .id(1)
                 .message(this.commentDtoRequestRef.msg())
+                .user(this.userRef)
                 .build();
     }
 
@@ -94,7 +88,7 @@ public class CommentControllerTest {
     @DisplayName("Create a comment with message not empty")
     void create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
         // Arrange
-        when(this.commentService.createComment(any(String.class))).thenReturn(this.commentRef);
+        when(this.commentService.createComment(anyString())).thenReturn(this.commentRef);
 
         // Send request, print response, check returned status and content type
         ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
@@ -109,17 +103,17 @@ public class CommentControllerTest {
         String contentAsString = result.getResponse().getContentAsString();
 
         // Deserialization results
-        Comment returnedComment = this.objectMapper.readValue(contentAsString, Comment.class);
+        CommentDtoResponse returnedComment = this.objectMapper.readValue(contentAsString, CommentDtoResponse.class);
 
         /*Assert*/
-        assertThat(returnedComment).isEqualTo(this.commentRef);
+        assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
     }
 
     @Test
     @DisplayName("Create a comment with message empty or blank")
     void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
         // Arrange
-        when(this.commentService.createComment(any(String.class))).thenThrow(InoteEmptyMessageCommentException.class);
+        when(this.commentService.createComment(anyString())).thenThrow(InoteEmptyMessageCommentException.class);
         CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
         CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
 

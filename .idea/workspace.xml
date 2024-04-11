@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="Refacto: add connectUserAndReturnBearer">
+    <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="create_shouldFail_whenMessageIsEmptyOrBlank PASSED">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,7 +103,9 @@
     "JUnit.AuthController_IT.newPassword_ShouldFail_WhenValidationNotExists.executor": "Run",
     "JUnit.CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Debug",
     "JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
+    "JUnit.CommentControllerTest.executor": "Run",
     "JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
+    "JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Run",
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank.executor": "Run",
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsNotConnected.executor": "Debug",
     "JUnit.CommentServiceImplTest.createComment_ShouldSuccess_whenUserIsConnected.executor": "Run",
@@ -174,14 +178,8 @@
       <recent name="fr.inote.inoteApi.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank">
-    <configuration name="requests | Account activation" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Account activation" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty">
     <configuration name="requests | Envoyer un avis" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="4" requestIdentifier="Envoyer un avis" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | User sign in" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="User sign in" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
@@ -204,6 +202,37 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommentControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.CommentControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.controller" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.controller.CommentControllerTest" />
+      <option name="METHOD_NAME" value="create_shouldSuccess_whenMessageIsNotEmpty" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -257,21 +286,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="HTTP Request.requests | Account activation" />
       <item itemvalue="HTTP Request.requests | Envoyer un avis" />
-      <item itemvalue="HTTP Request.requests | User sign in" />
       <item itemvalue="JUnit.All tests" />
+      <item itemvalue="JUnit.CommentControllerTest" />
+      <item itemvalue="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" />
       <item itemvalue="JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank" />
       <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" />
+        <item itemvalue="JUnit.CommentControllerTest" />
         <item itemvalue="JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank" />
         <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
         <item itemvalue="HTTP Request.requests | Envoyer un avis" />
-        <item itemvalue="HTTP Request.requests | User sign in" />
-        <item itemvalue="HTTP Request.requests | Account activation" />
       </list>
     </recent_temporary>
   </component>
@@ -299,7 +328,7 @@
       <workItem from="1712743510068" duration="8849000" />
       <workItem from="1712755510342" duration="4023000" />
       <workItem from="1712760102806" duration="12046000" />
-      <workItem from="1712834373119" duration="3699000" />
+      <workItem from="1712834373119" duration="5033000" />
     </task>
     <task id="LOCAL-00001" summary="register_shouldFail_whenUserExist PASSED">
       <option name="closed" value="true" />
@@ -661,7 +690,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712837598190</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="create_shouldFail_whenMessageIsEmptyOrBlank PASSED">
+      <option name="closed" value="true" />
+      <created>1712838354098</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1712838354098</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -669,7 +706,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="All test PASSED" />
     <MESSAGE value="sendValidation_byEmail refactoring OK" />
     <MESSAGE value="newPassword_ShouldFail_WhenUserExists PASSED" />
     <MESSAGE value="IT_newPassword_ShouldFail_WhenUserExists PASSED" />
@@ -694,7 +730,8 @@
     <MESSAGE value="create_shouldSuccess_whenMessageIsNotEmpty PASSED" />
     <MESSAGE value="IT_create_shouldSuccess_whenMessageIsNotEmpty PASSED" />
     <MESSAGE value="Refacto: add connectUserAndReturnBearer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refacto: add connectUserAndReturnBearer" />
+    <MESSAGE value="create_shouldFail_whenMessageIsEmptyOrBlank PASSED" />
+    <option name="LAST_COMMIT_MESSAGE" value="create_shouldFail_whenMessageIsEmptyOrBlank PASSED" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -748,9 +785,18 @@
           <line>104</line>
           <option name="timeStamp" value="105" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="returnValue.getId()" language="JAVA" />
+        <watch expression="returnValue.getMessage()" language="JAVA" />
+      </configuration>
       <configuration name="SpringBootApplicationConfigurationType">
         <watch expression="userDetails.getAuthorities()" language="JAVA" />
       </configuration>
