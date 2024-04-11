@@ -1,6 +1,5 @@
 package fr.inote.inoteApi.integrationTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -10,21 +9,15 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
-import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
 import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Comment;
-import fr.inote.inoteApi.entity.Role;
-import fr.inote.inoteApi.entity.User;
-import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.repository.CommentRepository;
 import fr.inote.inoteApi.repository.JwtRepository;
-import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
 
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,8 +36,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.internet.MimeMessage;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,9 +81,6 @@ public class CommentController_IT {
         private UserRepository userRepository;
 
         @Autowired
-        private RoleRepository roleRepository;
-
-        @Autowired
         private JwtRepository jwtRepository;
 
         @Autowired
@@ -114,21 +102,16 @@ public class CommentController_IT {
 
         private CommentDtoRequest commentDtoRequestRef = new CommentDtoRequest(
                         "Application should provide most functionalities");
-        private Comment commentRef = Comment.builder()
+        
+                        private Comment commentRef = Comment.builder()
                         .id(1)
                         .message(this.commentDtoRequestRef.msg())
                         .build();
         private UserDto userDtoRef = new UserDto(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
-        private UserDto userDtoRef2;
-        private Role roleRef;
-        private User userRef;
-
         private String bearerAuthorization;
 
         /* FIXTURES */
         /* ============================================================ */
-        @BeforeClass
-
         @BeforeEach
         void setUp() throws Exception {
                 this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
@@ -175,64 +158,11 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create a comment with message empty or blank")
         void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
-                // final String[] messageContainingCode = new String[1];
-                // // Arrange
-                // this.mockMvc.perform(
-                //                 post(Endpoint.REGISTER)
-                //                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                //                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                //                                 .andExpect(MockMvcResultMatchers.status().isCreated());
-                // await()
-                //                 .atMost(2, SECONDS)
-                //                 .untilAsserted(() -> {
-                //                         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                //                         assertThat(receivedMessages.length).isEqualTo(1);
-
-                //                         MimeMessage receivedMessage = receivedMessages[0];
-
-                //                         messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                //                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                //                 });
-
-                // final String reference = "activation code : ";
-                // int startSubtring = messageContainingCode[0].indexOf(reference);
-                // int startIndexOfCode = startSubtring + reference.length();
-                // int endIndexOfCode = startIndexOfCode + 6;
-                // String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                // Map<String, String> bodyRequest = new HashMap<>();
-                // bodyRequest.put("code", extractedCode);
-
-                // // Act
-                // ResultActions response = this.mockMvc.perform(
-                //                 post(Endpoint.ACTIVATION)
-                //                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                //                                 .content(this.objectMapper.writeValueAsString(bodyRequest)));
-
-                // // Assert
-                // response
-                //                 .andExpect(MockMvcResultMatchers.status().isOk())
-                //                 .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
-                // Map<String, String> signInBodyContent = new HashMap<>();
-                // signInBodyContent.put("username", this.userDtoRef.username());
-                // signInBodyContent.put("password", this.userDtoRef.password());
-
-                // response = this.mockMvc.perform(
-                //                 post(Endpoint.SIGN_IN)
-                //                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                //                                 .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-                // response.andExpect(MockMvcResultMatchers.status().isOk())
-                //                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                //                 .andExpect(jsonPath("$.bearer").isNotEmpty())
-                //                 .andExpect(jsonPath("$.refresh").isNotEmpty());
-
-                // String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                // String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                // assertThat(bearer.length()).isEqualTo(145);
-
+               
+                // Act & assert
                 CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
                 CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
 
-                // Act & assert
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                                 .header("authorization", "Bearer " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
