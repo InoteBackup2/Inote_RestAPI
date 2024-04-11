@@ -19,6 +19,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
+/**
+ * Integration tests of Endpoints
+ *
+ * @author atsuhiko Mochizuki
+ * @date 10/04/2024
+ */
+
 /*The @SpringBootTest annotation is used for integration testing in Spring Boot applications.
  * It helps in bootstrapping the application context required for testing */
 @SpringBootTest
