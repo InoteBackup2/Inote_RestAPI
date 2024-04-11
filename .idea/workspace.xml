@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="create_shouldFail_whenMessageIsEmptyOrBlank PASSED">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +102,7 @@
     "JUnit.CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Debug",
     "JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
     "JUnit.CommentControllerTest.executor": "Run",
+    "JUnit.CommentControllerTest2.create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
     "JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
     "JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Run",
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank.executor": "Run",
@@ -178,7 +177,7 @@
       <recent name="fr.inote.inoteApi.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty">
+  <component name="RunManager" selected="JUnit.CommentControllerTest">
     <configuration name="requests | Envoyer un avis" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="4" requestIdentifier="Envoyer un avis" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -296,8 +295,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" />
         <item itemvalue="JUnit.CommentControllerTest" />
+        <item itemvalue="JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty" />
         <item itemvalue="JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank" />
         <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
         <item itemvalue="HTTP Request.requests | Envoyer un avis" />
@@ -733,45 +732,45 @@
     <MESSAGE value="create_shouldFail_whenMessageIsEmptyOrBlank PASSED" />
     <option name="LAST_COMMIT_MESSAGE" value="create_shouldFail_whenMessageIsEmptyOrBlank PASSED" />
   </component>
-  <component name="WfRunsListSearchHistory"><![CDATA[{
-  "history": [
+  <component name="WfRunsListSearchHistory">{
+  &quot;history&quot;: [
     {
-      "currentBranchFilter": true
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     }
   ],
-  "lastFilter": {
-    "branch": "main",
-    "currentBranchFilter": true
+  &quot;lastFilter&quot;: {
+    &quot;branch&quot;: &quot;main&quot;,
+    &quot;currentBranchFilter&quot;: true
   }
-}]]></component>
+}</component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>

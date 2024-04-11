@@ -35,21 +35,40 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 /**
- * Unit tests of CommentController layer
+ * Unit tests of Controller layer
  *
  * @author atsuhiko Mochizuki
  * @date 10/04/2024
  */
+/* Dedicated for unit test mvc controllers:
+ * -disable full-auto configuration
+ * -apply config only relevant mvc tests
+ * -autoconfigure mockMvc instance (used to test the dispatcher servlet and your controllers)
+ */
 @WebMvcTest(CommentController.class)
+
+/* Enables all autoconfiguration related to MockMvc and ONLY MockMvc + none Spring security filters applied*/
 @AutoConfigureMockMvc(addFilters = false)
+
+/* Add Mockito functionalities to Junit 5*/
 @ExtendWith(MockitoExtension.class)
 public class CommentControllerTest {
+
+    /* DEPENDENCIES INJECTION*/
+    /*============================================================*/
+
+    /* MockMvc provides a convenient way to send requests to your application and inspect the
+     * responses, allowing you to verify the behavior of your controllers in isolation.
+     * -> Need to be autowired to be autoconfigured */
     @Autowired
     private MockMvc mockMvc;
 
+    /* ObjectMapper provide functionalities for read and write JSON data's*/
     @Autowired
     private ObjectMapper objectMapper;
 
+    /* DEPENDENCIES MOCKING */
+    /*============================================================*/
     @MockBean
     private AuthenticationManager authenticationManager;
     @MockBean
@@ -61,16 +80,17 @@ public class CommentControllerTest {
     @MockBean
     private CommentServiceImpl commentService;
 
-    // test references
+    /* REFERENCES FOR MOCKING*/
+    /*============================================================*/
     private CommentDtoRequest commentDtoRequestRef;
     private Comment commentRef;
-    private User userRef;
 
+    /* FIXTURES */
+    /*============================================================*/
     @BeforeEach
     void init() {
-        // Reference creation
         Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
-        this.userRef = User.builder()
+        User userRef = User.builder()
                 .email(REFERENCE_USER_EMAIL)
                 .name(REFERENCE_USER_NAME)
                 .password(REFERENCE_USER_PASSWORD)
@@ -80,16 +100,19 @@ public class CommentControllerTest {
         this.commentRef = Comment.builder()
                 .id(1)
                 .message(this.commentDtoRequestRef.msg())
-                .user(this.userRef)
+                .user(userRef)
                 .build();
     }
 
+    /* CONTROLLERS UNIT TEST */
+    /*============================================================*/
     @Test
     @DisplayName("Create a comment with message not empty")
     void create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
-        // Arrange
+        /*Arrange*/
         when(this.commentService.createComment(anyString())).thenReturn(this.commentRef);
 
+        /*Act*/
         // Send request, print response, check returned status and content type
         ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -107,27 +130,33 @@ public class CommentControllerTest {
 
         /*Assert*/
         assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
+
+        /*Mocking invocation check*/
+        verify(this.commentService, times(1)).createComment(anyString());
     }
 
     @Test
     @DisplayName("Create a comment with message empty or blank")
     void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
-        // Arrange
+        /*Arrange*/
         when(this.commentService.createComment(anyString())).thenThrow(InoteEmptyMessageCommentException.class);
+
+        /*Act & assert*/
         CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
         CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
-
-        // Act & assert
-        ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+        this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(this.objectMapper.writeValueAsString(commentDto_Request_empty)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
 
-        response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+        this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(this.objectMapper.writeValueAsString(commentDto_Request_blank)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+
+        /*Mocking invocation check*/
+        verify(this.commentService, times(2)).createComment(anyString());
     }
 }
