@@ -17,35 +17,54 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * The type Role service impl test.
+ * Unit tests of service RoleService
  *
  * @author atsuhiko Mochizuki
  * @date 28/03/2024
  */
+
+/*
+ * The @ActiveProfiles annotation in Spring is used to declare which active bean
+ * definition profiles
+ * should be used when loading an ApplicationContext for test classes
+ */
 @ActiveProfiles("test")
+
+/* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
-@Tag("Services_test")
 class RoleServiceImplTest {
 
+    /* DEPENDENCIES MOCKING */
+    /* ============================================================ */
+    /* @Mock create and inject mocked instances of classes */
     @Mock
     private RoleRepository roleRepository;
 
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    /*
+     * @InjectMocks instance class to be tested and automatically inject mock fields
+     * Nota : if service is an interface, instanciate implementation withs mocks in
+     * params
+     */
     @InjectMocks
     private RoleServiceImpl roleService;
 
-    /* References for test*/
+    /* REFERENCES FOR MOCKING */
+    /* ============================================================ */
     List<Role> rolesRef = null;
-    Role admin, manager, user;
+    private Role admin = Role.builder().name(RoleEnum.ADMIN).build();
+    private Role manager = Role.builder().name(RoleEnum.MANAGER).build();
+    private Role user = Role.builder().name(RoleEnum.USER).build();
 
+    /* FIXTURES */
+    /* ============================================================ */
     @BeforeEach
     void setUp() {
-        this.admin = Role.builder().name(RoleEnum.ADMIN).build();
-        this.manager = Role.builder().name(RoleEnum.MANAGER).build();
-        this.user = Role.builder().name(RoleEnum.USER).build();
-
         /* Load existing roles in App */
         this.rolesRef = new ArrayList<>();
         for (RoleEnum item : RoleEnum.values()) {
@@ -53,55 +72,77 @@ class RoleServiceImplTest {
         }
     }
 
+    /* SERVICE UNIT TESTS */
+    /* ============================================================ */
     @Test
     @DisplayName("Insert the application roles in db")
     void insertRolesInDb_shouldReturnAnArrayWithNumberOfRoleApp() {
+
+        /* Arrange */
         when(this.roleRepository.save(ArgumentMatchers.any(Role.class))).thenReturn(ArgumentMatchers.any(Role.class));
 
-        List<Role> roles;
-        roles = this.roleService.insertRolesInDb();
+        /* Act */
+        List<Role> roles = this.roleService.insertRolesInDb();
+
+        /* Assert */
         assertThat(roles).isNotNull();
         assertThat(roles.size()).isEqualTo(this.rolesRef.size());
 
+        /* Verify */
         verify(this.roleRepository, times(RoleEnum.values().length)).save(any(Role.class));
     }
 
     @Test
     @DisplayName("Load admin role from database")
     void loadAdminRole_shouldSuccess() throws InoteUserException {
+
+        /* Arrange */
         when(this.roleRepository.findByName(RoleEnum.ADMIN)).thenReturn(Optional.of(this.admin));
 
-        Role role;
-        role = this.roleService.loadAdminRole();
+        /* Act */
+        Role role = this.roleService.loadAdminRole();
+
+        /* Assert */
         assertThat(role).isNotNull();
         assertThat(role.getName()).isEqualTo(RoleEnum.ADMIN);
 
+        /* Verify */
         verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
     }
 
     @Test
     @DisplayName("Load manager role from database")
     void loadManagerRole_shouldSuccess() throws InoteUserException {
+
+        /* Arrange */
         when(this.roleRepository.findByName(RoleEnum.MANAGER)).thenReturn(Optional.of(this.manager));
 
-        Role role;
-        role = this.roleService.loadManagerRole();
+        /* Act */
+        Role role = this.roleService.loadManagerRole();
+
+        /* Assert */
         assertThat(role).isNotNull();
         assertThat(role.getName()).isEqualTo(RoleEnum.MANAGER);
 
+        /* Verify */
         verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
     }
 
     @Test
     @DisplayName("Load user role from database")
     void loadUserRole_shouldSuccess() throws InoteUserException {
+
+        /* Arrange */
         when(this.roleRepository.findByName(RoleEnum.USER)).thenReturn(Optional.of(this.user));
 
-        Role role;
-        role = this.roleService.loadUserRole();
+        /* Act */
+        Role role = this.roleService.loadUserRole();
+
+        /* Assert */
         assertThat(role).isNotNull();
         assertThat(role.getName()).isEqualTo(RoleEnum.USER);
 
+        /* Verify */
         verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
     }
 }
