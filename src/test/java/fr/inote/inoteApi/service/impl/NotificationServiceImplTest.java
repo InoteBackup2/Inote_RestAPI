@@ -20,6 +20,8 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
+import fr.inote.inoteApi.service.NotificationService;
+
 import javax.mail.internet.MimeMessage;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -70,14 +72,15 @@ public class NotificationServiceImplTest {
          * Nota : if service is an interface, instanciate implementation withs mocks in
          * params
          */
-        @InjectMocks
-        private NotificationServiceImpl notificationService;
+        
+        private JavaMailSender javaMailSender;
 
-        final JavaMailSender javaMailSender;
+        @InjectMocks
+        private NotificationService notificationService = new NotificationServiceImpl(javaMailSender);
 
         // Constructor injection
         @Autowired
-        public NotificationServiceImplTest(NotificationServiceImpl notificationService, JavaMailSender javaMailSender) {
+        public NotificationServiceImplTest(NotificationService notificationService, JavaMailSender javaMailSender) {
                 this.notificationService = notificationService;
                 this.javaMailSender = javaMailSender;
         }
