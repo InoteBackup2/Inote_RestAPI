@@ -34,8 +34,10 @@ class JwtServiceImplTest {
      * Nota : if service is an interface, instanciate implementation withs mocks in params
      */
 
-
     /* REFERENCES FOR MOCKING */
+    /* ============================================================ */
+
+    /* CONSTANTS */
     /* ============================================================ */
 
     /* FIXTURES */
@@ -78,4 +80,7 @@ class JwtServiceImplTest {
         /* Assert */
 
     }
+
+    /* UTILS */
+    /* ============================================================ */
 }
