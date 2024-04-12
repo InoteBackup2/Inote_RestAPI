@@ -15,31 +15,75 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-@ActiveProfiles("test")
+
+/**
+ * Unit tests of repository RefreshTokenRepositoryTest
+ *
+ * @author atsuhiko Mochizuki
+ * @date 28/03/2024
+ */
+
+/*
+ * @DataJpaTest is an annotation in Spring Boot that is used to test JPA
+ * repositories.
+ * It focuses only on JPA components and disables full auto-configuration,
+ * applying
+ * only the configuration relevant to JPA tests.
+ */
 @DataJpaTest
-//@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+/*
+ * The @ActiveProfiles annotation in Spring is used to declare which active bean
+ * definition profiles
+ * should be used when loading an ApplicationContext for test classes.
+ * Nota : here used for using another database ok main app
+ */
+@ActiveProfiles("test")
+// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+
+/* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
-@Tag("Repositories_tests")
 public class RefreshTokenRepositoryTest {
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-    RefreshToken refreshTokenRef;
+    /* DEPENDENCIES MOCKING */
+    /* ============================================================ */
+    /* use @Mock create and inject mocked instances of classes */
 
-    @BeforeEach
-    void init() {
-        this.refreshTokenRef = RefreshToken.builder()
-                .expirationStatus(false)
-                .contentValue("kjfhqhfqfmrehfmoqehgiomhsmgkjdsfhgjkmdfskjghdsfhgms")
-                .creationDate(Instant.now())
-                .expirationDate(Instant.now().plus(10,ChronoUnit.MINUTES))
-                .build();
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    /*
+     * Use classical injection by constructor
+     */
+    private RefreshTokenRepository refreshTokenRepository;
+
+    // Constructor
+    @Autowired
+    public RefreshTokenRepositoryTest(RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    @DisplayName("Save a refresh token in database")
+    /* REFERENCES FOR MOCKING */
+    /* ============================================================ */
+    RefreshToken refreshTokenRef = RefreshToken.builder()
+            .expirationStatus(false)
+            .contentValue("kjfhqhfqfmrehfmoqehgiomhsmgkjdsfhgjkmdfskjghdsfhgms")
+            .creationDate(Instant.now())
+            .expirationDate(Instant.now().plus(10, ChronoUnit.MINUTES))
+            .build();
+
+    /* FIXTURES */
+    /* ============================================================ */
+    // @BeforeEach
+    // void init() {}
+
+    /* REPOSITORY UNIT TESTS */
+    /* ============================================================ */
     @Test
+    @DisplayName("Save a refresh token in database")
     void save_shouldReturnSuccessAndReturnRefreshToken() {
+        /*Act */
         RefreshToken returnValue = this.refreshTokenRepository.save(this.refreshTokenRef);
+        
+        /*Assert */
         assertThat(returnValue).isEqualTo(this.refreshTokenRef);
     }
 }

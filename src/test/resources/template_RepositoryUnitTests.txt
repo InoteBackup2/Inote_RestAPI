@@ -1,0 +1,76 @@
+package fr.inote.inoteApi.repository;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+
+/**
+ * Unit tests of repository 
+ *
+ * @author atsuhiko Mochizuki
+ * @date 28/03/2024
+ */
+
+/*
+ * @DataJpaTest is an annotation in Spring Boot that is used to test JPA
+ * repositories.
+ * It focuses only on JPA components and disables full auto-configuration,
+ * applying
+ * only the configuration relevant to JPA tests.
+ */
+@DataJpaTest
+/*
+ * The @ActiveProfiles annotation in Spring is used to declare which active bean
+ * definition profiles
+ * should be used when loading an ApplicationContext for test classes.
+ * Nota : here used for using another database ok main app
+ */
+@ActiveProfiles("test")
+// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+
+/* Add Mockito functionalities to Junit 5 */
+@ExtendWith(MockitoExtension.class)
+class JwtRepositoryTest {
+
+        /* DEPENDENCIES MOCKING */
+        /* ============================================================ */
+        /* use @Mock create and inject mocked instances of classes */
+       
+
+        /* DEPENDENCIES INJECTION */
+        /* ============================================================ */
+        /*
+         * Use classical injection by constructor
+         */
+        
+
+        // Constructor
+        
+
+        /* REFERENCES FOR MOCKING */
+        /* ============================================================ */
+        
+
+        /* FIXTURES */
+        /* ============================================================ */
+        // @BeforeEach
+        // void setUp() {}
+
+        /* REPOSITORY UNIT TESTS */
+        /* ============================================================ */
+        // @Test
+        // @DisplayName("Searching jwt in db by content value, deactivated and expired, with good parameters")
+        // void findByContentValueAndDeactivatedAndExpired_shouldReturnOptional_whenParamsAreCorrect() {
+        //         /* Arrange */
+        //         Optional<Jwt> result = this.jwtRepository
+        //                         .findByContentValueAndDeactivatedAndExpired(
+        //                                         this.jwtRef.getContentValue(),
+        //                                         this.jwtRef.isDeactivated(),
+        //                                         this.jwtRef.isExpired());
+
+        //         /* Assert */
+        //         assertThat(result).isNotEmpty();
+        //         assertThat(result.get()).isEqualTo(this.jwtRef);
+        // }
+}
