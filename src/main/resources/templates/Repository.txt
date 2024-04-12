@@ -1,13 +1,3 @@
-package fr.inote.inoteApi.repository;
-
-import fr.inote.inoteApi.crossCutting.security.Jwt;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
-import java.util.stream.Stream;
-
 @Repository
 public interface JwtRepository extends CrudRepository<Jwt, Integer> {
     Optional<Jwt> findByContentValueAndDeactivatedAndExpired(String value, boolean deactivated, boolean expired);

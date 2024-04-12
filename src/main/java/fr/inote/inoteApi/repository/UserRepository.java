@@ -7,12 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import fr.inote.inoteApi.entity.User;
 
-/**
- * The interface User repository.
- * @author AtsuhikoMochizuki
- */
 @Repository
-public interface UserRepository extends CrudRepository<User,Integer>{
+public interface UserRepository extends CrudRepository<User, Integer> {
+
     /**
      * Find by email optional.
      *

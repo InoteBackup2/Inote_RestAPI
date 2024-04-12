@@ -4,5 +4,4 @@ public record CommentDtoResponse(
         Integer id,
         String message,
         Integer UserId
-) {
-}
+) {}

@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.NonNull;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,6 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtServiceImpl jwtServiceImpl;
 
+    @Autowired
     public JwtFilter(
             HandlerExceptionResolver handlerExceptionResolver,
             UserService utilisateurService,
@@ -61,9 +64,9 @@ public class JwtFilter extends OncePerRequestFilter {
      * runs exactly once per request dispatch, regardless of the servlet container
      * being used.
      */
-
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) {
 
         String token;
         Jwt tokenInDatabase = null;
@@ -92,20 +95,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (!isTokenExpired
                     && tokenInDatabase.getUser().getEmail().equals(username)
-                    /* The SecurityContextHolder.getContext().getAuthentication() method is used in
-                     * Spring Security to retrieve the currently authenticated user’s information */
+                    /*
+                     * The SecurityContextHolder.getContext().getAuthentication() method is used in
+                     * Spring Security to retrieve the currently authenticated user’s information
+                     */
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                /* UserDetails interface represents information about a user. It contains
+                /*
+                 * UserDetails interface represents information about a user. It contains
                  * details such as the user’s username, password, authorities (roles), and
-                 * additional attributes */
+                 * additional attributes
+                 */
                 UserDetails userDetails = utilisateurService.loadUserByUsername(username);
 
-                /* UsernamePasswordAuthenticationToken is a concrete implementation of the
+                /*
+                 * UsernamePasswordAuthenticationToken is a concrete implementation of the
                  * Authentication interface used to represent the credentials of a user
                  * attempting to authenticate. It is commonly used in scenarios where you want
                  * to manually authenticate a user after their account is created or by other
-                 * means not involving the traditional login form */
+                 * means not involving the traditional login form
+                 */
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 
@@ -113,7 +122,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
 
-            /* Must be invoked once filter processing is complete. Invoking doFilter on the
+            /*
+             * Must be invoked once filter processing is complete. Invoking doFilter on the
              * FilterChain object instructs the web container to call the doFilter method of
              * the next filter in the chain, if any. If there is no longer a filter
              * associated with the resource, the web container processes the request and
@@ -122,10 +132,13 @@ public class JwtFilter extends OncePerRequestFilter {
              * filter in the chain. This filter can then perform post-processing on the
              * request and response objects (e.g., save information, modify headers, etc.).
              * Finally, the filter's doFilter method is returned, enabling the web container
-             * to return the response to the client*/
+             * to return the response to the client
+             */
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
-            /* Transmitting error to the our RestControllerAdvice, who centralize exceptions */
+            /*
+             * Transmitting error to the our RestControllerAdvice, who centralize exceptions
+             */
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }

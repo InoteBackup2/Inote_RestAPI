@@ -7,7 +7,8 @@ import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import java.util.Map;
 
 public interface JwtService {
-    long VALIDITY_TOKEN_TIME_IN_MINUTES = 1;
+    
+    long VALIDITY_TOKEN_TIME_IN_MINUTES = 30;
 
     /**
      * Retrieve an token in database, actived and not expired

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import fr.inote.inoteApi.crossCutting.security.RefreshToken;
 
 @Repository
-public interface RefreshTokenRepository extends CrudRepository<RefreshToken,Integer>{
-    
+public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Integer> {
+
 }

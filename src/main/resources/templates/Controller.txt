@@ -1,0 +1,88 @@
+package fr.inote.inoteApi.controller;
+
+import fr.inote.inoteApi.crossCutting.constants.Endpoint;
+import fr.inote.inoteApi.crossCutting.exceptions.*;
+import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
+import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
+import fr.inote.inoteApi.dto.*;
+import fr.inote.inoteApi.entity.User;
+import fr.inote.inoteApi.service.impl.UserServiceImpl;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
+
+/**
+ * Controller for account user routes
+ *
+ * @author atsuhiko Mochizuki
+ * @date 10/04/2024
+ */
+
+/*
+ * Nota:
+ * The @RestController annotation is a specialized version of the @Controller
+ * annotation in Spring MVC.
+ * It combines the functionality of the @Controller and @ResponseBody
+ * annotations, which simplifies
+ * the implementation of RESTful web services.
+ * When a class is annotated with @RestController, the following points apply:
+ * -> It acts as a controller, handling client requests.
+ * -> The @ResponseBody annotation is automatically included, allowing the
+ * automatic serialization
+ * of the return object into the HttpResponse.
+ */
+@RestController
+public class AuthController {
+
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    @Autowired
+    public AuthController(){
+        
+    }
+           
+    
+
+    /* PUBLIC METHODS */
+    /* ============================================================ */
+    // Example
+    // /**
+    //  * Create user account
+    //  * 
+    //  * @param userDto
+    //  * @return ResponseEntity<String> response
+    //  * @throws InoteExistingEmailException
+    //  * @throws InoteInvalidEmailException
+    //  * @throws InoteRoleNotFoundException
+    //  * @throws InoteInvalidPasswordFormatException
+    //  */
+    // @PostMapping(Endpoint.REGISTER)
+    // public ResponseEntity<String> register(@RequestBody UserDto userDto) {
+    //     User userToRegister = User.builder()
+    //             .email(userDto.username())
+    //             .name(userDto.name())
+    //             .password(userDto.password())
+    //             .build();
+    //     try {
+    //         this.userService.register(userToRegister);
+    //     } catch (InoteExistingEmailException | InoteInvalidEmailException | InoteRoleNotFoundException
+    //             | InoteInvalidPasswordFormatException ex) {
+    //         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    //     }
+    //     return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED, HttpStatus.CREATED);
+    // }
+}

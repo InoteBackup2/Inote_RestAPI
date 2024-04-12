@@ -1,4 +1,5 @@
-package fr.inote.inoteApi.entity;
+package fr.inote.inoteApi.crossCutting.security;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,22 +12,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "ent")
+public class Ent {
 
     /* Id & strategy generation <=> primary key */
     /* ============================================================ */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    /* Private attributes <=> columns */
-    /* ============================================================ */
     private Integer id;
-    private String message;
-    private String status;
 
-    /* Private attributes in relations with others entities <=> foreign key */
+    /* Private attributes <=> columns*/
     /* ============================================================ */
-    @ManyToOne
-    private User user;
+   
+
+    /* Private attributes in relations with others entities <=> foreign key*/
+    /* ============================================================ */
 }

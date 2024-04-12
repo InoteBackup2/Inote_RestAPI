@@ -15,22 +15,29 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
+/**
+ * The Service ValidationServiceImpl
+ * 
+ * @author Atsuhiko Mochizuki
+ * @date 11/04/2024
+ */
 @Transactional
 @Service
 public class ValidationServiceImpl implements ValidationService {
 
-    /*Dependencies*/
-    private  ValidationRepository validationRepository;
-    private  NotificationService notificationService;
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    private ValidationRepository validationRepository;
+    private NotificationService notificationService;
 
-    /*Dependencies injection*/
     @Autowired
     public ValidationServiceImpl(ValidationRepository validationRepository, NotificationService notificationService) {
         this.validationRepository = validationRepository;
         this.notificationService = notificationService;
     }
 
-    /*public methods*/
+    /* PUBLIC METHODS */
+    /* ============================================================ */
 
     /**
      * Create and save validation in database

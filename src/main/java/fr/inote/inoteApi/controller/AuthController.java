@@ -91,15 +91,6 @@ public class AuthController {
 
     /**
      * Create user account
-     *
-     * @param userDto the user to register
-     * @throws InoteExistingEmailException
-     * @author atsuhiko Mochizuki
-     * @date 28/03/2024
-     */
-
-    /**
-     * Create user account
      * 
      * @param userDto
      * @return ResponseEntity<String> response

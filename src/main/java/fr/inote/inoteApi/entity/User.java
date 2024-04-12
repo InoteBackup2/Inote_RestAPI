@@ -1,15 +1,11 @@
 package fr.inote.inoteApi.entity;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.validation.constraints.Email;
-
 
 @Builder
 @Data
@@ -26,30 +22,29 @@ import jakarta.validation.constraints.Email;
  */
 public class User implements UserDetails {
 
-    
+    /* Id & strategy generation <=> primary key */
+    /* ============================================================ */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /* Private attributes <=> columns */
+    /* ============================================================ */
     @NonNull
     private String password;
-
     @NonNull
     private String name;
-    
     @Email
     private String email;
-
     @Builder.Default // Set default value when using Lombok @Builder annotation
-    @Getter private boolean actif = false;
+    @Getter
+    private boolean actif = false;
 
-    // @OneToOne(cascade = CascadeType.ALL)
+    /* Private attributes in relations with others entities <=> foreign key*/
+    /* ============================================================ */
     @OneToOne
     private Role role;
-
-
-
-
+    
     /* UserDetails interface implementations */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

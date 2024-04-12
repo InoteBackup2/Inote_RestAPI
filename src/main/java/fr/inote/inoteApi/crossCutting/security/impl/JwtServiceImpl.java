@@ -32,21 +32,15 @@ import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 
 @Slf4j
-@Transactional
+@Transactional // transactional behavior.
 @Service
 public class JwtServiceImpl implements JwtService {
 
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    private UserService userService;
+    private JwtRepository jwtRepository;
 
-    private final String INVALID_TOKEN = "Invalid token";
-    // Reference for encryption
-    // @Value("${jwt.encryptionKey}")
-    private final String ENCRYPTION_KEY = "7b751e0c0ca1e5f099bf9cca5a8217ee263bb8679303ddcc3cbfbe13ab79156e";
-
-    /* Dependencies*/
-    private final UserService userService;
-    private final JwtRepository jwtRepository;
-
-    /* Dependencies injection */
     @Autowired
     public JwtServiceImpl(
             UserService userService,
@@ -54,6 +48,16 @@ public class JwtServiceImpl implements JwtService {
         this.userService = userService;
         this.jwtRepository = jwtRepository;
     }
+
+    /* CONSTANTS */
+    /* ============================================================ */
+    // Reference for encryption
+
+    // @Value("${jwt.encryptionKey}")
+    private final String ENCRYPTION_KEY = "7b751e0c0ca1e5f099bf9cca5a8217ee263bb8679303ddcc3cbfbe13ab79156e";
+
+    /* PUBLIC METHODS */
+    /* ============================================================ */
 
     /**
      * Retrieve a token in database, actived and not expired
@@ -112,6 +116,8 @@ public class JwtServiceImpl implements JwtService {
 
     /**
      * Desactive tokens of an user
+     * 
+     * @param user
      */
     private void disableTokens(User user) {
         final List<Jwt> jwtList = this.jwtRepository.findJwtWithUserEmail(user.getEmail()).peek(
@@ -132,7 +138,6 @@ public class JwtServiceImpl implements JwtService {
     public String extractUsername(String token) {
         return this.getClaim(token, Claims::getSubject);
     }
-//
 
     /**
      * get expiration status of token
@@ -154,7 +159,6 @@ public class JwtServiceImpl implements JwtService {
     private Date getExpirationDateFromToken(String token) {
         return this.getClaim(token, Claims::getExpiration);
     }
-
 
     /**
      * Get claim in token
@@ -187,7 +191,7 @@ public class JwtServiceImpl implements JwtService {
         // Compilation of parser
         JwtParser parser = parserBuilder.build();
 
-        /* Token analyze whith our parser, then validation*/
+        /* Token analyze whith our parser, then validation */
         Jws<Claims> parsedJwt = parser.parseClaimsJws(token);
 
         /* Claims extraction */
@@ -221,31 +225,44 @@ public class JwtServiceImpl implements JwtService {
         return Map.of(BEARER, bearer);
     }
 
-
     /**
      * Generate an HMAC-SHA Key
-     * Un code d'authentification de message (MAC) est un code accompagnant des données dans le but
-     * d'assurer l'intégrité de ces dernières, en permettant de vérifier qu'elles n'ont subi aucune
+     * Un code d'authentification de message (MAC) est un code accompagnant des
+     * données dans le but
+     * d'assurer l'intégrité de ces dernières, en permettant de vérifier qu'elles
+     * n'ont subi aucune
      * modification, après une transmission par exemple.
-     * Le concept est relativement semblable aux fonctions de hachage. Il s’agit ici aussi
+     * Le concept est relativement semblable aux fonctions de hachage. Il s’agit ici
+     * aussi
      * d’algorithmes qui créent un petit bloc authentificateur de taille fixe.
-     * La grande différence est que ce bloc authentificateur ne se base plus uniquement sur le message,
+     * La grande différence est que ce bloc authentificateur ne se base plus
+     * uniquement sur le message,
      * mais également sur une clé secrète.
-     * Tout comme les fonctions de hachage, les MAC n’ont pas besoin d’être réversibles.
-     * En effet, le récepteur exécutera le même calcul sur le message et le comparera avec le MAC reçu.
-     * Le MAC assure non seulement une fonction de vérification de l'intégrité du message, comme le
-     * permettrait une simple fonction de hachage mais de plus authentifie l’expéditeur, détenteur de la
-     * clé secrète. Il peut également être employé comme un chiffrement supplémentaire (rare) e
-     * t peut être calculé avant ou après le chiffrement principal, bien qu’il soit généralement conseillé
-     * de le faire après (Encrypt-then-MAC, on chiffre d'abord le message, puis on transmet le message
+     * Tout comme les fonctions de hachage, les MAC n’ont pas besoin d’être
+     * réversibles.
+     * En effet, le récepteur exécutera le même calcul sur le message et le
+     * comparera avec le MAC reçu.
+     * Le MAC assure non seulement une fonction de vérification de l'intégrité du
+     * message, comme le
+     * permettrait une simple fonction de hachage mais de plus authentifie
+     * l’expéditeur, détenteur de la
+     * clé secrète. Il peut également être employé comme un chiffrement
+     * supplémentaire (rare) e
+     * t peut être calculé avant ou après le chiffrement principal, bien qu’il soit
+     * généralement conseillé
+     * de le faire après (Encrypt-then-MAC, on chiffre d'abord le message, puis on
+     * transmet le message
      * chiffré ainsi que son MAC).
-     * Un HMAC est calculé en utilisant un algorithme cryptographique qui combine une fonction de hachage
+     * Un HMAC est calculé en utilisant un algorithme cryptographique qui combine
+     * une fonction de hachage
      * cryptographique (comme SHA-256 ou SHA-512) avec une clé secrète.
      * Seuls les participants à la conversation connaissent la clé secrète,
      * et le résultat de la fonction de hachage dépend à présent des données
      * d'entrée et de la clé secrète.
      * Seules les parties qui ont accès à cette clé secrète peuvent calculer
-     * le condensé d'une fonction HMAC. Cela permet de vaincre les attaques de type "man-in-the-middle" et d'authentifier l'origine des données. L'intégrité est assurée quant à elle par les fonctions de hachage.
+     * le condensé d'une fonction HMAC. Cela permet de vaincre les attaques de type
+     * "man-in-the-middle" et d'authentifier l'origine des données. L'intégrité est
+     * assurée quant à elle par les fonctions de hachage.
      *
      * @return the key
      */
@@ -263,6 +280,7 @@ public class JwtServiceImpl implements JwtService {
     public void signOut() throws InoteJwtNotFoundException {
         // Get current user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Jwt jwt = this.jwtRepository.findTokenWithEmailAndStatusToken(
                 user.getEmail(),
                 false,
@@ -298,7 +316,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     /**
-     * When the jwt is expired and rejected by the server during a request for access to a protected resource,
+     * When the jwt is expired and rejected by the server during a request for
+     * access to a protected resource,
      * the HTTP client can transmit its refresh token to the server.
      * If this refresh token is valid, the server deletes all
      * tokens concerning the user,
@@ -307,14 +326,16 @@ public class JwtServiceImpl implements JwtService {
      * @param tokenValue
      * @return a Map containing the refresh token
      */
-    public Map<String, String> refreshConnectionWithRefreshTokenValue(String tokenValue) throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
+    public Map<String, String> refreshConnectionWithRefreshTokenValue(String tokenValue)
+            throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
 
         // find the first jwt with value of refreshToken
         final Jwt jwt = this.jwtRepository.findJwtWithRefreshTokenValue(tokenValue)
                 .orElseThrow(InoteJwtNotFoundException::new);
 
         // now, get refreshTokenStatus and check if is valid
-        if (jwt.getRefreshToken().isExpirationStatus() || jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())) {
+        if (jwt.getRefreshToken().isExpirationStatus()
+                || jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())) {
             throw new InoteExpiredRefreshTokenException();
         }
 

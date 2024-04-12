@@ -7,13 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.time.Instant;
 import java.util.Optional;
 
-/**
- * The interface Validation repository.
- *
- * @author AtsuhikoMochizuki
- */
 @Repository
 public interface ValidationRepository extends CrudRepository<Validation, Integer> {
+
     /**
      * Find by code optional.
      *
@@ -24,7 +20,8 @@ public interface ValidationRepository extends CrudRepository<Validation, Integer
     Optional<Validation> findByCode(String code);
 
     /**
-     * Deletes from the database all validations whose expiry date has passed at the time passed in parameters
+     * Deletes from the database all validations whose expiry date has passed at the
+     * time passed in parameters
      *
      * @param now actualInstant of call method
      * @author AtsuhikoMochizuki

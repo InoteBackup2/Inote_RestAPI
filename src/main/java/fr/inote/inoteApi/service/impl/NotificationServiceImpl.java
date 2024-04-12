@@ -18,10 +18,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Service NotificationServiceImpl
+ * 
+ * @author Atsuhiko Mochizuki
+ * @date 11/04/2024
+ */
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-    /* Dependencies */
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
 
     /*
      * The JavaMailSender interface is utilized in Java applications
@@ -31,13 +38,13 @@ public class NotificationServiceImpl implements NotificationService {
      */
     private final JavaMailSender javaMailSender;
 
-    /* Dependencies injection */
     @Autowired
     public NotificationServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
-    /* public methods */
+    /* PUBLIC METHODS */
+    /* ============================================================ */
 
     /**
      * Send validation by email.
@@ -70,11 +77,25 @@ public class NotificationServiceImpl implements NotificationService {
 
     }
 
-    /* private methods */
+    /* PRIVATE METHODS */
+    /* ============================================================ */
+    /**
+     * Send an email
+     * 
+     * @param from
+     * @param to
+     * @param subject
+     * @param content
+     * @throws MailException
+     * @throws InoteInvalidEmailException
+     * 
+     * @author Atsuhiko Mochizuki
+     * @date 11/04/2024
+     */
     private void sendEmail(String from,
-                           String to,
-                           String subject,
-                           String content) throws MailException, InoteInvalidEmailException {
+            String to,
+            String subject,
+            String content) throws MailException, InoteInvalidEmailException {
 
         Pattern compiledPattern;
         Matcher matcher;

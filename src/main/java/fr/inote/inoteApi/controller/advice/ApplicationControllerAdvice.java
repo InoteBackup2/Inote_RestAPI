@@ -18,12 +18,13 @@ import static org.springframework.http.HttpStatus.*;
 
 
 /**
- * Exception manager
+ * Exception manager for controller layer
  * @author atsuhiko Mochizuki
  * @date 28/03/2024
  */
 
 @Slf4j
+
 /* The @RestControllerAdvice annotation in Spring is a specialization of @ControllerAdvice and
  * @ResponseBody. It is used for exception handling in Restful APIs and is commonly used to
  * handle exceptions in a centralized way for all controllers in an application.*/
@@ -203,6 +204,6 @@ public class ApplicationControllerAdvice {
     @ResponseStatus(UNAUTHORIZED)
     @ExceptionHandler(value = Exception.class)
     public Map<String, String> exceptionsHandler() {
-        return Map.of("Error", "AAAAADetected anomaly");
+        return Map.of("Error", "Detected anomaly");
     }
 }

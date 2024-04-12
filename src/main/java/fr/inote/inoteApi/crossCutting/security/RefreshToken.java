@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.Instant;
@@ -28,14 +29,19 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class RefreshToken{
+@Table(name = "refresh-token")
+public class RefreshToken {
+    
+    /* Id & strategy generation <=> primary key */
+    /* ============================================================ */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
+    /* Private attributes <=> columns */
+    /* ============================================================ */
     private boolean expirationStatus;
     private String contentValue;
     private Instant creationDate;
     private Instant expirationDate;
 }
-

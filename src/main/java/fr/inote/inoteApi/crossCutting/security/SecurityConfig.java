@@ -28,7 +28,8 @@ import static org.springframework.http.HttpMethod.POST;
  * @date 28/03/2024
  */
 
-/* The @Configuration annotation in Spring is used to denote a class that
+/*
+ * The @Configuration annotation in Spring is used to denote a class that
  * declares one or more @Bean methods and may be processed by the Spring IoC
  * container to generate bean definitions and service requests for those beans
  * at runtime.
@@ -37,28 +38,43 @@ import static org.springframework.http.HttpMethod.POST;
  * will call the method and register the returned object as a bean in the
  * context.
  */
-@Configuration /*The class declares one or more @Bean methods and may be processed by the Spring IoC container to generate bean definitions*/
-@EnableMethodSecurity /*Indicates that part of the configuration is contained in methods elsewhere in the code*/
-@EnableWebSecurity /*Activation of Security*/
+@Configuration /*
+                * The class declares one or more @Bean methods and may be processed by the
+                * Spring IoC container to generate bean definitions
+                */
+@EnableMethodSecurity /*
+                       * Indicates that part of the configuration is contained in methods elsewhere in
+                       * the code
+                       */
+@EnableWebSecurity /* Activation of Security */
 public class SecurityConfig {
 
-    /* Dependencies*/
-    /*BCryptPasswordEncoder is a class provided by Spring Security that implements the PasswordEncoder
-     * interface. It uses the BCrypt strong hashing function to hash passwords, making them secure*/
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+
+    /*
+     * BCryptPasswordEncoder is a class provided by Spring Security that implements
+     * the PasswordEncoder
+     * interface. It uses the BCrypt strong hashing function to hash passwords,
+     * making them secure
+     */
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    /*Make validation on token(jwt) in the HTTP header request*/
+    /* Make validation on token(jwt) in the HTTP header request */
     private final JwtFilter jwtFilter;
 
-    /* UserDetailsService is a core interface in Spring Security used to retrieve user authentication
-     * and authorization information. It has one method named loadUserByUsername(), which can be
+    /*
+     * UserDetailsService is a core interface in Spring Security used to retrieve
+     * user authentication
+     * and authorization information. It has one method named loadUserByUsername(),
+     * which can be
      * overridden to customize the process of finding the user.
-     * When we replace the default implementation of UserDetailsService, we must also specify a
+     * When we replace the default implementation of UserDetailsService, we must
+     * also specify a
      * PasswordEncoder.
      */
     private final UserDetailsService userDetailsService;
 
-    /*Dependencies injection*/
     @Autowired
     public SecurityConfig(
             BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -69,37 +85,44 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
+    /* SECURITY FILTERS CHAIN */
+    /* ============================================================ */
     /**
      * Create security filter chain of application
      *
      * @param httpSecurity item allows configuring web based security for specific
-     *                     http requests. By default it will be applied to all requests, but can be
+     *                     http requests. By default it will be applied to all
+     *                     requests, but can be
      *                     restricted using requestMatcher or other similar methods.
      *                     <p>
      * @return the security filter chain
-     * <p>
+     *         <p>
      * @author atsuhiko mochizuki
      * @date 28/03/2024
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                /*********CRSF PROTECTION*********/
-                /*Deactivation of protection against the cross-site request forgery
-                vulnerability, which consists in transmitting a falsified request to an
-                unauthenticated user who will point to an internal site action so that he can
-                execute it without being aware of it with his own rights.*/
+                /********* CRSF PROTECTION *********/
+                /*
+                 * Deactivation of protection against the cross-site request forgery
+                 * vulnerability, which consists in transmitting a falsified request to an
+                 * unauthenticated user who will point to an internal site action so that he can
+                 * execute it without being aware of it with his own rights.
+                 */
                 .csrf(AbstractHttpConfigurer::disable)
 
-                /*********AUTHORIZATIONS*********/
-                /*By default, Spring Security requires that every request be authenticated.
-                That said, any time you use an HttpSecurity instance, it’s necessary to
-                declare your authorization rules.
-                So whenever you have an HttpSecurity instance, you should at least do:
-                http.authorizeHttpRequests((authorize) ->
-                authorize.anyRequest().authenticated());)*/
+                /********* AUTHORIZATIONS *********/
+                /*
+                 * By default, Spring Security requires that every request be authenticated.
+                 * That said, any time you use an HttpSecurity instance, it’s necessary to
+                 * declare your authorization rules.
+                 * So whenever you have an HttpSecurity instance, you should at least do:
+                 * http.authorizeHttpRequests((authorize) ->
+                 * authorize.anyRequest().authenticated());)
+                 */
                 .authorizeHttpRequests(
-                        /*********ROUTES MANAGEMENT*********/
+                        /********* ROUTES MANAGEMENT *********/
                         authorize -> authorize
                                 // -> Publics endpoints
                                 .requestMatchers(POST, Endpoint.REGISTER).permitAll()
@@ -110,14 +133,15 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
                                 .requestMatchers(POST, Endpoint.CREATE_COMMENT).permitAll()
                                 // -> Secured endpoints
-//                                .requestMatchers(POST, Endpoint.CREATE_COMMENT).authenticated()
-//                                .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).authenticated()
+                                // .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN",
+                                // "ROLE_MANAGER")
 
                                 // -> By default must be authenticated
                                 .anyRequest().authenticated())
 
                 /*
-                 * // Session Management
+                 * Session Management
                  * session is a period of interaction between a user and application.
                  * Furthermore, the website maintains state information about the user’s actions
                  * and preferences during a session.
@@ -132,32 +156,37 @@ public class SecurityConfig {
                  */
                 .sessionManagement(
                         httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
-                                // disable the creation and use of HTTP sessions. When this policy is set,
-                                // Spring Security will not create a session and will not rely on the session to
-                                // store the SecurityContext.
-                                // This policy is useful for stateless applications
-                                // where every request needs to be authenticated separately, without relying on
-                                // a previous session. However, note that this policy only applies to the Spring
-                                // Security context, and your application might still create its own sessions.
-                                // Reminder -> Browsers can generally handle authentication in one of two ways:
-                                // - Token authentication (stateless): the token already has the information
-                                // needed to validate the user, so there's no need to save session information
-                                // on the server.
+                                /*
+                                 * disable the creation and use of HTTP sessions. When this policy is set,
+                                 * Spring Security will not create a session and will not rely on the session to
+                                 * store the SecurityContext.
+                                 * This policy is useful for stateless applications
+                                 * where every request needs to be authenticated separately, without relying on
+                                 * a previous session. However, note that this policy only applies to the Spring
+                                 * Security context, and your application might still create its own sessions.
+                                 * Reminder -> Browsers can generally handle authentication in one of two ways:
+                                 * - Token authentication (stateless): the token already has the information
+                                 * needed to validate the user, so there's no need to save session information
+                                 * on the server.
+                                 * 
+                                 * - Session-based authentication (stateful) using cookies: identifiers are
+                                 * saved on the server and in the browser for comparison.
+                                 */
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                                // - Session-based authentication (stateful) using cookies: identifiers are
-                                // saved on the server and in the browser for comparison.
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                /*********CUSTOMS FILTERS*********/
-                /* Add a custom filter upstream of the security chain, inheriting from a filter
-                 class.
-                 The UsernamePasswordAuthenticationFilter is a Spring Security class that
-                 handles the authentication process for username and password credentials*/
-               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                /********* CUSTOMS FILTERS *********/
+                /*
+                 * Add a custom filter upstream of the security chain, inheriting from a filter
+                 * class.
+                 * The UsernamePasswordAuthenticationFilter is a Spring Security class that
+                 * handles the authentication process for username and password credentials
+                 */
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
+    /* AUTHENTIFICATION MANAGER */
+    /* ============================================================ */
     /**
      * Create authentification manager
      * The Spring AuthenticationManager is a core component of
@@ -176,6 +205,9 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /* AUTHENTIFICAION PROVIDER */
+    /* ============================================================ */
+
     /**
      * Create Spring authentification provider, who will be used by
      * AuthenticationManager,
@@ -191,17 +223,16 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
 
-        /*The DaoAuthenticationProvider is a AuthenticationProvider implementation in
-        Spring Security that uses a UserDetailsService and PasswordEncoder to
-        authenticate a username and password. It is responsible for loading user
-        details from the UserDetailsService and comparing the provided password with
-        the encoded password stored in the UserDetails object.*/
+        /*
+         * The DaoAuthenticationProvider is a AuthenticationProvider implementation in
+         * Spring Security that uses a UserDetailsService and PasswordEncoder to
+         * authenticate a username and password. It is responsible for loading user
+         * details from the UserDetailsService and comparing the provided password with
+         * the encoded password stored in the UserDetails object.
+         */
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return daoAuthenticationProvider;
     }
 }
-
-
-

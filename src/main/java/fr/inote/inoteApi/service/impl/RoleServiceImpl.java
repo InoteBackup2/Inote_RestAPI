@@ -11,18 +11,26 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Service RoleServiceImpl
+ * @author Atsuhiko Mochizuki
+ * @date   11/04/2024
+ */
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    /* Dependencies*/
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
     private RoleRepository roleRepository;
 
-    /* Dependencies injection */
-    // @Autowired
+    @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
+    /* PUBLIC METHODS */
+    /* ============================================================ */
+    
     /**
      * Populates the role table from the dedicated enumeration
      *

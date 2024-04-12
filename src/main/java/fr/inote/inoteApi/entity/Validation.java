@@ -12,19 +12,23 @@ import java.time.Instant;
 @Entity
 @Table(name = "validation")
 public class Validation {
+
+    /* Id & strategy generation <=> primary key */
+    /* ============================================================ */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /* Private attributes <=> columns */
+    /* ============================================================ */
     private Instant creation;
     private Instant expiration;
     private Instant activation;
     private String code;
 
-    //    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
-    // @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    /* Private attributes in relations with others entities <=> foreign key */
+    /* ============================================================ */
     @ManyToOne
     private User user;
 
 }
-
