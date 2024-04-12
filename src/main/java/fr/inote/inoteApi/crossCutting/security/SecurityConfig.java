@@ -1,6 +1,8 @@
 package fr.inote.inoteApi.crossCutting.security;
 
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
+import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
@@ -131,9 +133,8 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.CHANGE_PASSWORD).permitAll()
                                 .requestMatchers(POST, Endpoint.NEW_PASSWORD).permitAll()
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
-                                .requestMatchers(POST, Endpoint.CREATE_COMMENT).permitAll()
                                 // -> Secured endpoints
-                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).authenticated()
+                                .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasRole("USER")
                                 // .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN",
                                 // "ROLE_MANAGER")
 

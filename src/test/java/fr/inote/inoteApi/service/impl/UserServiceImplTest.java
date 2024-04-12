@@ -78,11 +78,13 @@ public class UserServiceImplTest {
     @InjectMocks
     private UserService userService = new UserServiceImpl(userRepository, passwordEncoder, validationService,
             roleRepository, validationRepository);
+
+    // For registerAdmin, not declared in interface
+    @InjectMocks
+    private UserServiceImpl userServiceImpl = new UserServiceImpl(userRepository, passwordEncoder, validationService,
+            roleRepository, validationRepository);
+
     
-            
-    // public UserServiceImplTest(UserRepository userRepository){
-    //     this.userRepository = userRepository;
-    // }
 
     /* REFERENCES FOR MOCKING */
     /* ============================================================ */
@@ -207,6 +209,42 @@ public class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Create an non-existing admin user")
+    void createAdminUser_shouldReturnUser_whenGoodParameters() throws NoSuchMethodException,
+            SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+        /* Arrange */
+        // Access to the private method using reflection
+        Method privateMethod_createAdminUser = UserServiceImpl.class.getDeclaredMethod("createAdminUser", User.class);
+        privateMethod_createAdminUser.setAccessible(true);
+
+        Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
+        User anotherUser = User.builder()
+                .email(REFERENCE_USER2_EMAIL)
+                .name(REFERENCE_USER2_NAME)
+                .password(REFERENCE_USER2_PASSWORD)
+                .role(roleForTest)
+                .build();
+
+        when(this.userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(this.passwordEncoder.encode(anotherUser.getPassword())).thenReturn("encodedPassword");
+        when(this.roleRepository.findByName(any(RoleEnum.class))).thenReturn(Optional.of(roleForTest));
+        when(this.userRepository.save(any(User.class))).thenReturn(anotherUser);
+
+        /* Act */
+        User userTest = (User) privateMethod_createAdminUser.invoke(this.userService, anotherUser);
+
+        /* Assert */
+        assertThat(userTest).isNotNull();
+        assertThat(userTest).isEqualTo(anotherUser);
+
+        /* Verify */
+        verify(this.userRepository, times(1)).findByEmail(any(String.class));
+        verify(this.passwordEncoder, times(1)).encode(any(String.class));
+        verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
+    }
+
+    @Test
     @DisplayName("Load an user registered in db with username")
     public void loadUserByUsername_shouldReturnUser_whenUserNameIsPresent() {
         /* Arrange */
@@ -262,6 +300,35 @@ public class UserServiceImplTest {
 
         /* Act & assert */
         assertThat(this.userService.register(anotherUser)).isEqualTo(anotherUser);
+
+        /* Verify */
+        verify(this.userRepository, times(1)).findByEmail(any(String.class));
+        verify(this.passwordEncoder, times(1)).encode(any(String.class));
+        verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
+        verify(this.userRepository, times(2)).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Register an non-existing admin user with good parameter")
+    void registerAdmin_shouldSuccess_whenUserNotExistAndGoodParameters()
+            throws NoSuchMethodException, InoteExistingEmailException, InoteInvalidEmailException,
+            InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+
+        Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
+        User anotherUser = User.builder()
+                .email(REFERENCE_USER2_EMAIL)
+                .name(REFERENCE_USER2_NAME)
+                .password(REFERENCE_USER2_PASSWORD)
+                .role(roleForTest)
+                .build();
+
+        when(this.userRepository.findByEmail(anotherUser.getEmail())).thenReturn(Optional.empty());
+        when(this.passwordEncoder.encode(anotherUser.getPassword())).thenReturn("encodedPassword");
+        when(this.roleRepository.findByName(any(RoleEnum.class))).thenReturn(Optional.of(roleForTest));
+        when(this.userRepository.save(any(User.class))).thenReturn(anotherUser);
+
+        /* Act & assert */
+        assertThat(this.userServiceImpl.registerAdmin(anotherUser).getPassword()).isEqualTo(anotherUser.getPassword());
 
         /* Verify */
         verify(this.userRepository, times(1)).findByEmail(any(String.class));

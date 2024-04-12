@@ -126,6 +126,15 @@ public class UserServiceImpl implements UserService {
         return userToRegister;
     }
 
+    public User registerAdmin(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
+            InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+        User userToRegister = this.createAdminUser(user);
+        this.validationService.createAndSave(userToRegister);
+        return userToRegister;
+    }
+
+    
+
     /* PRIVATE METHODS */
     /* ============================================================ */
 
@@ -175,6 +184,55 @@ public class UserServiceImpl implements UserService {
 
         return this.userRepository.save(user);
     }
+
+    /**
+     * Create an user admin in database with:<br>
+     * <ul>
+     * <li>validation of email format</li>
+     * <li>validation of password format</li>
+     * <li>checking is user is allready in database</li>
+     * <li>encryption of password with Bcrypt</li>
+     * </ul>
+     *
+     * @return the saved user if success
+     * @throws InoteExistingEmailException
+     * @author atsuhiko Mochizuki
+     * @date 26/03/2024
+     */
+    private User createAdminUser(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
+            InoteInvalidPasswordFormatException, InoteRoleNotFoundException {
+
+        Pattern compiledPattern;
+        Matcher matcher;
+
+        // Email format checking
+        compiledPattern = Pattern.compile(REGEX_EMAIL_PATTERN);
+        matcher = compiledPattern.matcher(user.getEmail());
+        if (!matcher.matches()) {
+            throw new InoteInvalidEmailException();
+        }
+
+        this.checkPasswordSecurityRequirements(user.getPassword());
+
+        // Verification of any existing registration
+        Optional<User> utilisateurOptional = this.userRepository.findByEmail(user.getEmail());
+        if (utilisateurOptional.isPresent()) {
+            throw new InoteExistingEmailException();
+        }
+
+        // Insert encrypted password in database
+        String pass = user.getPassword();
+        String mdpCrypte = this.passwordEncoder.encode(pass);
+        user.setPassword(mdpCrypte);
+
+        // Role affectation
+        Role role = this.roleRepository.findByName(RoleEnum.ADMIN).orElseThrow(InoteRoleNotFoundException::new);
+        user.setRole(role);
+
+        return this.userRepository.save(user);
+    }
+    
+
 
     /**
      * Activate an user

@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.integrationTest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -9,14 +10,18 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
+import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
 import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Comment;
+import fr.inote.inoteApi.entity.Role;
+import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.CommentRepository;
 import fr.inote.inoteApi.repository.JwtRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
+import fr.inote.inoteApi.service.impl.UserServiceImpl;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +31,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -36,6 +42,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.internet.MimeMessage;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,6 +96,10 @@ public class CommentController_IT {
         @Autowired
         private ValidationRepository validationRepository;
 
+        // For use methods not in interface
+        @Autowired
+        private UserServiceImpl userServiceImpl;
+
         /* TEST VARIABLES */
         /* ============================================================ */
         /*
@@ -102,8 +113,8 @@ public class CommentController_IT {
 
         private CommentDtoRequest commentDtoRequestRef = new CommentDtoRequest(
                         "Application should provide most functionalities");
-        
-                        private Comment commentRef = Comment.builder()
+
+        private Comment commentRef = Comment.builder()
                         .id(1)
                         .message(this.commentDtoRequestRef.msg())
                         .build();
@@ -115,12 +126,12 @@ public class CommentController_IT {
         @BeforeEach
         void setUp() throws Exception {
                 this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
-                this.bearerAuthorization = this.connectUserAndReturnBearer();
+                // this.bearerAuthorization = this.connectUserAndReturnBearer();
         }
 
         @AfterEach
-        void tearDown() throws FolderException{
-                
+        void tearDown() throws FolderException {
+
                 this.commentRepository.deleteAll();
                 this.jwtRepository.deleteAll();
                 this.validationRepository.deleteAll();
@@ -133,7 +144,7 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create a comment with message not empty")
         void IT_create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
-                
+
                 /* Act */
                 // Send request, print response, check returned status and primary checking
                 // (status code, content body type...)
@@ -158,7 +169,7 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create a comment with message empty or blank")
         void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
-               
+
                 // Act & assert
                 CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
                 CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
@@ -174,6 +185,85 @@ public class CommentController_IT {
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(commentDto_Request_blank)))
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+        }
+
+        @Test
+        @DisplayName("Create comment with user without authorities to do this")
+        void create_ShouldFail_whenUserDontHaveTheGoodAuthorities() throws JsonProcessingException, Exception {
+                Collection<? extends GrantedAuthority> authorities = RoleEnum.USER.getAuthorities();
+                for(GrantedAuthority item: authorities){
+                        System.out.println();
+                
+                }
+                // this.commentRepository.deleteAll();
+                // this.jwtRepository.deleteAll();
+                // this.validationRepository.deleteAll();
+                // this.userRepository.deleteAll();
+                // // Act & assert
+                // CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
+                final String[] messageContainingCode = new String[1];
+                Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
+                User anotherUser = User.builder()
+                                .email(REFERENCE_USER2_EMAIL)
+                                .name(REFERENCE_USER2_NAME)
+                                .password(REFERENCE_USER2_PASSWORD)
+                                .role(roleForTest)
+                                .build();
+                UserDto anotherUserDto = new UserDto(anotherUser.getName(), anotherUser.getUsername(), anotherUser.getPassword());
+                
+                                // No Endpoint for this method
+                this.userServiceImpl.registerAdmin(anotherUser);
+                
+                await()
+                                .atMost(5, SECONDS)
+                                .untilAsserted(() -> {
+                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                                        assertThat(receivedMessages.length).isEqualTo(1);
+
+                                        MimeMessage receivedMessage = receivedMessages[0];
+
+                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                                });
+
+                final String reference = "activation code : ";
+                int startSubstring = messageContainingCode[0].indexOf(reference);
+                int startIndexOfCode = startSubstring + reference.length();
+                int endIndexOfCode = startIndexOfCode + 6;
+                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+                Map<String, String> bodyRequest = new HashMap<>();
+                bodyRequest.put("code", extractedCode);
+
+                ResultActions response = this.mockMvc.perform(
+                                post(Endpoint.ACTIVATION)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
+                response
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+                Map<String, String> signInBodyContent = new HashMap<>();
+                signInBodyContent.put("username", anotherUserDto.username());
+                signInBodyContent.put("password", anotherUserDto.password());
+
+                response = this.mockMvc.perform(
+                                post(Endpoint.SIGN_IN)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
+                response.andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(jsonPath("$.bearer").isNotEmpty())
+                                .andExpect(jsonPath("$.refresh").isNotEmpty());
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+                // assertThat(bearer.length()).isEqualTo(145);
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + bearer)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
+
         }
 
         /* UTILS */
@@ -239,4 +329,16 @@ public class CommentController_IT {
 
                 return bearer;
         }
+
+        /**
+         * Connect an admin to application and return token value
+         *
+         * @return token value
+         * @throws Exception when anomaly occurs
+         * @date 11/04/2024
+         * @author AtsuhikoMochizuki
+         */
+        // private String connectAdminAndReturnBearer() throws Exception {
+
+        // }
 }
