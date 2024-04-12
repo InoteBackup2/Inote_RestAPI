@@ -1,0 +1,81 @@
+package fr.inote.inoteApi.crossCutting.security.impl;
+
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
+
+/**
+ * Unit tests of service
+ *
+ * @author atsuhiko Mochizuki
+ * @date 28/03/2024
+ */
+
+/*
+ * The @ActiveProfiles annotation in Spring is used to declare which active bean
+ * definition profiles
+ * should be used when loading an ApplicationContext for test classes
+ */
+@ActiveProfiles("test")
+
+/* Add Mockito functionalities to Junit 5 */
+@ExtendWith(MockitoExtension.class)
+class JwtServiceImplTest {
+
+    /* DEPENDENCIES MOCKING */
+    /* ============================================================ */
+    /* @Mock create and inject mocked instances of classes */
+
+     /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    /*
+     * @InjectMocks instance class to be tested and automatically inject mock fields
+     * Nota : if service is an interface, instanciate implementation withs mocks in params
+     */
+
+
+    /* REFERENCES FOR MOCKING */
+    /* ============================================================ */
+
+    /* FIXTURES */
+    /* ============================================================ */
+    // @BeforeEach
+    // void setUp() {}
+
+    /* SERVICE UNIT TESTS */
+    /* ============================================================ */
+    // Example
+    // @Test
+    // @DisplayName("Get all claims from a Jwt when token is bad-formed")
+    // void getAllClaims_shouldFail_whenTokenIsMalFormed() throws
+    // NoSuchMethodException {
+
+    // /* Arrange */
+    // Method privateMethod_getAllClaims =
+    // JwtServiceImpl.class.getDeclaredMethod("getAllClaims", String.class);
+    // privateMethod_getAllClaims.setAccessible(true);
+
+    // /* Act */
+    // Throwable thrown = catchThrowable(() -> {
+    // privateMethod_getAllClaims.invoke(this.jwtService, "78799879");
+    // });
+
+    // /* Assert */
+    // assertThat(thrown)
+    // .isInstanceOf(InvocationTargetException.class)
+    // .hasCauseInstanceOf(MalformedJwtException.class);
+    // }
+
+    @Test
+    @DisplayName(" ")
+    void method_Should_When() {
+
+        /* Arrange */
+
+        /* Act */
+
+        /* Assert */
+
+    }
+}
