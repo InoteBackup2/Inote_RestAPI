@@ -4,7 +4,6 @@ import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.repository.RoleRepository;
-import fr.inote.inoteApi.service.NotificationService;
 import fr.inote.inoteApi.service.RoleService;
 
 import org.junit.jupiter.api.*;
@@ -13,8 +12,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
