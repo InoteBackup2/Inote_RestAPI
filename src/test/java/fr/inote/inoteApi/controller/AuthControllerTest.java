@@ -171,7 +171,7 @@ public class AuthControllerTest {
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));
         }

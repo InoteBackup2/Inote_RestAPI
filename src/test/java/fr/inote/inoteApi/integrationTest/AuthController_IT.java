@@ -208,7 +208,7 @@ public class AuthController_IT {
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
