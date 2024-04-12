@@ -22,7 +22,8 @@ public class Validation {
     private String code;
 
     //    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    // @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @ManyToOne
     private User user;
 
 }
