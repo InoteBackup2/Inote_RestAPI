@@ -10,6 +10,7 @@ import fr.inote.inoteApi.repository.ValidationRepository;
 import fr.inote.inoteApi.service.UserService;
 import fr.inote.inoteApi.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -116,18 +117,20 @@ public class UserServiceImpl implements UserService {
      * @return the user
      * @throws InoteExistingEmailException
      * @author Atsuhiko Mochizuki
+     * @throws InoteMailException 
+     * @throws MailException 
      * @date 26/03/2024
      */
     @Override
     public User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
-            InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+            InoteRoleNotFoundException, InoteInvalidPasswordFormatException, MailException, InoteMailException {
         User userToRegister = this.createUser(user);
         this.validationService.createAndSave(userToRegister);
         return userToRegister;
     }
 
     public User registerTester(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
-            InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+            InoteRoleNotFoundException, InoteInvalidPasswordFormatException, MailException, InoteMailException {
         User userToRegister = this.createTesterUser(user);
         this.validationService.createAndSave(userToRegister);
         return userToRegister;
@@ -186,7 +189,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Create an user admin in database with:<br>
+     * Create an user tester in database with:<br>
      * <ul>
      * <li>validation of email format</li>
      * <li>validation of password format</li>
@@ -261,8 +264,10 @@ public class UserServiceImpl implements UserService {
      * Change password user
      *
      * @param email
+     * @throws InoteMailException 
+     * @throws MailException 
      */
-    public void changePassword(Map<String, String> email) throws InoteInvalidEmailException {
+    public void changePassword(Map<String, String> email) throws InoteInvalidEmailException, MailException, InoteMailException {
         User user = this.loadUserByUsername(email.get("email"));
         this.validationService.createAndSave(user);
     }

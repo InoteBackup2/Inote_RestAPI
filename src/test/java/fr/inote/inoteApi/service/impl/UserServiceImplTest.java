@@ -4,6 +4,7 @@ import static fr.inote.inoteApi.ConstantsForTests.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -215,8 +217,8 @@ public class UserServiceImplTest {
 
         /* Arrange */
         // Access to the private method using reflection
-        Method privateMethod_createAdminUser = UserServiceImpl.class.getDeclaredMethod("createAdminUser", User.class);
-        privateMethod_createAdminUser.setAccessible(true);
+        Method privateMethod_createTesterUser = UserServiceImpl.class.getDeclaredMethod("createTesterUser", User.class);
+        privateMethod_createTesterUser.setAccessible(true);
 
         Role roleForTest = Role.builder().name(RoleEnum.TESTER).build();
         User anotherUser = User.builder()
@@ -232,7 +234,7 @@ public class UserServiceImplTest {
         when(this.userRepository.save(any(User.class))).thenReturn(anotherUser);
 
         /* Act */
-        User userTest = (User) privateMethod_createAdminUser.invoke(this.userService, anotherUser);
+        User userTest = (User) privateMethod_createTesterUser.invoke(this.userService, anotherUser);
 
         /* Assert */
         assertThat(userTest).isNotNull();
@@ -279,7 +281,7 @@ public class UserServiceImplTest {
     @DisplayName("Register an non-existing user with good parameter")
     void register_shouldSuccess_whenUserNotExistAndGoodParameters()
             throws NoSuchMethodException, InoteExistingEmailException, InoteInvalidEmailException,
-            InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+            InoteRoleNotFoundException, InoteInvalidPasswordFormatException, MailException, InoteMailException {
 
         /* Arrange */
         Method privateMethod_createUser = UserServiceImpl.class.getDeclaredMethod("createUser", User.class);
@@ -312,7 +314,7 @@ public class UserServiceImplTest {
     @DisplayName("Register an non-existing admin user with good parameter")
     void registerAdmin_shouldSuccess_whenUserNotExistAndGoodParameters()
             throws NoSuchMethodException, InoteExistingEmailException, InoteInvalidEmailException,
-            InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
+            InoteRoleNotFoundException, InoteInvalidPasswordFormatException, MailException, InoteMailException {
 
         Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
         User anotherUser = User.builder()

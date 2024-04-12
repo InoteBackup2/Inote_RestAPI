@@ -87,7 +87,7 @@ public class RoleRepositoryTest {
     void findByName_shouldReturnEmptyOptional_whenAskedRoleIsNotInDb() {
         
         /* Act */
-        Optional<Role> role = this.roleRepository.findByName(RoleEnum.MANAGER);
+        Optional<Role> role = this.roleRepository.findByName(null);
 
         /* Assert */
         assertThat(role).isEmpty();

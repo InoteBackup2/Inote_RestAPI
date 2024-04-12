@@ -1,6 +1,7 @@
 package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteMailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
@@ -9,6 +10,7 @@ import fr.inote.inoteApi.service.NotificationService;
 import fr.inote.inoteApi.service.ValidationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -44,10 +46,12 @@ public class ValidationServiceImpl implements ValidationService {
      *
      * @param user the user to save
      * @author atsuhiko Mochizuki
+     * @throws InoteMailException 
+     * @throws MailException 
      * @date 2024-03-26
      */
     @Override
-    public Validation createAndSave(User user) throws InoteInvalidEmailException {
+    public Validation createAndSave(User user) throws InoteInvalidEmailException, MailException, InoteMailException {
         Validation validation = Validation.builder()
                 .user(user)
                 .creation(Instant.now())

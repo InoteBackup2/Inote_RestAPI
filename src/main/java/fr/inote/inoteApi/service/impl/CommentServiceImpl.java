@@ -6,14 +6,19 @@ import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.CommentRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.service.CommentService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
  * The Service CommentServiceImpl
+ * 
  * @author Atsuhiko Mochizuki
- * @date   11/04/2024
+ * @date 11/04/2024
  */
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -55,5 +60,17 @@ public class CommentServiceImpl implements CommentService {
                 .message(msg)
                 .build();
         return this.commentRepository.save(commentToWrite);
+    }
+
+    /**
+     * Get the list of all comments recorded
+     * 
+     * @return the list of all comments in database
+     * 
+     * @author atsuhiko Mochizuki
+     * @date 11/04/2024
+     */
+    public List<Comment> getAll() {
+        return Streamable.of(this.commentRepository.findAll()).toList();
     }
 }

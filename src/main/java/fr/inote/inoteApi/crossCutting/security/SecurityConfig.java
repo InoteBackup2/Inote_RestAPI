@@ -1,8 +1,6 @@
 package fr.inote.inoteApi.crossCutting.security;
 
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
-import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
@@ -21,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 /**
@@ -139,6 +138,7 @@ public class SecurityConfig {
                                 // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasROLE("USER")  // Role level
                                 // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAuthority("UTILISATEUR_CREATE_AVIS") // Role Permission level
                                 .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
+                                .requestMatchers(GET, Endpoint.COMMENT_GET_ALL).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
                                 
                                 // .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN",
                                 // "ROLE_MANAGER")

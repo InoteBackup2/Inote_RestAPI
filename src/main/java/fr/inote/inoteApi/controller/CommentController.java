@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.controller;
 
+import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
@@ -7,14 +8,19 @@ import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.service.CommentService;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 
 /**
  * Controller for account user routes
@@ -42,14 +48,14 @@ public class CommentController {
     /* DEPENDENCIES INJECTION */
     /* ============================================================ */
     private final CommentService commentService;
-    
-    //Needed for security context
+
+    // Needed for security context
     @SuppressWarnings("unused")
     private final AuthenticationManager authenticationManager;
-    
+
     @SuppressWarnings("unused")
     private final UserServiceImpl userService;
-    
+
     @SuppressWarnings("unused")
     private final JwtServiceImpl jwtService;
 
@@ -75,5 +81,11 @@ public class CommentController {
         CommentDtoResponse returnDtoValue = new CommentDtoResponse(returnValue.getId(), returnValue.getMessage(),
                 returnValue.getUser().getId());
         return new ResponseEntity<>(returnDtoValue, HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = Endpoint.COMMENT_GET_ALL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<Comment>> getComments() {
+        return new ResponseEntity<>(this.commentService.getAll(), HttpStatus.OK);
     }
 }

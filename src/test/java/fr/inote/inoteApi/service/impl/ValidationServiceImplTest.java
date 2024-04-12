@@ -2,6 +2,7 @@ package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteMailException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
@@ -91,7 +93,7 @@ class ValidationServiceImplTest {
     @Test
     @DisplayName("Create validation ans save when user not exist in db and data are correct")
     void createAndSave_shouldCreateAnewValidationInDbAndSendCodeActivation_whenUserIsCorrectAndNotExistsInDatabase()
-            throws InoteInvalidEmailException {
+            throws InoteInvalidEmailException, MailException, InoteMailException {
         /* Arrange */
         when(this.mockedValidationRepository.save(any(Validation.class))).thenReturn(this.validationRef);
         doNothing().when(this.mockedNotificationService).sendValidation_byEmail(any(Validation.class));

@@ -49,6 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -114,8 +115,18 @@ public class CommentController_IT {
                         .id(1)
                         .message(this.commentDtoRequestRef.msg())
                         .build();
-        private UserDto userDtoRef = new UserDto(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
         private String bearerAuthorization;
+        Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
+
+        User userRef = User.builder()
+                        .email(REFERENCE_USER_EMAIL)
+                        .name(REFERENCE_USER_NAME)
+                        .password(REFERENCE_USER_PASSWORD)
+                        .role(roleForTest)
+                        .build();
+
+        private UserDto userDtoRef = new UserDto(this.userRef.getName(),
+                        this.userRef.getUsername(), this.userRef.getPassword());
 
         /* FIXTURES */
         /* ============================================================ */
@@ -164,7 +175,7 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create a comment with message empty or blank")
         void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
-                
+
                 this.bearerAuthorization = this.connectUserAndReturnBearer();
 
                 // Act & assert
@@ -187,16 +198,99 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create comment with user without authorities to do this")
         void create_ShouldFail_whenUserDontHaveTheGoodAuthorities() throws JsonProcessingException, Exception {
-                
+
                 // Connect user with role tester, whithout permissions for this endpoint
                 String bearer = this.connectTesterAndReturnBearer();
-               
+
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                                 .header("authorization", "Bearer " + bearer)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
                                 .andExpect(MockMvcResultMatchers.status().isForbidden());
+        }
 
+        @Test
+        @DisplayName("Get all comments registered in database when user have  permissions")
+        void getComments_ShouldSuccess_WhenUserHavePermissions() throws Exception {
+
+                /* Arrange */
+                this.bearerAuthorization = this.connectUserAndReturnBearer();
+
+                final String message1 = "this application is really crap";
+                final String message2 = "What in God's name have I done to use such an application?";
+                final String message3 = "I'm puzzled by this application...";
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message1))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message2))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message3))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                /* Act & assert */
+                MvcResult result = this.mockMvc.perform(get(Endpoint.COMMENT_GET_ALL)
+                                .header("authorization", "Bearer " + this.bearerAuthorization))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.content()
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                .andReturn();
+                String returnedResponse = result.getResponse().getContentAsString();
+
+                assertThat(returnedResponse).contains(message1);
+                assertThat(returnedResponse).contains(message2);
+                assertThat(returnedResponse).contains(message3);
+
+        }
+
+        @Test
+        @DisplayName("Get all comments registered in database when user don't have  permissions")
+        void getComments_ShouldBeForbidden_WhenUserNotHavePermisssions() throws Exception {
+
+                /* Arrange */
+                this.bearerAuthorization = this.connectUserAndReturnBearer();
+
+                final String message1 = "this application is really crap";
+                final String message2 = "What in God's name have I done to use such an application?";
+                final String message3 = "I'm puzzled by this application...";
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message1))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message2))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
+                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message3))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                /* Act & assert */
+                CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
+                this.jwtRepository.deleteAll();
+                this.validationRepository.deleteAll();
+                this.bearerAuthorization = this.connectTesterAndReturnBearer();
+                
+                this.mockMvc.perform(get(Endpoint.COMMENT_GET_ALL)
+                                .header("authorization", "Bearer " + this.bearerAuthorization))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         /* UTILS */
@@ -264,7 +358,8 @@ public class CommentController_IT {
         }
 
         /**
-         * Connect a tester (authenticable, but without permissions) to application and return token value
+         * Connect a tester (authenticable, but without permissions) to application and
+         * return token value
          *
          * @return token value
          * @throws Exception when anomaly occurs
@@ -272,8 +367,7 @@ public class CommentController_IT {
          * @author AtsuhikoMochizuki
          */
         private String connectTesterAndReturnBearer() throws Exception {
-                
-                
+
                 final String[] messageContainingCode = new String[1];
                 Role roleForTest = Role.builder().name(RoleEnum.TESTER).build();
                 User anotherUser = User.builder()
@@ -282,11 +376,12 @@ public class CommentController_IT {
                                 .password(REFERENCE_USER2_PASSWORD)
                                 .role(roleForTest)
                                 .build();
-                UserDto anotherUserDto = new UserDto(anotherUser.getName(), anotherUser.getUsername(), anotherUser.getPassword());
-                
-                                // No Endpoint for this method
+                UserDto anotherUserDto = new UserDto(anotherUser.getName(), anotherUser.getUsername(),
+                                anotherUser.getPassword());
+
+                // No Endpoint for this method
                 this.userServiceImpl.registerTester(anotherUser);
-                
+
                 await()
                                 .atMost(5, SECONDS)
                                 .untilAsserted(() -> {
@@ -329,7 +424,7 @@ public class CommentController_IT {
 
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                
+
                 return bearer;
         }
 }

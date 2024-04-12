@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -108,7 +109,8 @@ public class AuthController {
                 .build();
         try {
             this.userService.register(userToRegister);
-        } catch (InoteExistingEmailException | InoteInvalidEmailException | InoteRoleNotFoundException
+        } catch (InoteMailException | InoteExistingEmailException | InoteInvalidEmailException
+                | InoteRoleNotFoundException
                 | InoteInvalidPasswordFormatException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -158,9 +160,11 @@ public class AuthController {
      * Send a password change request
      *
      * @param email
+     * @throws InoteMailException 
+     * @throws MailException 
      */
     @PostMapping(path = Endpoint.CHANGE_PASSWORD)
-    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) {
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) throws MailException, InoteMailException {
         try {
             this.userService.changePassword(email);
         } catch (UsernameNotFoundException | InoteInvalidEmailException ex) {

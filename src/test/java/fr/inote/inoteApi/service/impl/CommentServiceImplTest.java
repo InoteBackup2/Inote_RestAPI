@@ -20,12 +20,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.*;
 
@@ -151,6 +155,40 @@ class CommentServiceImplTest {
                 CommentDtoRequest commentDtoRequest3 = new CommentDtoRequest(null);
                 assertThatExceptionOfType(NullPointerException.class)
                                 .isThrownBy(() -> this.commentService.createComment(commentDtoRequest3.msg()));
+        }
+
+        @Test
+        @DisplayName("Get the list of all comments recorded in database")
+        void getAll_ShouldSucces() {
+
+                /* Arrange */
+                List<Comment> comments = new ArrayList<>();
+
+                comments.add(Comment.builder()
+                                .message("this application is really crap")
+                                .user(this.userRef)
+                                .build());
+
+                comments.add(Comment.builder()
+                                .message("What in God's name have I done to use such an application?")
+                                .user(this.userRef)
+                                .build());
+
+                comments.add(Comment.builder()
+                                .message("I'm puzzled by this application...")
+                                .user(this.userRef)
+                                .build());
+                when(this.commentRepository.findAll()).thenReturn(comments);
+
+                /*Act */
+                List<Comment> returnedList = this.commentService.getAll();
+
+                /*Assert */
+                assertThat(returnedList).isEqualTo(comments);
+
+                /*Verify */
+                verify(this.commentRepository, times(1)).findAll();
+
         }
 
 }

@@ -30,4 +30,10 @@ public class MessagesEn {
 
     // COMMENT
     public static final String COMMENT_ERROR_MESSAGE_IS_EMPTY = "The comment you wish to post contains no message.";
+    public static final String EMAIL_ERROR_POSSIBLE_SMTP_SERVEUR_NOT_CONFIGURED = """
+        The email could not be sent.
+        It's very likely that the smtp server is misconfigured. 
+        ==> If you are in dev mode, have you started "
+        smtpServer_simul_run.sh" (located in the root folder of the complete project)?
+            """;
 }

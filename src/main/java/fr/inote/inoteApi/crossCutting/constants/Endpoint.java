@@ -9,4 +9,5 @@ public class Endpoint {
     public static final String REFRESH_TOKEN = "/api/auth/refresh_token";
     public static final String SIGN_OUT = "/api/auth/sign_out";
     public static final String CREATE_COMMENT = "/api/comment/create";
+    public static final String COMMENT_GET_ALL = "/api/comments";
 }

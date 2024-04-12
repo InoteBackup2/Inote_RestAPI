@@ -2,6 +2,8 @@ package fr.inote.inoteApi.service;
 
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.entity.User;
+
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -25,9 +27,11 @@ public interface UserService extends UserDetailsService {
      * @return the user
      * @throws InoteExistingEmailException
      * @author Atsuhiko Mochizuki
+     * @throws InoteMailException 
+     * @throws MailException 
      * @date 26/03/2024
      */
-    User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException;
+    User register(User user) throws InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException, InoteInvalidPasswordFormatException, MailException, InoteMailException;
 
     /**
      * Activate an user

@@ -1,6 +1,7 @@
 package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteInvalidEmailException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteMailException;
 import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.service.NotificationService;
 
@@ -51,11 +52,13 @@ public class NotificationServiceImpl implements NotificationService {
      *
      * @param validation the validation
      * @author atsuhiko Mochizuki
+     * @throws InoteMailException 
      * @date 26-03-2024
      */
     @Override
-    public void sendValidation_byEmail(Validation validation) throws MailException, InoteInvalidEmailException {
-        this.sendEmail(
+    public void sendValidation_byEmail(Validation validation) throws MailException, InoteInvalidEmailException, InoteMailException {
+        try {
+            this.sendEmail(
                 NO_REPLY_EMAIL,
                 validation.getUser().getEmail(),
                 "Your activation code",
@@ -74,6 +77,10 @@ public class NotificationServiceImpl implements NotificationService {
                         validation.getUser().getName(),
                         validation.getCreation(),
                         validation.getCode()));
+        } catch (MailException e) {
+            throw new InoteMailException();
+        }
+        
 
     }
 
