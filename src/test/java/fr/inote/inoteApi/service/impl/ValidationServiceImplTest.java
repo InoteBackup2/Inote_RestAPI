@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import fr.inote.inoteApi.service.ValidationService;
+
 /**
  * Unit tests of service ValidationServiceImplTest
  *
@@ -59,7 +61,7 @@ class ValidationServiceImplTest {
      * params
      */
     @InjectMocks
-    private ValidationServiceImpl validationService;
+    private ValidationService validationService = new ValidationServiceImpl(mockedValidationRepository, mockedNotificationService);
 
     /* REFERENCES FOR MOCKING */
     /* ============================================================ */

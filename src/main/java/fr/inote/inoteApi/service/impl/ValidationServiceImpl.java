@@ -20,8 +20,8 @@ import java.util.Random;
 public class ValidationServiceImpl implements ValidationService {
 
     /*Dependencies*/
-    private final ValidationRepository validationRepository;
-    private final NotificationService notificationService;
+    private  ValidationRepository validationRepository;
+    private  NotificationService notificationService;
 
     /*Dependencies injection*/
     @Autowired
