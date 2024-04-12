@@ -22,23 +22,40 @@ import java.util.Random;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * The type Validation repository test.
+ * Unit tests of repository ValidationRepositoryTest
  *
- * @author Atsuhiko Mochizuki
+ * @author atsuhiko Mochizuki
+ * @date 28/03/2024
+ */
+
+/*
+ * @DataJpaTest is an annotation in Spring Boot that is used to test JPA
+ * repositories.
+ * It focuses only on JPA components and disables full auto-configuration,
+ * applying
+ * only the configuration relevant to JPA tests.
+ */
+@DataJpaTest
+/*
+ * The @ActiveProfiles annotation in Spring is used to declare which active bean
+ * definition profiles
+ * should be used when loading an ApplicationContext for test classes.
+ * Nota : here used for using another database ok main app
  */
 @ActiveProfiles("test")
-@DataJpaTest
-//@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+
+/* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
-@Tag("Repositories_tests")
 class ValidationRepositoryTest {
 
-    @Autowired
-    private ValidationRepository validationRepository;
-
+    /* DEPENDENCIES MOCKING */
+    /* ============================================================ */
+    /* use @Mock create and inject mocked instances of classes */
     // Ideally, roleRepository should be mocked in integrality, but it has a 1-N
     // relationship with UserRepository;
     // So when saving an user with admin role for example, an instance
@@ -46,20 +63,39 @@ class ValidationRepositoryTest {
     // So i think it not possible to mock the roleRepository, but the
     // save function is hibernate Implementation, but not many risk.
 
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private UserRepository userRepository;
-
     @Mock
     private RoleRepository mockedRoleRepository;
+
+    /* DEPENDENCIES INJECTION */
+    /* ============================================================ */
+    /*
+     * Use classical injection by constructor
+     */
+    private ValidationRepository validationRepository;
+    private RoleRepository roleRepository;
+    private UserRepository userRepository;
+
+    // Constructor
+    @Autowired
+    public ValidationRepositoryTest(
+            RoleRepository mockedRoleRepository,
+            RoleRepository roleRepository,
+            ValidationRepository validationRepository,
+            UserRepository userRepository) {
+        this.mockedRoleRepository = mockedRoleRepository;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.validationRepository = validationRepository;
+    }
+
+    /* REFERENCES FOR MOCKING */
+    /* ============================================================ */
     Role roleForTest;
     User userRef;
     Validation validationRef;
 
-    /**
-     * Sets up.
-     */
+    /* FIXTURES */
+    /* ============================================================ */
     @BeforeEach
     void setUp() {
 
@@ -90,10 +126,16 @@ class ValidationRepositoryTest {
 
     }
 
-    @DisplayName("Search a Validation in database with correct code")
+    /* REPOSITORY UNIT TESTS */
+    /* ============================================================ */
+
     @Test
+    @DisplayName("Search a Validation in database with correct code")
     void findByCode_shouldReturnOptionalOfValidation_whenCodeIsCorrect() {
+        /* Act */
         Optional<Validation> optionalOfValidation = this.validationRepository.findByCode(this.validationRef.getCode());
+
+        /* Assert */
         assertThat(optionalOfValidation).isNotEmpty();
         Validation foundValidation = optionalOfValidation.get();
         assertThat(foundValidation.getActivation()).isEqualTo(this.validationRef.getActivation());
@@ -104,17 +146,21 @@ class ValidationRepositoryTest {
         assertThat(foundValidation.getCode()).isEqualTo(this.validationRef.getCode());
     }
 
-    @DisplayName("Search a Validation in database with incorrect code")
     @Test
+    @DisplayName("Search a Validation in database with incorrect code")
     void findByCode_shouldReturnOptionalOfValidation_whenCodeIsNotCorrect() {
+        /* Act */
         Optional<Validation> optionalOfValidation = this.validationRepository.findByCode("INCORRECT_CODE");
+
+        /* Assert */
         assertThat(optionalOfValidation).isEmpty();
     }
 
-
-    @DisplayName("Delete all validations when expired")
     @Test
+    @DisplayName("Delete all validations when expired")
     void deleteAllByExpirationBefore_shouldDeleteExpiredValidation_whenInstantIsAfter() {
+
+        /* Act & assert */
         Optional<Validation> optionalOfValidation = this.validationRepository.findByCode(this.validationRef.getCode());
         assertThat(optionalOfValidation).isNotEmpty();
         Validation foundValidation = optionalOfValidation.get();
@@ -127,9 +173,11 @@ class ValidationRepositoryTest {
         assertThat(optionalOfValidation).isEmpty();
     }
 
-    @DisplayName("Attempt to delete a validation not expired")
     @Test
+    @DisplayName("Attempt to delete a validation not expired")
     void deleteAllByExpirationBefore_shouldNotDeleteValidation_whenInstantIsBefore() {
+        
+        /* Act & assert */
         Optional<Validation> optionalOfValidation = this.validationRepository.findByCode(this.validationRef.getCode());
         assertThat(optionalOfValidation).isNotEmpty();
         Validation foundValidation = optionalOfValidation.get();
