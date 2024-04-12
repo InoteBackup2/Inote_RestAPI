@@ -38,12 +38,12 @@ import static fr.inote.inoteApi.crossCutting.constants.RegexPatterns.REGEX_PASSW
 public class UserServiceImpl implements UserService {
 
     /* Dependencies */
-    final private UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    final private ValidationService validationService;
-    final private RoleRepository roleRepository;
+    private UserRepository userRepository;
+    private  BCryptPasswordEncoder passwordEncoder;
+     private ValidationService validationService;
+     private RoleRepository roleRepository;
 
-    private final ValidationRepository validationRepository;
+    private  ValidationRepository validationRepository;
 
 
     /* Dependencies injection */

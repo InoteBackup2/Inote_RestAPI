@@ -25,9 +25,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import fr.inote.inoteApi.service.UserService;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -52,7 +54,7 @@ import org.springframework.test.context.ActiveProfiles;
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
-   
+
     /* DEPENDENCIES MOCKING */
     /* ============================================================ */
     /* @Mock create and inject mocked instances of classes */
@@ -75,7 +77,13 @@ public class UserServiceImplTest {
      * params
      */
     @InjectMocks
-    private UserServiceImpl userService;
+    private UserService userService = new UserServiceImpl(userRepository, passwordEncoder, validationService,
+            roleRepository, validationRepository);
+    
+            
+    // public UserServiceImplTest(UserRepository userRepository){
+    //     this.userRepository = userRepository;
+    // }
 
     /* REFERENCES FOR MOCKING */
     /* ============================================================ */
@@ -122,7 +130,7 @@ public class UserServiceImplTest {
                 .role(roleForTest)
                 .build();
 
-        when(this.userRepository.findByEmail(anotherUser.getEmail())).thenReturn(Optional.empty());
+        when(this.userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(this.passwordEncoder.encode(anotherUser.getPassword())).thenReturn("encodedPassword");
         when(this.roleRepository.findByName(any(RoleEnum.class))).thenReturn(Optional.of(roleForTest));
         when(this.userRepository.save(any(User.class))).thenReturn(anotherUser);
