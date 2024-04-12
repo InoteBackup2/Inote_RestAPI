@@ -15,10 +15,10 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     /* Dependencies*/
-    private final RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     /* Dependencies injection */
-    @Autowired
+    // @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
