@@ -25,10 +25,12 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.*;
@@ -82,6 +84,7 @@ class CommentServiceImplTest {
 
         this.commentRef = Comment.builder()
                 .message(this.commentDtoRequestRef.msg())
+                .user(this.userRef)
                 .build();
     }
 
@@ -96,12 +99,13 @@ class CommentServiceImplTest {
         when(securityContext.getAuthentication()).thenReturn(auth);
         SecurityContextHolder.setContext(securityContext);
         when(this.commentRepository.save(any(Comment.class))).thenReturn(this.commentRef);
+        when(this.userRepository.findByEmail(anyString())).thenReturn(Optional.of(this.userRef));
 
         // Act & assert
         Comment commentForTest = this.commentService.createComment(this.commentDtoRequestRef.msg());
 //        assertThat(commentForTest.getUser()).isEqualTo(this.userRef);
         //Voir Ici! Pourquoi il ne retourne pas le user lors de la sauvegarde?
-        fail();
+        // fail();
         assertThat(commentForTest.getMessage()).isEqualTo(this.commentDtoRequestRef.msg());
 
     }
