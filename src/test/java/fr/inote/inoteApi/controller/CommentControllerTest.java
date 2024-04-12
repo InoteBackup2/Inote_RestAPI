@@ -104,7 +104,7 @@ public class CommentControllerTest {
                 .build();
     }
 
-    /* CONTROLLERS UNIT TEST */
+    /* CONTROLLER UNIT TESTS */
     /*============================================================*/
     @Test
     @DisplayName("Create a comment with message not empty")

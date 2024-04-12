@@ -776,8 +776,7 @@ public class AuthController_IT {
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
-
-                // Act
+                
                 this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)

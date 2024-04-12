@@ -74,7 +74,7 @@ public class CommentControllerTest {
 //        verify(this.commentService, times(1)).createComment(anyString());
 //    }
 
- 	/* CONTROLLERS UNIT TEST */
+ 	/* CONTROLLER UNIT TESTS */
     /*============================================================*/
     @Test
     @DisplayName("")
