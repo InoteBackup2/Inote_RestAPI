@@ -126,9 +126,9 @@ public class UserServiceImpl implements UserService {
         return userToRegister;
     }
 
-    public User registerAdmin(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
+    public User registerTester(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
             InoteRoleNotFoundException, InoteInvalidPasswordFormatException {
-        User userToRegister = this.createAdminUser(user);
+        User userToRegister = this.createTesterUser(user);
         this.validationService.createAndSave(userToRegister);
         return userToRegister;
     }
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
      * @author atsuhiko Mochizuki
      * @date 26/03/2024
      */
-    private User createAdminUser(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
+    private User createTesterUser(User user) throws InoteExistingEmailException, InoteInvalidEmailException,
             InoteInvalidPasswordFormatException, InoteRoleNotFoundException {
 
         Pattern compiledPattern;
@@ -226,7 +226,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(mdpCrypte);
 
         // Role affectation
-        Role role = this.roleRepository.findByName(RoleEnum.ADMIN).orElseThrow(InoteRoleNotFoundException::new);
+        Role role = this.roleRepository.findByName(RoleEnum.TESTER).orElseThrow(InoteRoleNotFoundException::new);
         user.setRole(role);
 
         return this.userRepository.save(user);

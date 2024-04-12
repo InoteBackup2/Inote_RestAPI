@@ -210,7 +210,7 @@ public class UserServiceImplTest {
 
     @Test
     @DisplayName("Create an non-existing admin user")
-    void createAdminUser_shouldReturnUser_whenGoodParameters() throws NoSuchMethodException,
+    void createTesterUser_shouldTesterUser_whenGoodParameters() throws NoSuchMethodException,
             SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         /* Arrange */
@@ -218,7 +218,7 @@ public class UserServiceImplTest {
         Method privateMethod_createAdminUser = UserServiceImpl.class.getDeclaredMethod("createAdminUser", User.class);
         privateMethod_createAdminUser.setAccessible(true);
 
-        Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
+        Role roleForTest = Role.builder().name(RoleEnum.TESTER).build();
         User anotherUser = User.builder()
                 .email(REFERENCE_USER2_EMAIL)
                 .name(REFERENCE_USER2_NAME)
@@ -328,7 +328,7 @@ public class UserServiceImplTest {
         when(this.userRepository.save(any(User.class))).thenReturn(anotherUser);
 
         /* Act & assert */
-        assertThat(this.userServiceImpl.registerAdmin(anotherUser).getPassword()).isEqualTo(anotherUser.getPassword());
+        assertThat(this.userServiceImpl.registerTester(anotherUser).getPassword()).isEqualTo(anotherUser.getPassword());
 
         /* Verify */
         verify(this.userRepository, times(1)).findByEmail(any(String.class));

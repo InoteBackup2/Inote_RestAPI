@@ -24,7 +24,10 @@ public enum PermissionEnum {
     MANAGER_DELETE_AVIS,
 
     // USER
-    UTILISATEUR_CREATE_AVIS;
+    UTILISATEUR_CREATE_AVIS,
+
+    //TESTER
+    TESTER_TESTER;
 
     private String libelle;
 }

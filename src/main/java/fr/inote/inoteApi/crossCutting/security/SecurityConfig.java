@@ -134,7 +134,12 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.NEW_PASSWORD).permitAll()
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
                                 // -> Secured endpoints
-                                .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasRole("USER")
+                                /*Examples */
+                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
+                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasROLE("USER")  // Role level
+                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAuthority("UTILISATEUR_CREATE_AVIS") // Role Permission level
+                                .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
+                                
                                 // .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN",
                                 // "ROLE_MANAGER")
 

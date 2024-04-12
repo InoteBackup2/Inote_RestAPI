@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
@@ -23,7 +22,6 @@ import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +29,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,7 +39,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.internet.MimeMessage;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -126,18 +122,15 @@ public class CommentController_IT {
         @BeforeEach
         void setUp() throws Exception {
                 this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
-                // this.bearerAuthorization = this.connectUserAndReturnBearer();
-        }
-
-        @AfterEach
-        void tearDown() throws FolderException {
-
                 this.commentRepository.deleteAll();
                 this.jwtRepository.deleteAll();
                 this.validationRepository.deleteAll();
                 this.userRepository.deleteAll();
                 CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
         }
+
+        // @AfterEach
+        // void tearDown() throws FolderException {}
 
         /* CONTROLLERS UNIT TEST */
         /* ============================================================ */
@@ -146,6 +139,8 @@ public class CommentController_IT {
         void IT_create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
 
                 /* Act */
+                this.bearerAuthorization = this.connectUserAndReturnBearer();
+
                 // Send request, print response, check returned status and primary checking
                 // (status code, content body type...)
                 ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
@@ -169,6 +164,8 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create a comment with message empty or blank")
         void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
+                
+                this.bearerAuthorization = this.connectUserAndReturnBearer();
 
                 // Act & assert
                 CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
@@ -190,74 +187,10 @@ public class CommentController_IT {
         @Test
         @DisplayName("Create comment with user without authorities to do this")
         void create_ShouldFail_whenUserDontHaveTheGoodAuthorities() throws JsonProcessingException, Exception {
-                Collection<? extends GrantedAuthority> authorities = RoleEnum.USER.getAuthorities();
-                for(GrantedAuthority item: authorities){
-                        System.out.println();
                 
-                }
-                // this.commentRepository.deleteAll();
-                // this.jwtRepository.deleteAll();
-                // this.validationRepository.deleteAll();
-                // this.userRepository.deleteAll();
-                // // Act & assert
-                // CommentController_IT.greenMail.purgeEmailFromAllMailboxes();
-                final String[] messageContainingCode = new String[1];
-                Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
-                User anotherUser = User.builder()
-                                .email(REFERENCE_USER2_EMAIL)
-                                .name(REFERENCE_USER2_NAME)
-                                .password(REFERENCE_USER2_PASSWORD)
-                                .role(roleForTest)
-                                .build();
-                UserDto anotherUserDto = new UserDto(anotherUser.getName(), anotherUser.getUsername(), anotherUser.getPassword());
-                
-                                // No Endpoint for this method
-                this.userServiceImpl.registerAdmin(anotherUser);
-                
-                await()
-                                .atMost(5, SECONDS)
-                                .untilAsserted(() -> {
-                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                                        assertThat(receivedMessages.length).isEqualTo(1);
-
-                                        MimeMessage receivedMessage = receivedMessages[0];
-
-                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                                });
-
-                final String reference = "activation code : ";
-                int startSubstring = messageContainingCode[0].indexOf(reference);
-                int startIndexOfCode = startSubstring + reference.length();
-                int endIndexOfCode = startIndexOfCode + 6;
-                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
-                ResultActions response = this.mockMvc.perform(
-                                post(Endpoint.ACTIVATION)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-                response
-                                .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", anotherUserDto.username());
-                signInBodyContent.put("password", anotherUserDto.password());
-
-                response = this.mockMvc.perform(
-                                post(Endpoint.SIGN_IN)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-                response.andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty());
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                // assertThat(bearer.length()).isEqualTo(145);
-
+                // Connect user with role tester, whithout permissions for this endpoint
+                String bearer = this.connectTesterAndReturnBearer();
+               
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                                 .header("authorization", "Bearer " + bearer)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -331,14 +264,72 @@ public class CommentController_IT {
         }
 
         /**
-         * Connect an admin to application and return token value
+         * Connect a tester (authenticable, but without permissions) to application and return token value
          *
          * @return token value
          * @throws Exception when anomaly occurs
          * @date 11/04/2024
          * @author AtsuhikoMochizuki
          */
-        // private String connectAdminAndReturnBearer() throws Exception {
+        private String connectTesterAndReturnBearer() throws Exception {
+                
+                
+                final String[] messageContainingCode = new String[1];
+                Role roleForTest = Role.builder().name(RoleEnum.TESTER).build();
+                User anotherUser = User.builder()
+                                .email(REFERENCE_USER2_EMAIL)
+                                .name(REFERENCE_USER2_NAME)
+                                .password(REFERENCE_USER2_PASSWORD)
+                                .role(roleForTest)
+                                .build();
+                UserDto anotherUserDto = new UserDto(anotherUser.getName(), anotherUser.getUsername(), anotherUser.getPassword());
+                
+                                // No Endpoint for this method
+                this.userServiceImpl.registerTester(anotherUser);
+                
+                await()
+                                .atMost(5, SECONDS)
+                                .untilAsserted(() -> {
+                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                                        assertThat(receivedMessages.length).isEqualTo(1);
 
-        // }
+                                        MimeMessage receivedMessage = receivedMessages[0];
+
+                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                                });
+
+                final String reference = "activation code : ";
+                int startSubstring = messageContainingCode[0].indexOf(reference);
+                int startIndexOfCode = startSubstring + reference.length();
+                int endIndexOfCode = startIndexOfCode + 6;
+                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+                Map<String, String> bodyRequest = new HashMap<>();
+                bodyRequest.put("code", extractedCode);
+
+                ResultActions response = this.mockMvc.perform(
+                                post(Endpoint.ACTIVATION)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
+                response
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+                Map<String, String> signInBodyContent = new HashMap<>();
+                signInBodyContent.put("username", anotherUserDto.username());
+                signInBodyContent.put("password", anotherUserDto.password());
+
+                response = this.mockMvc.perform(
+                                post(Endpoint.SIGN_IN)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
+                response.andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(jsonPath("$.bearer").isNotEmpty())
+                                .andExpect(jsonPath("$.refresh").isNotEmpty());
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+                
+                return bearer;
+        }
 }
