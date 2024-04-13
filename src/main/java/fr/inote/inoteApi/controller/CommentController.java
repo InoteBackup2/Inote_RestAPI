@@ -85,7 +85,7 @@ public class CommentController {
 
     @GetMapping(value = Endpoint.COMMENT_GET_ALL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<Comment>> getComments() {
+    public ResponseEntity<List<CommentDtoResponse>> getComments() {
         return new ResponseEntity<>(this.commentService.getAll(), HttpStatus.OK);
     }
 }

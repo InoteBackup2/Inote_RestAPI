@@ -5,30 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed9369af-e361-4c9a-ad54-1e554b8f19a0" name="Changes" comment="CommentControllerTest refactoring ok">
-      <change afterPath="$PROJECT_DIR$/src/test/resources/template_ControllerUnitTest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-08T142003.401.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-08T150612.201.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T113538.201.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T113636.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T113650.200.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T113753.401.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T113824.401.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114410.201.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114432.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114444.200.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114705.201.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114741.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114750.200.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-04-10T114814.401.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requests.http" beforeDir="false" afterPath="$PROJECT_DIR$/requests.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Validation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/entity/Validation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/constants/MessagesEn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/constants/MessagesEn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/CommentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/CommentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/service/impl/CommentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/AuthControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/controller/CommentControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/AuthController_IT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/CommentServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/service/impl/CommentServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +72,7 @@
     "HTTP Request.requests | Register an user with \"USER\" default role.executor": "Run",
     "HTTP Request.requests | User sign in.executor": "Run",
     "HTTP Request.requests | User sign out.executor": "Run",
-    "JUnit.All tests.executor": "Run",
+    "JUnit.All tests.executor": "Debug",
     "JUnit.AuthControllerTest.IT_activation_ShouldSuccess_whenCodeIsCorrect.executor": "Run",
     "JUnit.AuthControllerTest.activation_ShouldFail_whenCodeIsNotCorrect.executor": "Run",
     "JUnit.AuthControllerTest.changePassword_ShouldFail_WhenEmailIsBadFormated.executor": "Run",
@@ -99,6 +86,7 @@
     "JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenIsExpired.executor": "Run",
     "JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsBad.executor": "Run",
     "JUnit.AuthControllerTest.refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect.executor": "Run",
+    "JUnit.AuthControllerTest.register_ShouldSuccess_WithNotExistingUser.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldFail_WhenUserNotExistsInSecurityContext.executor": "Run",
     "JUnit.AuthControllerTest.signIn_ShouldSuccess_WhenExistInSecurityContext.executor": "Debug",
     "JUnit.AuthControllerTest.signOut_ShouldSuccess_WhenUserIsConnected.executor": "Run",
@@ -113,6 +101,7 @@
     "JUnit.AuthController_IT.IT_newPassword_ShouldSuccess_WhenUserExists.executor": "Run",
     "JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect.executor": "Debug",
     "JUnit.AuthController_IT.IT_refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect.executor": "Run",
+    "JUnit.AuthController_IT.IT_register_shouldFail_whenUserExist.executor": "Debug",
     "JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist.executor": "Run",
     "JUnit.AuthController_IT.IT_signIn_ShouldFail_whenCredentialsAreNotCorrect.executor": "Run",
     "JUnit.AuthController_IT.IT_signIn_ShouldSuccess_whenCredentialsAreCorrect.executor": "Run",
@@ -124,6 +113,7 @@
     "JUnit.CommentControllerTest.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Debug",
     "JUnit.CommentControllerTest.create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
     "JUnit.CommentControllerTest.executor": "Run",
+    "JUnit.CommentControllerTest.getComments_ShouldSuccess.executor": "Run",
     "JUnit.CommentControllerTest2.create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
     "JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty.executor": "Run",
     "JUnit.CommentController_IT.create_shouldFail_whenMessageIsEmptyOrBlank.executor": "Run",
@@ -131,6 +121,7 @@
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsConnectedAndMessageIsEmptyOrBlank.executor": "Run",
     "JUnit.CommentServiceImplTest.createComment_ShouldFail_whenUserIsNotConnected.executor": "Debug",
     "JUnit.CommentServiceImplTest.createComment_ShouldSuccess_whenUserIsConnected.executor": "Run",
+    "JUnit.CommentServiceImplTest.getAll_ShouldSucces.executor": "Run",
     "JUnit.EndPointsTest_IT.executor": "Run",
     "JUnit.EndPointsTest_IT.register_shouldFail_whenUserExist.executor": "Run",
     "JUnit.EndPointsTest_IT.register_shouldSuccess_whenUserNotExist.executor": "Debug",
@@ -200,19 +191,7 @@
       <recent name="fr.inote.inoteApi.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.InoteApiApplication">
-    <configuration name="requests | Account activation" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="2" requestIdentifier="Account activation" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Envoyer un avis" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="4" requestIdentifier="Envoyer un avis" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Register an user with &quot;USER&quot; default role" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" requestIdentifier="Register an user with &quot;USER&quot; default role" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | User sign in" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" index="3" requestIdentifier="User sign in" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="JUnit.CommentController_IT">
     <configuration name="All tests" type="JUnit" factoryName="JUnit">
       <module name="InoteApi" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -233,6 +212,55 @@
       <option name="MAIN_CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT.IT_register_shouldFail_whenUserExist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="IT_register_shouldFail_whenUserExist" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthController_IT.IT_register_shouldSuccess_whenUserNotExist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="/usr/lib/jvm/jdk-17-oracle-x64" />
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.AuthController_IT" />
+      <option name="METHOD_NAME" value="IT_register_shouldSuccess_whenUserNotExist" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -248,6 +276,22 @@
       <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
       <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.CommentController_IT" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="InoteApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.inote.inoteApi.integrationTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.inote.inoteApi.integrationTest" />
+      <option name="MAIN_CLASS_NAME" value="fr.inote.inoteApi.integrationTest.CommentController_IT" />
+      <option name="METHOD_NAME" value="IT_create_shouldSuccess_whenMessageIsNotEmpty" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -269,21 +313,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="HTTP Request.requests | Account activation" />
-      <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
-      <item itemvalue="HTTP Request.requests | User sign in" />
-      <item itemvalue="HTTP Request.requests | Envoyer un avis" />
       <item itemvalue="JUnit.All tests" />
+      <item itemvalue="JUnit.AuthController_IT" />
+      <item itemvalue="JUnit.AuthController_IT.IT_register_shouldFail_whenUserExist" />
+      <item itemvalue="JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist" />
+      <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
       <item itemvalue="JUnit.CommentController_IT" />
       <item itemvalue="Spring Boot.InoteApiApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="HTTP Request.requests | Envoyer un avis" />
-        <item itemvalue="HTTP Request.requests | User sign in" />
-        <item itemvalue="HTTP Request.requests | Account activation" />
-        <item itemvalue="HTTP Request.requests | Register an user with &quot;USER&quot; default role" />
         <item itemvalue="JUnit.CommentController_IT" />
+        <item itemvalue="JUnit.CommentController_IT.IT_create_shouldSuccess_whenMessageIsNotEmpty" />
+        <item itemvalue="JUnit.AuthController_IT" />
+        <item itemvalue="JUnit.AuthController_IT.IT_register_shouldFail_whenUserExist" />
+        <item itemvalue="JUnit.AuthController_IT.IT_register_shouldSuccess_whenUserNotExist" />
       </list>
     </recent_temporary>
   </component>
@@ -764,10 +808,40 @@
   }
 }</component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java</url>
+          <line>80</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/fr/inote/inoteApi/integrationTest/CommentController_IT.java</url>
+          <line>152</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/controller/CommentController.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fr/inote/inoteApi/crossCutting/security/JwtFilter.java</url>
+          <line>78</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="JUnit">
         <watch expression="returnValue.getId()" language="JAVA" />
         <watch expression="returnValue.getMessage()" language="JAVA" />
+        <watch expression="commentDtoRequest.msg()" language="JAVA" />
       </configuration>
       <configuration name="SpringBootApplicationConfigurationType">
         <watch expression="userDetails.getAuthorities()" language="JAVA" />

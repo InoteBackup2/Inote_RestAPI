@@ -1,3 +1,6 @@
+# USER ACCOUNT
+#=================================================================
+
 ### Register an user with "USER" default role
 # Nota : In dev context, need stmp-dev running (smtp server simulation)
 # Run, as administrator (sudo in linux), smtp-dev/Rnwood.Smtp4dev binary
@@ -20,7 +23,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"092235"
+    "code":"338385"
 }
 
 #### User sign in
@@ -30,67 +33,17 @@ Content-Type: application/json
 
 {
   "username":"sangoku@kame-house.com",
-  "password":"booqsfqfq4666HHHYFj$"
+  "password":"chichi@@YYY14646_"
 }
-
-### Envoyer un avis
-POST http://localhost:8080/api/comment/create HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTI4NTYxMTMsIm5hbWUiOiJzYW5nb2t1Iiwic3ViIjoic2FuZ29rdUBrYW1lLWhvdXNlLmNvbSJ9.Gz1SnbaM5_1NTA15ewI-5qxI2cyhUbrBJ9BcjqRIt6U
-Content-Type: application/json
-
-{
-    "msg": "vraiment super bon cours"
-}
-
 
 ### User sign out
-# Nota : put the bearer given by server when sign in
+# Nota : Don't forget to set the good bearer given by server when sign in
 POST http://localhost:8080/api/auth/sign_out HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTMwMjg5NTd9.u-AV2Q1k5cm49EkX9-SJMFyvBa9stZzA0uw77ksspbo
 Content-Type: application/json
 
-### Inscription d'un admin
-## POST http://localhost:8080/api/inscription HTTP/1.1
-## Content-Type: application/json
-#
-## {
-##     "nom":"admin1",
-##     "email":"admin1@tyuyuouy.com",
-##     "mdp":"admin1",
-##     "role":{
-##         "libelle":"ADMINISTRATEUR"
-##     }
-## }
-#
-#
-#
-#
-#
-#
-#
-#
-#### Connexion administrateur
-#POST http://localhost:8080/api/connexion HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "username":"vegeta@vegeta.veg",
-#    "password":"admin"
-#}
-#
-#### Connexion manager
-#POST http://localhost:8080/api/connexion HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "username":"bulma@capsule.corp",
-#    "password":"manager"
-#}
-#
-
-
-
-### Demande de modification de mot de passe
+### Change password request
+# Nota : Don't forget to recuperate activation code
 POST http://localhost:8080/api/auth/change_password HTTP/1.1
 Content-Type: application/json
 
@@ -98,39 +51,42 @@ Content-Type: application/json
     "email":"sangoku@kame-house.com"
 }
 
-### Envoi nouveau mot de passe
-POST http://localhost:8080/api/new-password HTTP/1.1
+### Send a new password
+# Nota: Don't forget to set the good activation code
+POST http://localhost:8080/api/auth/new_password HTTP/1.1
 Content-Type: application/json
 
 {
-    "email":"sangoku@gmail.com",
-    "code":"821921",
-    "password": "chichi"
+    "email":"sangoku@kame-house.com",
+    "code":"782725",
+    "password": "chichi@@YYY14646_"
 }
 
 
-#### Envoi du refreshToken
-#POST http://localhost:8080/api/refresh-token HTTP/1.1
-#Content-Type: application/json
-#
-#{
-#    "refresh":"01d76804-c491-496a-888d-09733cf1323e"
-#}
-#
-#### Lire tous les avis en tant qu'utilisateur
-#GET http://localhost:8080/api/avis HTTP/1.1
-#Content-Type: application/json
-#Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZWdldGFAdmVnZXRhLnZlZyIsImV4cCI6MTcxMDI1Mzg1OCwibm9tIjoiYWRtaW4ifQ.4Z8UrKrfHJPz83rg_c2Y4J6AW5lJmjgbWBxei8FMUjE
-#
-#### Lire tous les avis en tant qu'admin
-#GET http://localhost:8080/api/avis HTTP/1.1
-#Content-Type: application/json
-#Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJub20iOiJhZG1pbiIsInN1YiI6InZlZ2V0YUB2ZWdldGEudmVnIiwiZXhwIjoxNzEwMjM4OTYyfQ.kO981iwiGZ0egqpNZLIfVeBdwvbRR4QiBaCulQrLX6w
-#
-#{}
-#
-#### Récupérer tous les utilisateurs (only admin)
-#GET http://localhost:8080/api/users HTTP/1.1
-#Content-Type: application/json
-#Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZWdldGFAdmVnZXRhLnZlZyIsIm5vbSI6ImFkbWluIiwiZXhwIjoxNzEwMTY5MTg0fQ.-uwYZuuz0wRIShry-6ZR5XIh2pA_7easNMnr7B-xb9Y
-#
+### Send refresh-token
+# Nota : Don't forget to set the good refresh UUID, sended when sign in
+POST http://localhost:8080/api/auth/refresh_token HTTP/1.1
+Content-Type: application/json
+
+{
+   "refresh":"61ff6d18-607c-4220-8a38-1392ff89aec8"
+}
+
+#COMMENTS
+#========================================================================
+### Send a comment
+#Nota : dont forget to set the good bearer
+POST http://localhost:8080/api/comment/create HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTMwMjg5NTd9.u-AV2Q1k5cm49EkX9-SJMFyvBa9stZzA0uw77ksspbo
+Content-Type: application/json
+
+{
+    "msg": "Hello"
+}
+
+### Read All comments
+#Don't forget to set the good bearer
+GET http://localhost:8080/api/comments HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTMwMjg5NTd9.u-AV2Q1k5cm49EkX9-SJMFyvBa9stZzA0uw77ksspbo
+

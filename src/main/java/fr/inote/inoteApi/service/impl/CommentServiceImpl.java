@@ -1,12 +1,14 @@
 package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
+import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.CommentRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.service.CommentService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,13 +66,17 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Get the list of all comments recorded
-     * 
+     *
      * @return the list of all comments in database
-     * 
      * @author atsuhiko Mochizuki
      * @date 11/04/2024
      */
-    public List<Comment> getAll() {
-        return Streamable.of(this.commentRepository.findAll()).toList();
+    public List<CommentDtoResponse> getAll() {
+        List<CommentDtoResponse> commentDtos = new ArrayList<>();
+        List<Comment> comments =Streamable.of(this.commentRepository.findAll()).toList();
+        for(Comment item : comments){
+            commentDtos.add(new CommentDtoResponse(item.getId(), item.getMessage(), item.getUser().getId()));
+        }
+        return  commentDtos;
     }
 }

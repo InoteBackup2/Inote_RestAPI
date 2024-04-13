@@ -40,13 +40,13 @@ import static org.springframework.http.HttpMethod.POST;
  * context.
  */
 @Configuration /*
-                * The class declares one or more @Bean methods and may be processed by the
-                * Spring IoC container to generate bean definitions
-                */
+ * The class declares one or more @Bean methods and may be processed by the
+ * Spring IoC container to generate bean definitions
+ */
 @EnableMethodSecurity /*
-                       * Indicates that part of the configuration is contained in methods elsewhere in
-                       * the code
-                       */
+ * Indicates that part of the configuration is contained in methods elsewhere in
+ * the code
+ */
 @EnableWebSecurity /* Activation of Security */
 public class SecurityConfig {
 
@@ -88,6 +88,7 @@ public class SecurityConfig {
 
     /* SECURITY FILTERS CHAIN */
     /* ============================================================ */
+
     /**
      * Create security filter chain of application
      *
@@ -97,7 +98,7 @@ public class SecurityConfig {
      *                     restricted using requestMatcher or other similar methods.
      *                     <p>
      * @return the security filter chain
-     *         <p>
+     * <p>
      * @author atsuhiko mochizuki
      * @date 28/03/2024
      */
@@ -139,7 +140,7 @@ public class SecurityConfig {
                                 // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAuthority("UTILISATEUR_CREATE_AVIS") // Role Permission level
                                 .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
                                 .requestMatchers(GET, Endpoint.COMMENT_GET_ALL).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
-                                
+
                                 // .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN",
                                 // "ROLE_MANAGER")
 
@@ -174,7 +175,7 @@ public class SecurityConfig {
                                  * - Token authentication (stateless): the token already has the information
                                  * needed to validate the user, so there's no need to save session information
                                  * on the server.
-                                 * 
+                                 *
                                  * - Session-based authentication (stateful) using cookies: identifiers are
                                  * saved on the server and in the browser for comparison.
                                  */
@@ -193,6 +194,7 @@ public class SecurityConfig {
 
     /* AUTHENTIFICATION MANAGER */
     /* ============================================================ */
+
     /**
      * Create authentification manager
      * The Spring AuthenticationManager is a core component of

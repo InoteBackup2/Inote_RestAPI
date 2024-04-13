@@ -182,23 +182,10 @@ public class CommentControllerTest {
         void getComments_ShouldSuccess() throws Exception {
 
                 /* Arrange */
-                List<Comment> comments = new ArrayList<>();
-
-                comments.add(Comment.builder()
-                                .message("this application is really crap")
-                                .user(this.userRef)
-                                .build());
-
-                comments.add(Comment.builder()
-                                .message("What in God's name have I done to use such an application?")
-                                .user(this.userRef)
-                                .build());
-
-                comments.add(Comment.builder()
-                                .message("I'm puzzled by this application...")
-                                .user(this.userRef)
-                                .build());
-
+                List<CommentDtoResponse> comments = new ArrayList<>();
+                comments.add(new CommentDtoResponse(1,"this application is really crap",1));
+                comments.add(new CommentDtoResponse(1,"What in God's name have I done to use such an application?",1));
+                comments.add(new CommentDtoResponse(1,"I'm puzzled by this application...",1));
                 when(this.commentService.getAll()).thenReturn(comments);
 
                 /* Act & assert */

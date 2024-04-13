@@ -3,6 +3,7 @@ package fr.inote.inoteApi.service.impl;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
+import fr.inote.inoteApi.dto.CommentDtoResponse;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -181,10 +182,12 @@ class CommentServiceImplTest {
                 when(this.commentRepository.findAll()).thenReturn(comments);
 
                 /*Act */
-                List<Comment> returnedList = this.commentService.getAll();
+                List<CommentDtoResponse> returnedList = this.commentService.getAll();
 
                 /*Assert */
-                assertThat(returnedList).isEqualTo(comments);
+                assertThat(returnedList.get(0).message()).isEqualTo(comments.get(0).getMessage());
+                assertThat(returnedList.get(1).message()).isEqualTo(comments.get(1).getMessage());
+                assertThat(returnedList.get(2).message()).isEqualTo(comments.get(2).getMessage());
 
                 /*Verify */
                 verify(this.commentRepository, times(1)).findAll();

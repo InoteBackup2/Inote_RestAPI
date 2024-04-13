@@ -114,7 +114,7 @@ public class AuthController {
                 | InoteInvalidPasswordFormatException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED, HttpStatus.CREATED);
+        return new ResponseEntity<>(MessagesEn.ACTIVATION_NEED_ACTIVATION, HttpStatus.CREATED);
     }
 
     /**
@@ -171,7 +171,7 @@ public class AuthController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(MessagesEn.REGISTER_OK_MAIL_SENDED, HttpStatus.OK);
+        return new ResponseEntity<>(MessagesEn.ACTIVATION_NEED_ACTIVATION, HttpStatus.OK);
     }
 
     /**

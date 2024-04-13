@@ -153,7 +153,7 @@ public class AuthControllerTest {
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
                                 .andExpect(MockMvcResultMatchers
                                                 .content()
-                                                .string(MessagesEn.REGISTER_OK_MAIL_SENDED));
+                                                .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
 
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));

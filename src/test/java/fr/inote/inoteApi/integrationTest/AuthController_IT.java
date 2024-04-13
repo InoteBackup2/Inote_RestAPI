@@ -176,7 +176,7 @@ public class AuthController_IT {
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
                                 .andExpect(content()
-                                                .string(MessagesEn.REGISTER_OK_MAIL_SENDED));
+                                                .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
 
                 await()
                                 .atMost(2, SECONDS)
@@ -196,7 +196,7 @@ public class AuthController_IT {
                 /* Arrange */
                 assertThatCode(() -> {
                         Role role = this.roleRepository.findByName(RoleEnum.USER)
-                                        .orElseThrow(() -> new InoteUserException());
+                                        .orElseThrow(InoteUserException::new);
                         this.userRef.setRole(role);
                         this.userRepository.save(this.userRef);
                 }).doesNotThrowAnyException();
