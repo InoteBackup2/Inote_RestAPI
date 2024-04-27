@@ -204,7 +204,14 @@
     <build>
         <!-- List of plugins -->
         <plugins>
-
+             <plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-compiler-plugin</artifactId>
+        		<version>3.11.0</version>
+        		<configuration>
+          			<release>17</release>
+        		</configuration>
+      		</plugin>
 
             <!-- Jacoco is an open-source tool for measuring and reporting Java code coverage -->
             <plugin>
