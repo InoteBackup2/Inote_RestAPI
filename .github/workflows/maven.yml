@@ -49,11 +49,7 @@ jobs:
       
       - name: Rename jar
         run: mv target/*.jar target/Inote_api.jar
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+      
       - name: copy file via ssh key
         uses: appleboy/scp-action@v0.1.7
         with:
