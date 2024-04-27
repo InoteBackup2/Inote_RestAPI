@@ -63,7 +63,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           mkdir ../build
-          cp ./target/Inote_api.jar ../build
+          cp -R ./target/* ../build/
           ls ../build
           tar -cvf deploy.tar ../build/
 
