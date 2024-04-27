@@ -64,6 +64,7 @@ jobs:
         run: |
           mkdir ../build
           cp ./target/Inote_api.jar ../build
+          ls ../build
           tar -cvf deploy.tar ../build/
 
       - name: copy file via ssh password
