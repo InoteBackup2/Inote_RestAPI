@@ -22,9 +22,10 @@ jobs:
     - name: Set PATH
       run: |
           export PATH=$PATH:/usr/bin
+          
     - name: Change directory
       working-directory:  ${{ secrets.PATH }}
       
-    - name: Run command
+    - name: Build Jar
       run: |
           bash -c "mvn clean package"
