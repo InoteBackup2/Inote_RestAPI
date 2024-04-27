@@ -22,7 +22,4 @@ jobs:
     - name: Set PATH
       run: |
           export PATH=$PATH:/usr/bin
-          
-    - name: Change directory
-      working-directory:  ${{ secrets.PATH }}
 
