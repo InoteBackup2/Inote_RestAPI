@@ -24,4 +24,4 @@ jobs:
           export PATH=$PATH:/usr/bin
     - name: Run command
       run: |
-          bash -c "echo $PATH"
+          bash -c "cd ${{ secrets.PATH }}"
