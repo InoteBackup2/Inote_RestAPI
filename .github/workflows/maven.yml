@@ -63,26 +63,17 @@ jobs:
           tar -cvf deploy.tar ../build/
       
   
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     # for fix the error empty archive
-  #     # https://stackoverflow.com/questions/60253093/how-do-i-scp-repo-files-using-github-actions
-  #     - name: Run a multi-line script
-  #       run: |
-  #         mkdir ../build
-  #         cp -R ./target/* ../build/
-  #         ls ../build
-  #         tar -cvf deploy.tar ../build/
-
-  #     - name: copy file via ssh password
-  #       uses: appleboy/scp-action@master
-  #       with:
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.SSHKEY }}
-  #         port: ${{ secrets.PORT }}
-  #         source: "deploy.tar"
-  #         target: ${{ secrets.PATH }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          source: "deploy.tar"
+          target: ${{ secrets.PATH }}
     
