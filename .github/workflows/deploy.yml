@@ -25,7 +25,4 @@ jobs:
           
     - name: Change directory
       working-directory:  ${{ secrets.PATH }}
-      
-    - name: Build Jar
-      run: |
-          bash -c "mvn clean package"
+
