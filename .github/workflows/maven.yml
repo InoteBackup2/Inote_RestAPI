@@ -63,4 +63,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           source: "target/Inote_api.jar"
-          target: ${{ secrets.PATH }}
+          target: "${{ secrets.PATH }}"
