@@ -22,8 +22,6 @@ jobs:
     - name: Set PATH
       run: |
           export PATH=$PATH:/usr/bin
-
-    - name: Build jar
-      run: |
-        bash -c "mvn clean package"
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
   
