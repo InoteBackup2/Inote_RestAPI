@@ -52,8 +52,10 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           
-      # - name: Build and package JAR
-      #   run: mvn clean package
+      - name: creates JAR
+        run: mvn clean package
+       
+        
         
       # - name: Run Api
       #   run: mvn spring-boot:run
