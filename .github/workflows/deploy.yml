@@ -51,14 +51,14 @@ jobs:
         run: |
           mvn clean package
           # java -jar target/myapp.jar
-      - name: Deploy to VPS
-        uses: ssh-deploy@v1
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}
-          path: ${{ secrets.PATH }}
+      # - name: Deploy to VPS
+      #   uses: ssh-deploy@v1
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     port: ${{ secrets.PORT }}
+      #     key: ${{ secrets.SSHKEY }}
+      #     path: ${{ secrets.PATH }}
           
 
   
