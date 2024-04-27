@@ -22,9 +22,9 @@ jobs:
     - name: Set PATH
       run: |
           export PATH=$PATH:/usr/bin
-    #   - name: Run command
-    #     run: |
-    #       bash -c "your_command_here"
+    - name: Package the Jar
+      run: |
+          bash -c "cd ${{ secrets.PATH }} && mvn clean package"
 
     # - name: Executing remote command
     #   uses: appleboy/ssh-action@master
