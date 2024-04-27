@@ -59,8 +59,9 @@ jobs:
         env:
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-          SSHKEY: ${{ secrets.SSHKEY }}
+          KEY: ${{ secrets.SSHKEY }}
           PORT: ${{ secrets.PORT }}
+        with:
           source: "target/Inote_api.jar"
           target: "${{ secrets.PATH }}"
           strip_components: 1
