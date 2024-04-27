@@ -68,7 +68,7 @@ jobs:
         port: ${{ secrets.PORT }}
         user: ${{ secrets.USERNAME }}
         scp: |
-          target/Inote_api.jar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/essai/test.jar
+          target/Inote_api.jar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.PATH }}/test.jar
           
 
         
