@@ -55,6 +55,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - name: copy file via ssh password
       uses: appleboy/scp-action@v0.1.7
