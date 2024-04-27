@@ -19,9 +19,6 @@ jobs:
         source: "."
         target: ${{ secrets.PATH }}
 
-    - name: Set PATH
-      run: |
-          export PATH=$PATH:/usr/bin
     - name: Build with Maven
       run: mvn -B package --file pom.xml
   
