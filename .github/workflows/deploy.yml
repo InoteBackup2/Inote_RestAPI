@@ -25,5 +25,5 @@ jobs:
 
     - name: Build jar
       run: |
-        bash -c "mvn package"
+        bash -c "echo '$PWD'"
   
