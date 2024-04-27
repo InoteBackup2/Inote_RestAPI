@@ -24,7 +24,6 @@ jobs:
           export PATH=$PATH:/usr/bin
 
     - name: Build jar
-      working-directory: ${{ secrets.PATH }}
       run: |
-        bash -c "mvn clean package"
+        bash -c "mvn --version"
   
