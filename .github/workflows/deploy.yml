@@ -16,7 +16,7 @@ jobs:
         target: "/servers_folder/bfg-bot/"
 
     - name: Executing remote command
-      uses: appleboy/ssh-action@0.1.4
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
