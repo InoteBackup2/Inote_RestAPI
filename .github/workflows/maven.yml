@@ -53,6 +53,13 @@ jobs:
       - name: See content
         run: ls target
       
+     
+      
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       # for fix the error empty archive
       # https://stackoverflow.com/questions/60253093/how-do-i-scp-repo-files-using-github-actions
       - name: Run a multi-line script
@@ -61,12 +68,7 @@ jobs:
           cp -R ./target/*.jar ../build/
           ls ../build
           tar -cvf deploy.tar ../build/
-      
-  
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
@@ -74,6 +76,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
-          source: ${{ secrets.PATH }}
-          target: "deploy.tar"
+          source: "deploy.tar"
+          target: ${{ secrets.PATH }}
     
