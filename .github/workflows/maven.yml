@@ -15,10 +15,8 @@ on:
   #   branches: [ "main" ]
 
 jobs:
-
   # Create folder on vps 
   create-folder:
-    name: Build
     runs-on: ubuntu-latest
     steps:
     - name: Create folder on vps
