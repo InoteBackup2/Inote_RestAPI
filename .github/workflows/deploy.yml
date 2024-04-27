@@ -24,7 +24,7 @@ jobs:
           export PATH=$PATH:/usr/bin
     - name: Package the Jar
       run: |
-          bash -c "cd ${{ secrets.PATH }} && mvn clean package"
+          bash -c "cd ${{ secrets.PATH }}"
 
     # - name: Executing remote command
     #   uses: appleboy/ssh-action@master
