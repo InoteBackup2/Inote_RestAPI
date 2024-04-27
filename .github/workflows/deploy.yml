@@ -50,7 +50,7 @@ jobs:
       - name: Build and test
         run: |
           mvn clean package
-          java -jar target/myapp.jar
+          # java -jar target/myapp.jar
       - name: Deploy to VPS
         uses: ssh-deploy@v1
         with:
