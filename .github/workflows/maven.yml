@@ -49,13 +49,18 @@ jobs:
       
       - name: Rename jar
         run: mv target/*.jar target/Inote_api.jar
-      
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: copy file via ssh password
-        uses: appleboy/scp-action@v0.1.4
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
+          password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           source: "target/Inote_api.jar"
           target: ${{ secrets.PATH }}
