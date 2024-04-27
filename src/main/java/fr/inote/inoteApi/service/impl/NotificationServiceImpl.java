@@ -5,15 +5,16 @@ import fr.inote.inoteApi.crossCutting.exceptions.InoteMailException;
 import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.service.NotificationService;
 
-import static fr.inote.inoteApi.crossCutting.constants.EmailAdress.NO_REPLY_EMAIL;
-
 import static fr.inote.inoteApi.crossCutting.constants.RegexPatterns.REGEX_EMAIL_PATTERN;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,6 +40,9 @@ public class NotificationServiceImpl implements NotificationService {
      */
     private final JavaMailSender javaMailSender;
 
+    @Value("${inoterServer.doNotReplyAdress}")
+    private String NOT_REPLY_ADRESS_MAIL;
+
     @Autowired
     public NotificationServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -52,36 +56,40 @@ public class NotificationServiceImpl implements NotificationService {
      *
      * @param validation the validation
      * @author atsuhiko Mochizuki
-     * @throws InoteMailException 
+     * @throws InoteMailException
      * @date 26-03-2024
      */
     @Override
-    public void sendValidation_byEmail(Validation validation) throws MailException, InoteInvalidEmailException, InoteMailException {
+    public void sendValidation_byEmail(Validation validation)
+            throws MailException, InoteInvalidEmailException, InoteMailException {
         try {
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss.SSS");
+            String formattedDateTime = validation.getCreation().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                    .format(dateFormatter);
+
             this.sendEmail(
-                NO_REPLY_EMAIL,
-                validation.getUser().getEmail(),
-                "Your activation code",
-                String.format(
-                        """
-                                Inote notification service
-                                %s
+                    NOT_REPLY_ADRESS_MAIL,
+                    validation.getUser().getEmail(),
+                    "Your activation code",
+                    String.format(
+                            """
+                                    Inote notification service
+                                    %s
 
-                                Hello %s, you have made on %s a request that requires an activation code.
-                                Please enter the following code in asked field:
-                                activation code : %s
+                                    Hello %s, you have made on %s a request that requires an activation code.
+                                    Please enter the following code in asked field:
+                                    activation code : %s
 
-                                Inote wishes you a good day!
-                                """,
-                        EMAIL_SUBJECT_ACTIVATION_CODE,
-                        validation.getUser().getName(),
-                        validation.getCreation(),
-                        validation.getCode()));
+                                    Inote wishes you a good day!
+                                    """,
+                            EMAIL_SUBJECT_ACTIVATION_CODE,
+                            validation.getUser().getName(),
+                            formattedDateTime,
+                            validation.getCode()));
         } catch (MailException e) {
             throw new InoteMailException();
         }
-        
-
     }
 
     /* PRIVATE METHODS */

@@ -191,27 +191,6 @@ public class AuthController_IT {
         }
 
         @Test
-        @DisplayName("Register an existing user in database")
-        void IT_register_shouldFail_whenUserExist() throws Exception {
-                /* Arrange */
-                assertThatCode(() -> {
-                        Role role = this.roleRepository.findByName(RoleEnum.USER)
-                                        .orElseThrow(InoteUserException::new);
-                        this.userRef.setRole(role);
-                        this.userRepository.save(this.userRef);
-                }).doesNotThrowAnyException();
-
-                /* Act & assert */
-                // Send request, print response, check returned status and primary checking
-                // (status code, content body type...)
-                this.mockMvc.perform(
-                                post(Endpoint.REGISTER)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-        }
-
-        @Test
         @DisplayName("Activate an user with good code")
         void IT_activation_ShouldSuccess_whenCodeIsCorrect() throws Exception {
 
@@ -867,5 +846,27 @@ public class AuthController_IT {
                 this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer "
                                 + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw"))
                                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+        }
+
+        // @Disabled // Fail when launch ALL tests
+        @Test
+        @DisplayName("Register an existing user in database")
+        void IT_register_shouldFail_whenUserExist() throws Exception {
+                /* Arrange */
+                assertThatCode(() -> {
+                        Role role = this.roleRepository.findByName(RoleEnum.USER)
+                                        .orElseThrow(InoteUserException::new);
+                        this.userRef.setRole(role);
+                        this.userRepository.save(this.userRef);
+                }).doesNotThrowAnyException();
+
+                /* Act & assert */
+                // Send request, print response, check returned status and primary checking
+                // (status code, content body type...)
+                this.mockMvc.perform(
+                                post(Endpoint.REGISTER)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 }
