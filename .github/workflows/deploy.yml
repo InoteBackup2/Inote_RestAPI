@@ -26,4 +26,7 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
-        script: cd ${{ secrets.PATH }}
+        run: |
+          cd ${{ secrets.PATH }}
+          mvn clean package
+          mvn deploy
