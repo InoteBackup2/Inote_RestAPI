@@ -51,10 +51,7 @@ jobs:
         run: mv target/*.jar target/Inote_api.jar
       
       - name: See content
-        run: |
-          if [ -f ./target/Inote_api.jar ]; then
-            echo "The file exists"
-          fi
+        run: ls target
       
   
   deploy:
