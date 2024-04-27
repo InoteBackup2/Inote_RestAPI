@@ -47,11 +47,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Build and package JAR
-        run: mvn package
-      - name: Run Api
-        run: mvn spring-boot:run
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          
+      # - name: Build and package JAR
+      #   run: mvn clean package
+        
+      # - name: Run Api
+      #   run: mvn spring-boot:run
 
        # - name: executing remote ssh commands using password
       #   uses: appleboy/ssh-action@master
