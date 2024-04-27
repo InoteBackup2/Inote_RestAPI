@@ -74,6 +74,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
-          source: "deploy.tar"
-          target: ${{ secrets.PATH }}
+          source: ${{ secrets.PATH }}
+          target: "deploy.tar"
     
