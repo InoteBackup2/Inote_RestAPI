@@ -58,5 +58,5 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           source: "target/Inote_api.jar"
-          target: /home/test
+          target: ${{ secrets.PATH }}
     
