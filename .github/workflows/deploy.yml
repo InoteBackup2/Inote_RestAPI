@@ -52,28 +52,26 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           
-      - name: creates JAR
+      - name: create JAR
         run: mvn clean package
        
-        
-        
-      # - name: Run Api
-      #   run: mvn spring-boot:run
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with: 
+          # host: ${{ secrets.HOST }}
+          # username: ${{ secrets.USERNAME }}
+          # key: ${{ secrets.KEY }}
+          # key_path: ${{ secrets.KEY_PATH }}
+          # password: ${{ secrets.PASSWORD }}
+          # port: ${{ secrets.PORT }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script: whoami
 
-       # - name: executing remote ssh commands using password
-      #   uses: appleboy/ssh-action@master
-      #   with: 
-      #     # host: ${{ secrets.HOST }}
-      #     # username: ${{ secrets.USERNAME }}
-      #     # key: ${{ secrets.KEY }}
-      #     # key_path: ${{ secrets.KEY_PATH }}
-      #     # password: ${{ secrets.PASSWORD }}
-      #     # port: ${{ secrets.PORT }}
-      #     host: ${{ secrets.HOST }}
-      #     username: ${{ secrets.USERNAME }}
-      #     port: ${{ secrets.PORT }}
-      #     key: ${{ secrets.SSHKEY }}
-      #     script: whoami
+      - name: Run Api
+        run: mvn spring-boot:run
 
 
   
