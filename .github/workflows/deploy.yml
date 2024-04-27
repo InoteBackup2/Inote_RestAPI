@@ -19,11 +19,18 @@ jobs:
         source: "."
         target: ${{ secrets.PATH }}
 
-    - name: Executing remote command
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-        script: ls
+    - name: Set PATH
+      run: |
+          export PATH=$PATH:/usr/bin
+    #   - name: Run command
+    #     run: |
+    #       bash -c "your_command_here"
+
+    # - name: Executing remote command
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.HOST }}
+    #     USERNAME: ${{ secrets.USERNAME }}
+    #     PORT: ${{ secrets.PORT }}
+    #     KEY: ${{ secrets.SSHKEY }}
+    #     script: ls
