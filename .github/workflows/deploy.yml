@@ -68,10 +68,10 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          script: whoami
+          script: mvn spring-boot:run
 
-      - name: Run Api
-        run: mvn spring-boot:run
+      # - name: Run Api
+      #   run: mvn spring-boot:run
 
 
   
