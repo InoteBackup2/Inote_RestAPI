@@ -38,8 +38,9 @@
     <properties>
         <!-- Project will be compiled with java 17 -->
         <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         
-
         <!-- Mocking smtp server during tests -->
         <greenmail.version>1.6.5</greenmail.version>
     </properties>
