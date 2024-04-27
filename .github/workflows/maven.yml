@@ -16,7 +16,7 @@ on:
 
 jobs:
 
-  # Create folder on vps
+  # Create folder on vps 
   create-folder:
     name: Build
     runs-on: ubuntu-latest
@@ -48,6 +48,6 @@ jobs:
       - name: Build & tests & packaging with Maven
         run: mvn -B package --file pom.xml
 
-        
+
   
   
