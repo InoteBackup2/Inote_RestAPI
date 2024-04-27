@@ -58,7 +58,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           mkdir ../build
-          cp -R ./target/* ../build/
+          cp -R ./target/*.jar ../build/
           ls ../build
           tar -cvf deploy.tar ../build/
       
