@@ -49,6 +49,13 @@ jobs:
       
       - name: Rename jar
         run: mv target/*.jar target/Inote_api.jar
+      
+      - name: See content
+        run: |
+          if [ -f ./target/Inote_api.jar ]; then
+            echo "The file exists"
+          fi
+      
   
   deploy:
     runs-on: ubuntu-latest
