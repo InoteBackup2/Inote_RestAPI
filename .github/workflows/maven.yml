@@ -54,14 +54,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy Files
-        uses: appleboy/scp-action@master
-        env:
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          KEY: ${{ secrets.SSHKEY }}
-          PORT: ${{ secrets.PORT }}
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.4
         with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
           source: "target/Inote_api.jar"
-          target: "${{ secrets.PATH }}"
-          strip_components: 1
+          target: "/home/test/"
+    
