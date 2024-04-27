@@ -1,34 +1,40 @@
-# name: Deploy
+# name: Publish JAR to VPS
 
-# on: [push]
+# on:
+#   push:
+#     branches:
+#       - main
 
 # jobs:
-#   build:
-
+#   publish-jar:
 #     runs-on: ubuntu-latest
-
 #     steps:
-#     - uses: actions/checkout@v1
-#     - name: Copy repository contents via scp
-#       uses: appleboy/scp-action@master
-#       with:
-#         host: ${{ secrets.HOST }}
-#         username: ${{ secrets.USERNAME }}
-#         port: ${{ secrets.PORT }}
-#         key: ${{ secrets.SSHKEY }}
-#         source: "."
-#         target: ${{ secrets.PATH }}
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-#     - name: Set up Java for publishing
-#       uses: actions/setup-java@v4
-#       with:
+#       - name: Set up Java
+#         uses: actions/setup-java@v3
+#         with:
 #           java-version: '17'
 #           distribution: 'temurin'
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           port: ${{ secrets.PORT }}
+#           key: ${{ secrets.SSHKEY }}
+          
+#       - name: create JAR
+#         run: mvn clean package
+       
+#       - name: executing remote ssh commands using password
+#         uses: appleboy/ssh-action@master
+#         with: 
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           port: ${{ secrets.PORT }}
+#           key: ${{ secrets.SSHKEY }}
+#           script: mvn spring-boot:run
 
-#     - name: Build with Maven
-#       run: mvn -B package --file pom.xml
-
-name: Publish JAR to VPS
+name: Deploy to VPS
 
 on:
   push:
@@ -36,42 +42,23 @@ on:
       - main
 
 jobs:
-  publish-jar:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/checkout@v2
+      - name: Build and test
+        run: |
+          mvn clean package
+          java -jar target/myapp.jar
+      - name: Deploy to VPS
+        uses: ssh-deploy@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
+          path: ${{ secrets.PATH }}
           
-      - name: create JAR
-        run: mvn clean package
-       
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
-        with: 
-          # host: ${{ secrets.HOST }}
-          # username: ${{ secrets.USERNAME }}
-          # key: ${{ secrets.KEY }}
-          # key_path: ${{ secrets.KEY_PATH }}
-          # password: ${{ secrets.PASSWORD }}
-          # port: ${{ secrets.PORT }}
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}
-          script: mvn spring-boot:run
-
-      # - name: Run Api
-      #   run: mvn spring-boot:run
-
 
   
