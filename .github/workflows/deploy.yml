@@ -34,7 +34,7 @@
 #           key: ${{ secrets.SSHKEY }}
 #           script: mvn spring-boot:run
 
-name: Deploy to VPS
+name: Deploy to Server
 
 on:
   push:
@@ -42,32 +42,16 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}     
-      # - name: Build and test
-      #   run: |
-      #     mvn clean package
-          # java -jar target/myapp.jar
-      - name: Deploy to VPS
-        uses: ssh-deploy@v1
+        uses: actions/checkout@v2
+      - name: Deploy
+        uses: actions/ssh-deploy@v1
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAM }}
           key: ${{ secrets.SSHKEY }}
-          path: ${{ secrets.PATH }}
-          
-
-  
+          port: ${{ secrets.PORT }}
+          path: ./dist
