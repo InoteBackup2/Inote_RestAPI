@@ -22,12 +22,6 @@ jobs:
     - name: Set PATH
       run: |
           export PATH=$PATH:/usr/bin
-    
-    - name: Executing remote command
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-        script: ls
+    - name: Run command
+      run: |
+          bash -c "echo $PATH"
