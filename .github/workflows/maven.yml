@@ -76,6 +76,7 @@ jobs:
         script: mkdir -p ${{ secrets.PORT }}
   build:
     runs-on: ubuntu-latest
+    needs: create-folder
     steps:
     - name: Téléchargement des sources
       uses: actions/checkout@v3
@@ -89,13 +90,28 @@ jobs:
       run: mvn -Dmaven.test.skip=true -B package --file pom.xml
     - name: Rename jar
       run: mv target/*.jar target/Inote_API.jar
-    - name: copy file via ssh password
-      uses: appleboy/scp-action@v0.1.7
-      with: 
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSHKEY }}
-        port: ${{ secrets.PORT }}
-        source: "target/Inote_API.jar"
-        target: "${{ secrets.PORT }}" 
-        strip_components: 1
+    # - name: copy file via ssh password
+    #   uses: appleboy/scp-action@v0.1.7
+    #   with: 
+    #     host: ${{ secrets.HOST }}
+    #     username: ${{ secrets.USERNAME }}
+    #     key: ${{ secrets.SSHKEY }}
+    #     port: ${{ secrets.PORT }}
+    #     source: "target/Inote_API.jar"
+    #     target: "${{ secrets.PORT }}" 
+    #     strip_components: 1
+  
+  deploy-jar:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with: 
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          source: "target/Inote_API.jar"
+          target: "${{ secrets.PORT }}" 
+          strip_components: 1
