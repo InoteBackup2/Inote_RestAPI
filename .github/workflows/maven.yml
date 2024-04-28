@@ -73,7 +73,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        script: mkdir -p /home/inote/test/
+        # script: mkdir -p /home/inote/test/Inote_Rest_API
   build:
     runs-on: ubuntu-latest
     steps:
@@ -88,7 +88,7 @@ jobs:
     - name: Build with Maven
       run: mvn -Dmaven.test.skip=true -B package --file pom.xml
     - name: Rename jar
-      run: mv target/*.jar target/sa.jar
+      run: mv target/*.jar target/Inote_API.jar
     - name: copy file via ssh password
       uses: appleboy/scp-action@v0.1.7
       with: 
@@ -96,6 +96,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        source: "target/sa.jar"
-        target: /home/inote/test/
+        source: "target/Inote_API.jar"
+        target: /home/inote/
         strip_components: 1
