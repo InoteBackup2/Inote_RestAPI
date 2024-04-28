@@ -50,7 +50,7 @@ jobs:
         cache: maven
 
     - name: Package Jar with Maven
-      run: mvn -B -DskipTests package --file pom.xml
+      run: mvn -B package --file pom.xml
     
     - name: Rename jar for deployement
       run: mv target/*.jar target/Inote_API.jar
@@ -66,19 +66,19 @@ jobs:
         target: "./Inote_project/" 
         strip_components: 1
 
-  reboot: # RestApi will be launch at startup
-    name: Reboot system (for launching api)
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create folder on host for jar deployment 
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          port: ${{ secrets.PORT }}
-          script: sudo reboot
+  # reboot: # RestApi will be launch at startup
+  #   name: Reboot system (for launching api)
+  #   needs: build-and-deploy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Create folder on host for jar deployment 
+  #       uses: appleboy/ssh-action@v1.0.0
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.SSHKEY }}
+  #         port: ${{ secrets.PORT }}
+  #         script: sudo reboot
   
   
   # run-jar: # Never end on github action
