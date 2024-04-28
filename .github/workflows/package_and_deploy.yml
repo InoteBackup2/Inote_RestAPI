@@ -1,0 +1,68 @@
+# CI/CD pipeline for Inote API
+# atsuhikoMochizuki
+# 28/04/2024
+
+name: CI/CD pipeline for Inote API
+
+on:
+  push:
+    branches: ["main"]
+jobs:
+  create-folder:
+    name: create-folder
+    runs-on: ubuntu-latest
+    steps:
+     - name: Create folder on host for jar deployment
+       uses: appleboy/ssh-action@v1.0.0
+       with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        script: mkdir -p ./Inote_project/
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: create-folder
+    steps:
+    
+    - name: Clone repository on Github Docker container
+      uses: actions/checkout@v3
+    
+    - name: Set up JDK 17 on Github Docker container
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Package Jar with Maven
+      run: mvn -B package --file pom.xml
+    
+    - name: Rename jar for deployement
+      run: mv target/*.jar target/Inote_API.jar
+    
+    - name: Deploy jar on server via ssh password
+      uses: appleboy/scp-action@v0.1.7
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        source: "target/Inote_API.jar"
+        target: "./Inote_project/" 
+        strip_components: 1
+
+  run-jar:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Run jar on server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            java -jar ./Inote_project/Inote_API.jar
