@@ -97,5 +97,5 @@ jobs:
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
         source: "target/inote.jar"
-        target: ${{ secrets.PORT }}
+        target: ${{ secrets.PATH }}
         strip_components: 1
