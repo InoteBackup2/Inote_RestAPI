@@ -91,7 +91,7 @@ jobs:
       run: mv target/*.jar target/inote.jar
     - name: copy file via ssh password
       uses: appleboy/scp-action@v0.1.4
-      with:
+      with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
