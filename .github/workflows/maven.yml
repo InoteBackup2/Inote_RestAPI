@@ -73,7 +73,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        script: mkdir -p /opt/applications/sa
+        script: mkdir -p /home/inote/test/
   build:
     runs-on: ubuntu-latest
     steps:
@@ -97,5 +97,5 @@ jobs:
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
         source: "target/sa.jar"
-        target: /opt/applications/sa
+        target: /home/inote/test/
         strip_components: 1
