@@ -23,6 +23,7 @@ jobs:
 
   create-folder:
     name: create-folder
+    needs: kill-process
     runs-on: ubuntu-latest
     steps:
      - name: Create folder on host for jar deployment
