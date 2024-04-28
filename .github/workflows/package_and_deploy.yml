@@ -68,6 +68,7 @@ jobs:
 
   reboot: # RestApi will be launch at startup
     name: Reboot system (for launching api)
+    needs: build-and-deploy
     runs-on: ubuntu-latest
     steps:
       - name: Create folder on host for jar deployment 
