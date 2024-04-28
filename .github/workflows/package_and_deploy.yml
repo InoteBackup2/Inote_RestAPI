@@ -8,6 +8,19 @@ on:
   push:
     branches: ["main"]
 jobs:
+  kill-process:
+    name: kill process
+    runs-on: ubuntu-latest
+    steps:
+     - name: Stop process running on port 8080
+       uses: appleboy/ssh-action@v1.0.0
+       with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        script: fuser -k 8080/tcp
+
   create-folder:
     name: create-folder
     runs-on: ubuntu-latest
@@ -65,5 +78,4 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-            fuser -k 8080/tcp
             java -jar ./Inote_project/Inote_API.jar
