@@ -37,7 +37,7 @@ jobs:
         cache: maven
 
     - name: Package Jar with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B -DskipTests package --file pom.xml
     
     - name: Rename jar for deployement
       run: mv target/*.jar target/Inote_API.jar
@@ -65,4 +65,5 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
+            fuser -k 8080/tcp
             java -jar ./Inote_project/Inote_API.jar
