@@ -79,4 +79,4 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-            java -jar ./Inote_project/Inote_API.jar
+            java -jar ./Inote_project/Inote_API.jar &
