@@ -73,7 +73,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        script: mkdir -p ${{ secrets.PATH }}
+        script: mkdir -p /opt/applications/sa
   build:
     runs-on: ubuntu-latest
     steps:
@@ -88,14 +88,14 @@ jobs:
     - name: Build with Maven
       run: mvn -Dmaven.test.skip=true -B package --file pom.xml
     - name: Rename jar
-      run: mv target/*.jar target/inote.jar
+      run: mv target/*.jar target/sa.jar
     - name: copy file via ssh password
-      uses: appleboy/scp-action@v0.1.4
+      uses: appleboy/scp-action@v0.1.7
       with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        source: "target/inote.jar"
-        target: ${{ secrets.PATH }}
+        source: "target/sa.jar"
+        target: /opt/applications/sa
         strip_components: 1
