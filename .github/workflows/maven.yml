@@ -114,6 +114,6 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-            mvn spring-boot:run
+            java -jar ./Inote_project/Inote_API.jar
  
   
