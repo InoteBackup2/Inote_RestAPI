@@ -73,7 +73,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        # script: mkdir -p /home/inote/test/Inote_Rest_API
+        script: mkdir -p ./Inote_project/
   build:
     runs-on: ubuntu-latest
     steps:
@@ -97,5 +97,5 @@ jobs:
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
         source: "target/Inote_API.jar"
-        target: /home/inote/
+        target: ./Inote_project/
         strip_components: 1
