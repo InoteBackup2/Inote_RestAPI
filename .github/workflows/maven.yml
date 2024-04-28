@@ -114,8 +114,8 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-            sudo ln -sf ./Inote_project/Inote_API.jar /etc/init.d/Inote_API
-            sudo /etc/init.d/Inote_API stop
-            sudo /etc/init.d/Inote_API start
+            ln -sf ./Inote_project/Inote_API.jar /etc/init.d/Inote_API
+            /etc/init.d/Inote_API stop
+            /etc/init.d/Inote_API start
  
   
