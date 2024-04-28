@@ -73,7 +73,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
-        script: mkdir -p ${{ secrets.PATH }}
+        script: mkdir -p ./Inote_project/
   
   build:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
         key: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
         source: "target/Inote_API.jar"
-        target: "${{ secrets.PATH }}" 
+        target: "./Inote_project/" 
         strip_components: 1
 
   # run-jar:
