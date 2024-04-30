@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
@@ -100,8 +101,10 @@ public class AuthController {
      * @throws InoteRoleNotFoundException
      * @throws InoteInvalidPasswordFormatException
      */
-    @PostMapping(Endpoint.REGISTER)
-    public ResponseEntity<String> register(@RequestBody UserDto userDto) {
+    @PostMapping(path=Endpoint.REGISTER)
+        public ResponseEntity<Map<String,String>> register(@RequestBody UserDto userDto) {
+        Map<String,String> responseMsg = new HashMap<>();
+
         User userToRegister = User.builder()
                 .email(userDto.username())
                 .name(userDto.name())
@@ -112,9 +115,11 @@ public class AuthController {
         } catch (InoteMailException | InoteExistingEmailException | InoteInvalidEmailException
                 | InoteRoleNotFoundException
                 | InoteInvalidPasswordFormatException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+                    responseMsg.put("msg",ex.getMessage());
+            return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(MessagesEn.ACTIVATION_NEED_ACTIVATION, HttpStatus.CREATED);
+        responseMsg.put("msg",MessagesEn.ACTIVATION_NEED_ACTIVATION);
+        return new ResponseEntity<>(responseMsg, HttpStatus.CREATED);
     }
 
     /**

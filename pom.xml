@@ -38,7 +38,7 @@
     <properties>
         <!-- Project will be compiled with java 17 -->
         <java.version>17</java.version>
-        
+
         <!-- Mocking smtp server during tests -->
         <greenmail.version>1.6.5</greenmail.version>
     </properties>
@@ -51,7 +51,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        
+
         <!-- Integration of Java Persistance Api -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>3.2.4</version>
+            <!-- <version>3.2.4</version> -->
         </dependency>
 
         <!-- End-to-end JSON Web Token (JWT) creation and verification. -->
@@ -88,7 +88,6 @@
             <version>0.11.5</version>
         </dependency>
 
-        
 
         <!-- Provides additional development-time features to enhance the application development
         experience
@@ -121,7 +120,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-<!--            <version>6.1.5-SNAPSHOT</version>-->
+            <!--            <version>6.1.5-SNAPSHOT</version>-->
         </dependency>
 
 
@@ -157,7 +156,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-<!--            <version>2.2.224</version>-->
+            <!--            <version>2.2.224</version>-->
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -196,20 +195,27 @@
             <version>${greenmail.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Swagger UI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
+         </dependency>
     </dependencies>
-    
-    
+
+
     <build>
         <!-- List of plugins -->
         <plugins>
-        	 <plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-compiler-plugin</artifactId>
-        		<version>3.11.0</version>
-        		<configuration>
-          			<release>17</release>
-        		</configuration>
-      		</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
 
 
             <!-- Jacoco is an open-source tool for measuring and reporting Java code coverage -->

@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
@@ -40,13 +39,13 @@ import static org.springframework.http.HttpMethod.POST;
  * context.
  */
 @Configuration /*
- * The class declares one or more @Bean methods and may be processed by the
- * Spring IoC container to generate bean definitions
- */
+                * The class declares one or more @Bean methods and may be processed by the
+                * Spring IoC container to generate bean definitions
+                */
 @EnableMethodSecurity /*
- * Indicates that part of the configuration is contained in methods elsewhere in
- * the code
- */
+                       * Indicates that part of the configuration is contained in methods elsewhere in
+                       * the code
+                       */
 @EnableWebSecurity /* Activation of Security */
 public class SecurityConfig {
 
@@ -76,6 +75,15 @@ public class SecurityConfig {
      */
     private final UserDetailsService userDetailsService;
 
+    /* For Swagger */
+    private final String[] AUTH_WHITELIST = {
+            "/api/v1/auth/**",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-ui/**",
+            "swagger-ui.html"
+    };
+
     @Autowired
     public SecurityConfig(
             BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -98,7 +106,7 @@ public class SecurityConfig {
      *                     restricted using requestMatcher or other similar methods.
      *                     <p>
      * @return the security filter chain
-     * <p>
+     *         <p>
      * @author atsuhiko mochizuki
      * @date 28/03/2024
      */
@@ -126,6 +134,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         /********* ROUTES MANAGEMENT *********/
                         authorize -> authorize
+                                // Swagger-ui
+                                .requestMatchers(AUTH_WHITELIST).permitAll()
                                 // -> Publics endpoints
                                 .requestMatchers(POST, Endpoint.REGISTER).permitAll()
                                 .requestMatchers(POST, Endpoint.ACTIVATION).permitAll()
@@ -134,12 +144,17 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.NEW_PASSWORD).permitAll()
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
                                 // -> Secured endpoints
-                                /*Examples */
-                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
-                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasROLE("USER")  // Role level
-                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAuthority("UTILISATEUR_CREATE_AVIS") // Role Permission level
-                                .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
-                                .requestMatchers(GET, Endpoint.COMMENT_GET_ALL).hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")    // Role level
+                                /* Examples */
+                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER",
+                                // "ROLE_MANAGER", "ROLE_ADMIN") // Role level
+                                // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasROLE("USER") // Role level
+                                // .requestMatchers(POST,
+                                // Endpoint.CREATE_COMMENT).hasAuthority("UTILISATEUR_CREATE_AVIS") // Role
+                                // Permission level
+                                .requestMatchers(POST, Endpoint.CREATE_COMMENT)
+                                .hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN") // Role level
+                                .requestMatchers(GET, Endpoint.COMMENT_GET_ALL)
+                                .hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN") // Role level
 
                                 // .requestMatchers(GET, "/comment").hasAnyAuthority("ROLE_ADMIN",
                                 // "ROLE_MANAGER")
@@ -243,4 +258,5 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return daoAuthenticationProvider;
     }
+
 }

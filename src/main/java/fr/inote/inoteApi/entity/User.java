@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
     /* Private attributes in relations with others entities <=> foreign key*/
     /* ============================================================ */
-    @OneToOne
+    @ManyToOne
     private Role role;
     
     /* UserDetails interface implementations */
