@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
      * <li>encryption of password with Bcrypt</li>
      * </ul>
      *
-     * @return the saved user if success
+     * @return the saved user if success 
      * @throws InoteExistingEmailException
      * @author atsuhiko Mochizuki
      * @date 26/03/2024
