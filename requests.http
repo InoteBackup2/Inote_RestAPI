@@ -7,12 +7,12 @@
 # from Inote root project
 # Simulated Inbox mail is accessible at :
 # http://localhost:5000
-POST http://localhost:8080/api/auth/register HTTP/1.1
+POST http://51.254.103.89:8080/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name":"sangrzolu",
-    "username":"s@kazrme-house.com",
+    "name":"horochimaru",
+    "username":"atsuhiko_atsuhiko_mochizuki27@laposte.net",
     "password":"booqsfqfq4666HHHYFj$"
 }
 
