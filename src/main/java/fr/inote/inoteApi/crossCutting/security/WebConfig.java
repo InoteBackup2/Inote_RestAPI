@@ -9,13 +9,16 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 
 @Configuration
 public class WebConfig {
-    @Bean
+    
+	@Value("${server.name}")
+	private String serverName;
+
+	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
-			@Value("${server.name}")
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping(Endpoint.REGISTER).allowedOrigins("http://localhost:4200");
+				registry.addMapping(Endpoint.REGISTER).allowedOrigins("http://localhost:8080");
 			}
 		};
 	}
