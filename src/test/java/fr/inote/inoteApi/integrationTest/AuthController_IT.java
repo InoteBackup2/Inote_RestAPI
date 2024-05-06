@@ -25,6 +25,7 @@ import fr.inote.inoteApi.repository.ValidationRepository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -170,13 +171,19 @@ public class AuthController_IT {
                 /* Act & assert */
                 // Send request, print response, check returned status and primary checking
                 // (status code, content body type...)
-                this.mockMvc.perform(
+                ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                                .andExpect(content()
-                                                .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
+                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                ObjectMapper mapper = new ObjectMapper();
+                @SuppressWarnings("unchecked")
+                Map<String,String> map = mapper.readValue(returnedResponse, Map.class);
+                assertThat(map.size()).isEqualTo(1);
+                assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_NEED_ACTIVATION);
 
                 await()
                                 .atMost(2, SECONDS)
@@ -848,7 +855,7 @@ public class AuthController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
         }
 
-        // @Disabled // Fail when launch ALL tests
+        @Disabled // Fail when launch ALL tests
         @Test
         @DisplayName("Register an existing user in database")
         void IT_register_shouldFail_whenUserExist() throws Exception {

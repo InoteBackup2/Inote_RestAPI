@@ -13,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -46,7 +48,7 @@ import static org.mockito.Mockito.*;
  * Nota : here used for using another database ok main app
  */
 @ActiveProfiles("test")
-// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)

@@ -101,9 +101,9 @@ public class AuthController {
      * @throws InoteRoleNotFoundException
      * @throws InoteInvalidPasswordFormatException
      */
-    @PostMapping(path=Endpoint.REGISTER)
-        public ResponseEntity<Map<String,String>> register(@RequestBody UserDto userDto) {
-        Map<String,String> responseMsg = new HashMap<>();
+    @PostMapping(path = Endpoint.REGISTER)
+    public ResponseEntity<Map<String, String>> register(@RequestBody UserDto userDto) {
+        Map<String, String> responseMsg = new HashMap<>();
 
         User userToRegister = User.builder()
                 .email(userDto.username())
@@ -115,11 +115,14 @@ public class AuthController {
         } catch (InoteMailException | InoteExistingEmailException | InoteInvalidEmailException
                 | InoteRoleNotFoundException
                 | InoteInvalidPasswordFormatException ex) {
-                    responseMsg.put("msg",ex.getMessage());
+            responseMsg.put("msg", ex.getMessage());
             return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
         }
-        responseMsg.put("msg",MessagesEn.ACTIVATION_NEED_ACTIVATION);
+        responseMsg.put("msg", MessagesEn.ACTIVATION_NEED_ACTIVATION);
+        
         return new ResponseEntity<>(responseMsg, HttpStatus.CREATED);
+        
+        
     }
 
     /**
@@ -165,11 +168,12 @@ public class AuthController {
      * Send a password change request
      *
      * @param email
-     * @throws InoteMailException 
-     * @throws MailException 
+     * @throws InoteMailException
+     * @throws MailException
      */
     @PostMapping(path = Endpoint.CHANGE_PASSWORD)
-    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email) throws MailException, InoteMailException {
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email)
+            throws MailException, InoteMailException {
         try {
             this.userService.changePassword(email);
         } catch (UsernameNotFoundException | InoteInvalidEmailException ex) {

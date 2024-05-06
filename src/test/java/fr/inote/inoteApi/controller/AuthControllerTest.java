@@ -1,6 +1,7 @@
 package fr.inote.inoteApi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
@@ -28,7 +29,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -39,6 +42,7 @@ import static fr.inote.inoteApi.ConstantsForTests.*;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -139,6 +143,7 @@ public class AuthControllerTest {
 
         /* CONTROLLER UNIT TEST */
         /* ============================================================ */
+        @SuppressWarnings("unchecked")
         @Test
         @DisplayName("Register a non existing user")
         void register_ShouldSuccess_WithNotExistingUser() throws Exception {
@@ -146,14 +151,18 @@ public class AuthControllerTest {
                 when(this.userService.register(any(User.class))).thenReturn(this.userRef);
 
                 /* Act & assert */
-                this.mockMvc.perform(
+                ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                                .andExpect(MockMvcResultMatchers
-                                                .content()
-                                                .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
+                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String,String> map = mapper.readValue(returnedResponse, Map.class);
+                assertThat(map.size()).isEqualTo(1);
+                assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_NEED_ACTIVATION);
 
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));
