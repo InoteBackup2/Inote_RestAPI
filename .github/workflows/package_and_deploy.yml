@@ -55,6 +55,7 @@ jobs:
         DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME}}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD}}
         SERVER_HOST_NAME: ${{ secrets.HOST_NAME}}
+        SERVER_MAIL_DO_NOT_REPLY: ${{ secrets.MAIL_DO_NOT_REPLY}}
         
 
       run: mvn -B package --file pom.xml
