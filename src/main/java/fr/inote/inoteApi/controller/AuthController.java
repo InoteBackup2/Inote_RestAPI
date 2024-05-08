@@ -139,10 +139,11 @@ public class AuthController {
         try {
             this.userService.activation(activationCode);
         } catch (InoteValidationNotFoundException | InoteValidationExpiredException | InoteUserNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        	responseMsg.put("msg", ex.getMessage());
+            return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(MessagesEn.ACTIVATION_OF_USER_OK, HttpStatus.OK);
+responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
+         return new ResponseEntity<>(responseMsg, HttpStatus.OK);
     }
 
     /**
