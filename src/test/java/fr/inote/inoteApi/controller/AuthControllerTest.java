@@ -160,7 +160,7 @@ public class AuthControllerTest {
 
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 ObjectMapper mapper = new ObjectMapper();
-                Map<String,String> map = mapper.readValue(returnedResponse, Map.class);
+                Map<String, String> map = mapper.readValue(returnedResponse, Map.class);
                 assertThat(map.size()).isEqualTo(1);
                 assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_NEED_ACTIVATION);
 
@@ -185,6 +185,7 @@ public class AuthControllerTest {
                 verify(this.userService, times(1)).register(any(User.class));
         }
 
+        @SuppressWarnings("unchecked")
         @Test
         @DisplayName("Activate an user with good code")
         void activation_ShouldSuccess_whenCodeIsCorrect() throws Exception {
@@ -195,12 +196,22 @@ public class AuthControllerTest {
                 /* Act & assert */
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", "123456");
-                this.mockMvc.perform(
+                ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+                                .andExpect(MockMvcResultMatchers.content()
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, String> map = mapper.readValue(returnedResponse, Map.class);
+                assertThat(map.size()).isEqualTo(1);
+                assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                /* Mocking invocation check */
+                verify(this.userService, times(1)).activation(anyMap());
         }
 
         @Test
