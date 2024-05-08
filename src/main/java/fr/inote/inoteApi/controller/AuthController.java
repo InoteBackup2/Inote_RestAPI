@@ -135,7 +135,9 @@ public class AuthController {
      * @throws InoteValidationExpiredException
      */
     @PostMapping(path = Endpoint.ACTIVATION)
-    public ResponseEntity<String> activation(@RequestBody Map<String, String> activationCode) {
+    public ResponseEntity<Map<String,String>> activation(@RequestBody Map<String, String> activationCode) {
+        Map<String, String> responseMsg = new HashMap<>();
+
         try {
             this.userService.activation(activationCode);
         } catch (InoteValidationNotFoundException | InoteValidationExpiredException | InoteUserNotFoundException ex) {
