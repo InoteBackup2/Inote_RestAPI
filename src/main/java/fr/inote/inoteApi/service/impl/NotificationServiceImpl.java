@@ -40,7 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
      */
     private final JavaMailSender javaMailSender;
 
-    @Value("${inoterServer.doNotReplyAdress}")
+    @Value("${inote.backend.mail.doNotReplyAdress}")
     private String NOT_REPLY_ADRESS_MAIL;
 
     @Autowired
