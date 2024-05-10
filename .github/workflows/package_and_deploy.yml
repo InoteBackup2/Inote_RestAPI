@@ -42,12 +42,21 @@ jobs:
     - name: Clone repository on Github Docker container
       uses: actions/checkout@v3
 
-    - name: Load HOST in application.properties
+    - name: Load FRONT HOST in application.properties
       run: sed -i 's#<front_url>#${{ secrets.FRONT_HOSTNAME}}#g' src/main/resources/application.properties
     
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application.properties
       run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/main/resources/application.properties
-        
+
+    - name: Load DATASOURCE_URL in application.properties
+      run: sed -i 's#<spring_datasource_url>#${{ secrets.DATASOURCE_URL }}#g' src/main/resources/application.properties
+
+    - name: Load DATASOURCE_USERNAME in application.properties
+      run: sed -i 's#<spring_datasource_username>#${{ secrets.DATASOURCE_USERNAME }}#g' src/main/resources/application.properties
+
+    - name: Load DATASOURCE_PASSWORD in application.properties
+      run: sed -i 's#<spring_datasource_password>#${{ secrets.DATASOURCE_PASSWORD }}#g' src/main/resources/application.properties
+    
     - name: Set up JDK 17 on Github Docker container
       uses: actions/setup-java@v3
       with:
