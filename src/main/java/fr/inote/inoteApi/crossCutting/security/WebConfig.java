@@ -74,7 +74,7 @@ public class WebConfig {
 
         // AllowedOrigin vous permet de spécifier quels domaines, schémas ou ports sont
         // autorisés à adresser des requêtes à votre serveur.
-        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("http://localhost:4200"); 
 
         /**
          * La méthode setAllowedHeaders est utilisée pour spécifier la liste des
