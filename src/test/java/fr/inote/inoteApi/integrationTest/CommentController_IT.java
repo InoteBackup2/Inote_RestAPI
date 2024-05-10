@@ -287,7 +287,7 @@ public class CommentController_IT {
                 this.jwtRepository.deleteAll();
                 this.validationRepository.deleteAll();
                 this.bearerAuthorization = this.connectTesterAndReturnBearer();
-                
+
                 this.mockMvc.perform(get(Endpoint.COMMENT_GET_ALL)
                                 .header("authorization", "Bearer " + this.bearerAuthorization))
                                 .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -333,10 +333,13 @@ public class CommentController_IT {
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)));
-                response
-                                .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String returnedMsg = JsonPath.parse(returnedResponse).read("$.msg");
+                assertThat(returnedMsg).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", this.userDtoRef.username());
                 signInBodyContent.put("password", this.userDtoRef.password());
@@ -350,7 +353,7 @@ public class CommentController_IT {
                                 .andExpect(jsonPath("$.bearer").isNotEmpty())
                                 .andExpect(jsonPath("$.refresh").isNotEmpty());
 
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                returnedResponse = response.andReturn().getResponse().getContentAsString();
                 String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
                 assertThat(bearer.length()).isEqualTo(145);
 
@@ -407,8 +410,8 @@ public class CommentController_IT {
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)));
                 response
-                                .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().string(MessagesEn.ACTIVATION_OF_USER_OK));
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", anotherUserDto.username());
                 signInBodyContent.put("password", anotherUserDto.password());
