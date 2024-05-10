@@ -46,7 +46,7 @@ jobs:
       run: sed -i 's#<front_url>#${{ secrets.FRONT_HOSTNAME}}#g' src/main/resources/application.properties
     
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application.properties
-      run: sed -i 's/<back_mail_do_not_reply_adress>/${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}/g' src/main/resources/application.properties
+      run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/main/resources/application.properties
         
     - name: Set up JDK 17 on Github Docker container
       uses: actions/setup-java@v3
