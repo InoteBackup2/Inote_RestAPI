@@ -16,19 +16,22 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping(Endpoint.REGISTER)
-                .allowedOrigins(FRONTEND_HOST)
+                //.allowedOrigins(FRONTEND_HOST)	// MUST BE rEPLACED!
+                .allowedOrigins("*") // WARNING IT IS FOR DEV
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.ACTIVATION)
-                .allowedOrigins(FRONTEND_HOST)
+                //.allowedOrigins(FRONTEND_HOST)
+                .allowedOrigins("*")
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.SIGN_IN)
-                .allowedOrigins(FRONTEND_HOST)
+                //.allowedOrigins(FRONTEND_HOST)
+                .allowedOrigins("*")
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
