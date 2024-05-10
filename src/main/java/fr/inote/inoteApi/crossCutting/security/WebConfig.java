@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.crossCutting.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,10 +9,14 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${inote.host}")
+    private String FRONTEND_HOST;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping(Endpoint.REGISTER)
-                .allowedOrigins("http://51.254.103.89:4200")
+                .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
