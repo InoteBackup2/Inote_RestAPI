@@ -10,7 +10,7 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${inote.host}")
+    @Value("${inote.frontend.host}")
     private String FRONTEND_HOST;
 
     @Override
