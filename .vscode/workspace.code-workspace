@@ -1,0 +1,62 @@
+{
+	"folders": [
+		{
+			"path": "./..",
+			"name": "Inote Backend"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "disabled",
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"sqltools.connections": [
+			{
+				"mysqlOptions": {
+					"authProtocol": "default"
+				},
+				"previewLimit": 50,
+				"server": "127.0.0.1",
+				"port": 3306,
+				"driver": "MySQL",
+				"name": "inote",
+				"database": "inote",
+				"username": "moch",
+				"askForPassword": true
+			}
+		]
+	},
+	"launch": {
+		// Use IntelliSense to learn about possible attributes.
+		// Hover to view descriptions of existing attributes.
+		// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "java",
+				"name": "Inote API application",
+				"request": "launch",
+				"mainClass": "fr.inote.inoteApi.InoteApiApplication",
+				"projectName": "InoteApi"
+			}
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			// Redhat
+			"redhat.java",
+			"redhat.vscode-xml",
+			// VSCode Java
+			"vscjava.vscode-java-debug",
+			"vscjava.vscode-java-pack",
+			"vscjava.vscode-maven",
+			"vscjava.vscode-java-dependency",
+			// Spring Boot
+			"vscjava.vscode-spring-boot-dashboard",
+			"vmware.vscode-spring-boot",
+			"vscjava.vscode-spring-initializr",
+			"pivotal.vscode-boot-dev-pack",
+			// SQL
+			"mtxr.sqltools",
+			"mtxr.sqltools-driver-mysql"
+		]
+	}
+}
