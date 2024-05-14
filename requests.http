@@ -11,8 +11,8 @@ POST http://localhost:8080/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name":"plume",
-    "username":"plume@kame-house.com",
+    "name":"obelix",
+    "username":"obelix@kame-house.com",
     "password":"booqsfqfq4666HHHYFj$"
 }
 

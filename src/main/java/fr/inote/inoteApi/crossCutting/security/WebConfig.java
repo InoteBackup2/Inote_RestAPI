@@ -36,6 +36,13 @@ public class WebConfig implements WebMvcConfigurer {
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
+                registry.addMapping(Endpoint.GET_CURRENT_USER)
+                //.allowedOrigins(FRONTEND_HOST)
+                .allowedOrigins("*")
+                .allowedMethods("GET")
+                .allowedHeaders("Content-Type", "Authorization")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+
     }
 }
 
