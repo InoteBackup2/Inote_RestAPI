@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "inote.backend.mail.notreply",
+    "type": "java.lang.String",
+    "description": "E-mail address of remote SMTP server"
+  },
+  {
+    "name": "inote.frontend.host",
+    "type": "java.lang.String",
+    "description": "Web address of frontend HTTP server"
+  }
+]}
