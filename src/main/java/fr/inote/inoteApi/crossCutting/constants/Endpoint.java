@@ -10,4 +10,5 @@ public class Endpoint {
     public static final String SIGN_OUT = "/api/auth/sign_out";
     public static final String CREATE_COMMENT = "/api/comment/create";
     public static final String COMMENT_GET_ALL = "/api/comments";
+    public static final String GET_CURRENT_USER = "/api/auth/current-user";
 }

@@ -15,7 +15,9 @@ import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -119,10 +121,9 @@ public class AuthController {
             return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
         }
         responseMsg.put("msg", MessagesEn.ACTIVATION_NEED_ACTIVATION);
-        
+
         return new ResponseEntity<>(responseMsg, HttpStatus.CREATED);
-        
-        
+
     }
 
     /**
@@ -135,17 +136,17 @@ public class AuthController {
      * @throws InoteValidationExpiredException
      */
     @PostMapping(path = Endpoint.ACTIVATION)
-    public ResponseEntity<Map<String,String>> activation(@RequestBody Map<String, String> activationCode) {
+    public ResponseEntity<Map<String, String>> activation(@RequestBody Map<String, String> activationCode) {
         Map<String, String> responseMsg = new HashMap<>();
 
         try {
             this.userService.activation(activationCode);
         } catch (InoteValidationNotFoundException | InoteValidationExpiredException | InoteUserNotFoundException ex) {
-        	responseMsg.put("msg", ex.getMessage());
+            responseMsg.put("msg", ex.getMessage());
             return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
         }
-responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
-         return new ResponseEntity<>(responseMsg, HttpStatus.OK);
+        responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
+        return new ResponseEntity<>(responseMsg, HttpStatus.OK);
     }
 
     /**
@@ -242,5 +243,31 @@ responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(MessagesEn.USER_SIGNOUT_SUCCESS, HttpStatus.OK);
+    }
+
+    
+    
+    /** 
+     * Get informations of current connected user
+     * 
+     * @param user
+     * @return ResponseEntity<Map<String, PublicUserDto>>
+     * @throws InoteUserNotFoundException
+     * 
+     * @author AtsuhikoMochizuki
+     * @date   14-05-2024
+     */
+    @GetMapping(path = Endpoint.GET_CURRENT_USER)
+    public ResponseEntity<Map<String, PublicUserDto>> getCurrentUser(@AuthenticationPrincipal User user)
+            throws InoteUserNotFoundException {
+        Map<String, PublicUserDto> responseMsg = new HashMap<>();
+        if (user == null) {
+            throw new InoteUserNotFoundException();
+        }
+        PublicUserDto publicUserDto = new PublicUserDto(user.getName(), user.getUsername(), null, user.isActif(),
+                user.getRole().getName().toString());
+
+        responseMsg.put("data", publicUserDto);
+        return new ResponseEntity<>(responseMsg, HttpStatus.OK);
     }
 }
