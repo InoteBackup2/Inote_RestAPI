@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.integrationTest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
@@ -8,12 +9,15 @@ import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
+
+import fr.inote.inoteApi.ConstantsForTests;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inoteApi.dto.NewPasswordDto;
+import fr.inote.inoteApi.dto.PublicUserDto;
 import fr.inote.inoteApi.dto.RefreshConnectionDto;
 import fr.inote.inoteApi.dto.UserDto;
 import fr.inote.inoteApi.entity.Role;
@@ -37,6 +41,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -913,5 +918,107 @@ public class AuthController_IT {
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        }
+
+          @Test
+        @DisplayName("Get the current user when he is connected")
+        void IT_getCurrentUser_shouldSuccess_whenUserIsConnected() throws JsonProcessingException, Exception {
+
+                /* Arrange */
+                String bearer = this.connectAndReturnBearer();
+
+                /* Act & assert */
+                ResultActions response = this.mockMvc.perform(
+                                MockMvcRequestBuilders.get(Endpoint.GET_CURRENT_USER)
+                                                .header("authorization", "Bearer " + bearer)
+                                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, PublicUserDto> map = mapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, PublicUserDto>>() {
+                                });
+                PublicUserDto currentUser = map.get("data");
+                assertThat(currentUser.pseudo()).isEqualTo(this.userRef.getName());
+                assertThat(currentUser.username()).isEqualTo(this.userRef.getUsername());
+        }
+
+        @Test
+        @DisplayName("Attempt to get the current user when he is not connected")
+        void IT_getCurrentUser_shouldReturnForbidden_whenBearerIsNotPresent() throws Exception {
+                /* Act & assert */
+                this.mockMvc.perform(
+                                MockMvcRequestBuilders.get(Endpoint.GET_CURRENT_USER)
+                                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("Attempt to get the current user when he is not connected")
+        void IT_getCurrentUser_shouldReturnForbidden_whenBearerIsNotCorrect() throws Exception {
+                /* Act & assert */
+                this.mockMvc.perform(
+                                MockMvcRequestBuilders.get(Endpoint.GET_CURRENT_USER)
+                                                .header("authorization", "Bearer " + ConstantsForTests.FALSE_BEARER)
+                                                .accept(MediaType.APPLICATION_JSON))
+                                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+        }
+
+        private String connectAndReturnBearer() throws JsonProcessingException, Exception {
+                final String[] messageContainingCode = new String[1];
+                this.mockMvc.perform(
+                                post(Endpoint.REGISTER)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                await()
+                                .atMost(2, SECONDS)
+                                .untilAsserted(() -> {
+                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                                        assertThat(receivedMessages.length).isEqualTo(1);
+
+                                        MimeMessage receivedMessage = receivedMessages[0];
+
+                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                                });
+
+                final String reference = "activation code : ";
+                int startSubtring = messageContainingCode[0].indexOf(reference);
+                int startIndexOfCode = startSubtring + reference.length();
+                int endIndexOfCode = startIndexOfCode + 6;
+                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+                Map<String, String> bodyRequest = new HashMap<>();
+                bodyRequest.put("code", extractedCode);
+
+                ResultActions response = this.mockMvc.perform(
+                                post(Endpoint.ACTIVATION)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
+                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                Map<String, String> signInBodyContent = new HashMap<>();
+                signInBodyContent.put("username", this.userDtoRef.username());
+                signInBodyContent.put("password", this.userDtoRef.password());
+
+                MvcResult result = this.mockMvc.perform(
+                                post(Endpoint.SIGN_IN)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(jsonPath("$.bearer").isNotEmpty())
+                                .andExpect(jsonPath("$.refresh").isNotEmpty())
+                                .andReturn();
+
+                returnedResponse = result.getResponse().getContentAsString();
+                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
+                assertThat(bearer.length()).isEqualTo(145);
+                return bearer;
         }
 }

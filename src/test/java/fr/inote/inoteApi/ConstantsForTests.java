@@ -14,4 +14,5 @@ public class ConstantsForTests {
         public static final String REFERENCE_USER2_NAME = "Vegeta";
         public static final String REFERENCE_USER2_EMAIL = "vegeta@inote.fr";
         public static final String REFERENCE_USER2_PASSWORD = "Bulma59ddI?@!";
+        public static final String FALSE_BEARER = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 }
