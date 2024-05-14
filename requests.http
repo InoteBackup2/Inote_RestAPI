@@ -7,12 +7,12 @@
 # from Inote root project
 # Simulated Inbox mail is accessible at :
 # http://localhost:5000
-POST http://localhost/api/auth/register HTTP/1.1
+POST http://localhost:8080/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name":"sangoku",
-    "username":"sangoku@kame-house.com",
+    "name":"plume",
+    "username":"plume@kame-house.com",
     "password":"booqsfqfq4666HHHYFj$"
 }
 
@@ -23,7 +23,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"338385"
+    "code":"309128"
 }
 
 #### User sign in
@@ -32,8 +32,8 @@ POST http://localhost:8080/api/auth/sign_in HTTP/1.1
 Content-Type: application/json
 
 {
-  "username":"sangoku@kame-house.com",
-  "password":"chichi@@YYY14646_"
+  "username":"plume@kame-house.com",
+  "password":"booqsfqfq4666HHHYFj$"
 }
 
 ### User sign out
@@ -71,6 +71,14 @@ Content-Type: application/json
 {
    "refresh":"61ff6d18-607c-4220-8a38-1392ff89aec8"
 }
+
+### Get current user
+# Nota : Don't forget to set the good refresh UUID, sended when sign in
+GET http://localhost:8080/api/auth/current-user HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwbHVtZUBrYW1lLWhvdXNlLmNvbSIsIm5hbWUiOiJwbHVtZSIsImV4cCI6MTcxNTY4OTMyMH0.wYVnogs3eN_zy2Mat-3ry0sr0XXlErkSeD9c6J7-ods
+
+
 
 #COMMENTS
 #========================================================================
