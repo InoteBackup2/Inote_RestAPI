@@ -11,6 +11,7 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.JsonPath;
 
 import fr.inote.inoteApi.ConstantsForTests;
+
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
@@ -473,9 +474,11 @@ public class AuthController_IT {
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String,String> parsedResponse = this.objectMapper.readValue(returnedResponse, new TypeReference<Map<String, String>>() {});
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
                 assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
-                
+
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", this.userDtoRef.username());
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
@@ -567,9 +570,10 @@ public class AuthController_IT {
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse, new TypeReference<Map<String, String>>() {});
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
                 assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
-                                
 
                 Map<String, String> usernameMap = new HashMap<>();
                 usernameMap.put("email", this.userDtoRef.username());
@@ -644,7 +648,9 @@ public class AuthController_IT {
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse, new TypeReference<Map<String, String>>() {});
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
                 assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 Map<String, String> usernameMap = new HashMap<>();
@@ -721,7 +727,9 @@ public class AuthController_IT {
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse, new TypeReference<Map<String, String>>() {});
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
                 assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 Map<String, String> signInBodyContent = new HashMap<>();
@@ -802,13 +810,15 @@ public class AuthController_IT {
                 bodyRequest.put("code", extractedCode);
 
                 ResultActions response = this.mockMvc.perform(
-                        post(Endpoint.ACTIVATION)
-                                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                        .content(this.objectMapper.writeValueAsString(bodyRequest)))
-                        .andExpect(MockMvcResultMatchers.status().isOk());
-        String returnedResponse = response.andReturn().getResponse().getContentAsString();
-        Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse, new TypeReference<Map<String, String>>() {});
-        assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+                                post(Endpoint.ACTIVATION)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
+                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 Map<String, String> signInBodyContent = new HashMap<>();
                 signInBodyContent.put("username", this.userDtoRef.username());
@@ -864,14 +874,16 @@ public class AuthController_IT {
 
                 Map<String, String> bodyRequest = new HashMap<>();
                 bodyRequest.put("code", extractedCode);
-                
+
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse, new TypeReference<Map<String, String>>() {});
+                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
+                                new TypeReference<Map<String, String>>() {
+                                });
                 assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 Map<String, String> signInBodyContent = new HashMap<>();

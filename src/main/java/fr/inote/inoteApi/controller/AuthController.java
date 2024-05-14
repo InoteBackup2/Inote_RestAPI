@@ -122,7 +122,9 @@ public class AuthController {
         }
         responseMsg.put("msg", MessagesEn.ACTIVATION_NEED_ACTIVATION);
 
+
         return new ResponseEntity<>(responseMsg, HttpStatus.CREATED);
+
 
     }
 
@@ -143,10 +145,12 @@ public class AuthController {
             this.userService.activation(activationCode);
         } catch (InoteValidationNotFoundException | InoteValidationExpiredException | InoteUserNotFoundException ex) {
             responseMsg.put("msg", ex.getMessage());
+            responseMsg.put("msg", ex.getMessage());
             return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
         }
         responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
         return new ResponseEntity<>(responseMsg, HttpStatus.OK);
+        
     }
 
     /**

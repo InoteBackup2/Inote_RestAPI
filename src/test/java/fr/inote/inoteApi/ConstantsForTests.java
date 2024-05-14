@@ -10,6 +10,7 @@ public class ConstantsForTests {
 
         public static final String REFERENCE_USER_BEARER = "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.m5rG1OfisLenbvHUf79NjLqXcxP2PZzOzPzcm_C9Omw";
         public static final String REFERENCE_USER_REFRESH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.m5rG1OfisLenbvHUf79NjLqXcxP2PZzOzPzcm_C9Omw";
+        
 
         public static final String REFERENCE_USER2_NAME = "Vegeta";
         public static final String REFERENCE_USER2_EMAIL = "vegeta@inote.fr";
