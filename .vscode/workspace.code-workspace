@@ -38,7 +38,7 @@
 				"projectName": "InoteApi",
 				"env":{ "SDS": "spring.datasource"},
 				"envFile":"${workspaceFolder}/../.env",
-				"args": "--${SDS}.url=${SDS_URL} --${SDS}.driver-class-name=${SDS_DCN} --${SDS}.username=${SDS_USER} --${SDS}.password=${SDS_PW} --inote.frontend.host=${FRONTEND_HOST} --inote.backend.mail.notreply=${BACKEND_MAIL_NOTREPLY}"
+				"args": "--spring.profiles.active=dev"
 			}
 		]
 	},
