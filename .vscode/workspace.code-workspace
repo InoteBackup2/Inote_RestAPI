@@ -6,6 +6,14 @@
 		}
 	],
 	"settings": {
+		"java.test.config": [
+			{
+				"name": "Inote test configuration",
+				"workingDirectory": "${workspaceFolder}",
+				"envFile":"${workspaceFolder}/../.env"
+			},
+		   
+		],
 		"java.compile.nullAnalysis.mode": "disabled",
 		"java.configuration.updateBuildConfiguration": "automatic",
 		"sqltools.connections": [
@@ -67,5 +75,5 @@
 			// Test coverage
 			"ryanluker.vscode-coverage-gutters"
 		]
-	}
+	},
 }

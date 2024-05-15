@@ -43,7 +43,6 @@ import org.springframework.test.context.ActiveProfiles;
  * should be used when loading an ApplicationContext for test classes
  */
 @ActiveProfiles("test")
-
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
 
@@ -72,7 +71,7 @@ public class NotificationServiceImplTest {
          * Nota : if service is an interface, instanciate implementation withs mocks in
          * params
          */
-        
+
         private JavaMailSender javaMailSender;
 
         @InjectMocks
@@ -101,6 +100,7 @@ public class NotificationServiceImplTest {
 
         /* SERVICE UNIT TESTS */
         /* ============================================================ */
+
         @Test
         @DisplayName("Sending email with good parameters")
         public void sendEmail_ShouldSuccess_withGoodParams() throws NoSuchMethodException, SecurityException {
