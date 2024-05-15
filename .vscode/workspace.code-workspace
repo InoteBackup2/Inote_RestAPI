@@ -36,7 +36,6 @@
 				"request": "launch",
 				"mainClass": "fr.inote.inoteApi.InoteApiApplication",
 				"projectName": "InoteApi",
-				"env":{ "SDS": "spring.datasource"},
 				"envFile":"${workspaceFolder}/../.env",
 				"args": "--spring.profiles.active=dev"
 			}
