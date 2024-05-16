@@ -9,7 +9,6 @@ import fr.inote.inoteApi.repository.ValidationRepository;
 import fr.inote.inoteApi.service.NotificationService;
 import fr.inote.inoteApi.service.ValidationService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,6 @@ public class ValidationServiceImpl implements ValidationService {
     private ValidationRepository validationRepository;
     private NotificationService notificationService;
 
-    @Autowired
     public ValidationServiceImpl(ValidationRepository validationRepository, NotificationService notificationService) {
         this.validationRepository = validationRepository;
         this.notificationService = notificationService;

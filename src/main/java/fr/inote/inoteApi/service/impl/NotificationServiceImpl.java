@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -43,8 +42,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Value("${inote.backend.mail.notreply}")
     private String NOT_REPLY_ADRESS_MAIL;
     
-
-    @Autowired
     public NotificationServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }

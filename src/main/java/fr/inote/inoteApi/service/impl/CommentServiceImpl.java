@@ -11,7 +11,6 @@ import fr.inote.inoteApi.service.CommentService;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     private UserRepository userRepository;
 
-    @Autowired
     public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;

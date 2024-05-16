@@ -5,7 +5,6 @@ import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ public class RoleServiceImpl implements RoleService {
     /* ============================================================ */
     private RoleRepository roleRepository;
 
-    @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }

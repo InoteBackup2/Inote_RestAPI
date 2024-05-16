@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.NonNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtServiceImpl jwtServiceImpl;
 
-    @Autowired
+    
     public JwtFilter(
             HandlerExceptionResolver handlerExceptionResolver,
             UserService utilisateurService,

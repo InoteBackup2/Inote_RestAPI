@@ -9,7 +9,6 @@ import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.repository.ValidationRepository;
 import fr.inote.inoteApi.service.UserService;
 import fr.inote.inoteApi.service.ValidationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,7 +43,6 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     private ValidationRepository validationRepository;
 
-    @Autowired
     public UserServiceImpl(
             UserRepository userRepository,
             BCryptPasswordEncoder passwordEncoder,

@@ -11,7 +11,6 @@ import fr.inote.inoteApi.service.impl.UserServiceImpl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +58,6 @@ public class CommentController {
     @SuppressWarnings("unused")
     private final JwtServiceImpl jwtService;
 
-    @Autowired
     public CommentController(CommentService commentService, AuthenticationManager authenticationManager,
             UserServiceImpl userService, JwtServiceImpl jwtService) {
         this.commentService = commentService;

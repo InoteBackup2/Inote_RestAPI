@@ -15,7 +15,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class JwtServiceImpl implements JwtService {
     private UserService userService;
     private JwtRepository jwtRepository;
 
-    @Autowired
     public JwtServiceImpl(
             UserService userService,
             JwtRepository jwtRepository) {

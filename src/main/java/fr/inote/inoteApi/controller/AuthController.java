@@ -8,7 +8,6 @@ import fr.inote.inoteApi.dto.*;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
@@ -80,7 +79,7 @@ public class AuthController {
     private final UserServiceImpl userService;
     private final JwtServiceImpl jwtService;
 
-    @Autowired
+    
     public AuthController(
             AuthenticationManager authenticationManager,
             UserServiceImpl userService,

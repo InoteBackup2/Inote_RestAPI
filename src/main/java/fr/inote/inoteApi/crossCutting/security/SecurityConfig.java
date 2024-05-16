@@ -1,7 +1,6 @@
 package fr.inote.inoteApi.crossCutting.security;
 
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.context.annotation.Configuration;
@@ -84,7 +83,6 @@ public class SecurityConfig {
             "swagger-ui.html"
     };
 
-    @Autowired
     public SecurityConfig(
             BCryptPasswordEncoder bCryptPasswordEncoder,
             JwtFilter jwtFilter,
