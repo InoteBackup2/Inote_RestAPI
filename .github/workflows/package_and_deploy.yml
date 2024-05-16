@@ -2,7 +2,7 @@
 # atsuhikoMochizuki
 # 28/04/2024
 
-name: CI/CD pipeline for Inote API
+name: Inote Backend CI/CD
 
 on:
   push:
