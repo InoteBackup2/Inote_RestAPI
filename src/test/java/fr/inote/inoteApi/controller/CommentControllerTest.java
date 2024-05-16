@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -62,6 +63,7 @@ import java.util.List;
 
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class CommentControllerTest {
 
         /* DEPENDENCIES INJECTION */

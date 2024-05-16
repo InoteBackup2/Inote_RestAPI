@@ -69,6 +69,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
+
 public class AuthControllerTest {
 
         /* DEPENDENCIES INJECTION */

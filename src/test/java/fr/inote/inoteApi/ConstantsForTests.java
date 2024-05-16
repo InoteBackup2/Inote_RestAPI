@@ -2,7 +2,7 @@ package fr.inote.inoteApi;
 
 import org.springframework.test.context.ActiveProfiles;
 
-// @ActiveProfiles("test")
+@ActiveProfiles("test")
 public class ConstantsForTests {
         public static final String REFERENCE_USER_NAME = "Sangoku";
         public static final String REFERENCE_USER_EMAIL = "sangoku@inote.fr";

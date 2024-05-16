@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * should be used when loading an ApplicationContext for test classes.
  * Nota : here used for using another database ok main app
  */
-// @ActiveProfiles("test")
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 
 /* Add Mockito functionalities to Junit 5 */
