@@ -85,7 +85,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * definition profiles
  * should be used when loading an ApplicationContext for test classes
  */
-@ActiveProfiles("test")
+// @ActiveProfiles("test")
 public class AuthController_IT {
 
         /* JUNIT5 EXTENSIONS ACCESS AS OBJECT */

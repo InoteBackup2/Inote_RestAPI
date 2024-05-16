@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
+// @ActiveProfiles("test")
 public class JwtServiceImpl_IT {
 
     @Test

@@ -10,7 +10,8 @@
 			{
 				"name": "Inote test configuration",
 				"workingDirectory": "${workspaceFolder}",
-				"envFile":"${workspaceFolder}/../.env"
+				"envFile":"${workspaceFolder}/../.env",
+				"args": ["--spring.profiles.active=testDev"]
 			},
 		   
 		],

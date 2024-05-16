@@ -46,7 +46,7 @@ jobs:
       run: sed -i 's#<front_url>#${{ secrets.FRONT_HOSTNAME}}#g' src/main/resources/application.properties
     
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application.properties
-      run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/main/resources/application.properties
+      run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/test/resources/application-test.properties
 
     - name: Load DATASOURCE_URL in application.properties
       run: sed -i 's#<spring_datasource_url>#${{ secrets.DATASOURCE_URL }}#g' src/main/resources/application.properties
@@ -57,15 +57,22 @@ jobs:
     - name: Load DATASOURCE_PASSWORD in application.properties
       run: sed -i 's#<spring_datasource_password>#${{ secrets.DATASOURCE_PASSWORD }}#g' src/main/resources/application.properties
     
+    
+
+    
     - name: Set up JDK 17 on Github Docker container
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    
+    
+      
 
     - name: Package Jar with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dspring.profiles.active=test
+      
     
     - name: Rename jar for deployement
       run: mv target/*.jar target/Inote_API.jar
