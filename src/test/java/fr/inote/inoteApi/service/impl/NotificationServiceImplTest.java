@@ -42,7 +42,7 @@ import org.springframework.test.context.ActiveProfiles;
  * definition profiles
  * should be used when loading an ApplicationContext for test classes
  */
-@ActiveProfiles({"test", "testDev"})
+@ActiveProfiles("test")
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
 
