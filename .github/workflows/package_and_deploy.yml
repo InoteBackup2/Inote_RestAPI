@@ -71,9 +71,7 @@ jobs:
       
 
     - name: Package Jar with Maven
-      env:  
-        SPRING_PROFILES_ACTIVE: test
-      run: mvn -B package --file pom.xml -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}
+      run: mvn -B package --file pom.xml -Dspring.profiles.active=test
       
     
     - name: Rename jar for deployement
