@@ -49,7 +49,7 @@ jobs:
       run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/main/resources/application.properties
       
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application-test.properties
-      run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/test/resources/application-test.properties
+      run: sed -i 's#${BACKEND_MAIL_NOTREPLY}#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/test/resources/application-test.properties
       
 
     - name: Load DATASOURCE_URL in application.properties
