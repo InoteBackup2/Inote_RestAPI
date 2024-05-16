@@ -41,7 +41,7 @@ import fr.inote.inoteApi.service.ValidationService;
  * definition profiles
  * should be used when loading an ApplicationContext for test classes
  */
-@ActiveProfiles("test")
+// @ActiveProfiles("test")
 
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)

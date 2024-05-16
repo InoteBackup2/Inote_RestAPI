@@ -57,15 +57,24 @@ jobs:
     - name: Load DATASOURCE_PASSWORD in application.properties
       run: sed -i 's#<spring_datasource_password>#${{ secrets.DATASOURCE_PASSWORD }}#g' src/main/resources/application.properties
     
+    
+
+    
     - name: Set up JDK 17 on Github Docker container
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    
+    
+      
 
     - name: Package Jar with Maven
-      run: mvn -B package --file pom.xml
+      env:  
+        SPRING_PROFILES_ACTIVE: test
+      run: mvn -B package --file pom.xml -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}
+      
     
     - name: Rename jar for deployement
       run: mv target/*.jar target/Inote_API.jar
