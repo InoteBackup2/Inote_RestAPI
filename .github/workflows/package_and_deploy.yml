@@ -1,28 +1,25 @@
 # CI/CD pipeline for Inote API
-# atsuhikoMochizuki
-# 28/04/2024
 
-name: Inote Backend CI/CD
 
+name: Inote Backend CI/CD workflow
+#Data securisation : Github secrets
+#atsuhikoMochizuki
+#28/04/2024
+
+# Conditions for launching CI/CD process
+# =========================================
 on:
   push:
     branches: ["main"]
-jobs:
-  # kill-process:
-  #   name: kill process
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #    - name: Stop process running on port 8080
-  #      uses: appleboy/ssh-action@v1.0.0
-  #      with:
-  #       host: ${{ secrets.HOST }}
-  #       username: ${{ secrets.USERNAME }}
-  #       key: ${{ secrets.SSHKEY }}
-  #       port: ${{ secrets.PORT }}
-  #       script: fuser -k 8080/tcp
 
+# Workflow steps
+# =========================================
+jobs:
+  
+  # => Jar folder creation on Inote server
+  # ---------------------------------------
   create-folder:
-    name: create-folder
+    name: create the jar folder if not exists
     runs-on: ubuntu-latest
     steps:
      - name: Create folder on host for jar deployment 
@@ -34,14 +31,22 @@ jobs:
         port: ${{ secrets.PORT }}
         script: mkdir -p ./Inote_project/
   
+  # => Test & build jar on github container, then
+  #    put on Inote server
+  # ------------------------------------------------
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Type of container where packaging will make
     needs: create-folder
-    steps:
     
+    steps:
+
+    # Source code recuperation
+    # -------------------------
     - name: Clone repository on Github Docker container
       uses: actions/checkout@v3
 
+    # Secrets Injections in properties files
+    # ---------------------------------------
     - name: Load FRONT HOST in application.properties
       run: sed -i 's#${FRONTEND_HOST}#${{ secrets.FRONT_HOSTNAME}}#g' src/main/resources/application.properties
     
@@ -50,20 +55,18 @@ jobs:
       
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application-test.properties
       run: sed -i 's#${BACKEND_MAIL_NOTREPLY}#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/test/resources/application-test.properties
-      
-
+    
     - name: Load DATASOURCE_URL in application.properties
       run: sed -i 's#${SDS_URL}#${{ secrets.DATASOURCE_URL }}#g' src/main/resources/application.properties
-
+    
     - name: Load DATASOURCE_USERNAME in application.properties
       run: sed -i 's#${SDS_USER}#${{ secrets.DATASOURCE_USERNAME }}#g' src/main/resources/application.properties
 
     - name: Load DATASOURCE_PASSWORD in application.properties
       run: sed -i 's#${SDS_PW}#${{ secrets.DATASOURCE_PASSWORD }}#g' src/main/resources/application.properties
     
-    
-
-    
+    # Container preparation for java version to use
+    # ------------------------------------------------
     - name: Set up JDK 17 on Github Docker container
       uses: actions/setup-java@v3
       with:
@@ -71,16 +74,16 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
-    
-      
-
+    # Packaging the jar in container(build, test, package)
+    # ----------------------------------------------------
     - name: Package Jar with Maven
       run: mvn -B package --file pom.xml
       
-    
     - name: Rename jar for deployement
       run: mv target/*.jar target/Inote_API.jar
     
+    # Jar deployement on Inote server via ssh
+    # ----------------------------------------------------
     - name: Deploy jar on server via ssh password
       uses: appleboy/scp-action@v0.1.7
       with: 
@@ -91,33 +94,3 @@ jobs:
         source: "target/Inote_API.jar"
         target: "./Inote_project/" 
         strip_components: 1
-
-  # reboot: # RestApi will be launch at startup
-  #   name: Reboot system (for launching api)
-  #   needs: build-and-deploy
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Create folder on host for jar deployment 
-  #       uses: appleboy/ssh-action@v1.0.0
-  #       with:
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.SSHKEY }}
-  #         port: ${{ secrets.PORT }}
-  #         script: sudo reboot
-  
-  
-  # run-jar: # Never end on github action
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Run jar on server
-  #       uses: appleboy/ssh-action@v1.0.0
-  #       with:
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.SSHKEY }}
-  #         port: ${{ secrets.PORT }}
-  #         script: |
-  #           java -jar ./Inote_project/Inote_API.jar 
-      
