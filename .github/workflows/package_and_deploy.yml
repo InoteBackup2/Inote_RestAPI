@@ -43,23 +43,23 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Load FRONT HOST in application.properties
-      run: sed -i 's#<front_url>#${{ secrets.FRONT_HOSTNAME}}#g' src/main/resources/application.properties
+      run: sed -i 's#${FRONTEND_HOST}#${{ secrets.FRONT_HOSTNAME}}#g' src/main/resources/application.properties
     
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application.properties
-      run: sed -i 's#<back_mail_do_not_reply_adress>#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/main/resources/application.properties
+      run: sed -i 's#${BACKEND_MAIL_NOTREPLY}#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/main/resources/application.properties
       
     - name: Load BACKEND_MAIL_DO_NOT_REPLY_ADDRESS in application-test.properties
       run: sed -i 's#${BACKEND_MAIL_NOTREPLY}#${{ secrets.BACKEND_MAIL_DO_NOT_REPLY_ADDRESS }}#g' src/test/resources/application-test.properties
       
 
     - name: Load DATASOURCE_URL in application.properties
-      run: sed -i 's#<spring_datasource_url>#${{ secrets.DATASOURCE_URL }}#g' src/main/resources/application.properties
+      run: sed -i 's#${SDS_URL}#${{ secrets.DATASOURCE_URL }}#g' src/main/resources/application.properties
 
     - name: Load DATASOURCE_USERNAME in application.properties
-      run: sed -i 's#<spring_datasource_username>#${{ secrets.DATASOURCE_USERNAME }}#g' src/main/resources/application.properties
+      run: sed -i 's#${SDS_USER}#${{ secrets.DATASOURCE_USERNAME }}#g' src/main/resources/application.properties
 
     - name: Load DATASOURCE_PASSWORD in application.properties
-      run: sed -i 's#<spring_datasource_password>#${{ secrets.DATASOURCE_PASSWORD }}#g' src/main/resources/application.properties
+      run: sed -i 's#${SDS_PW}#${{ secrets.DATASOURCE_PASSWORD }}#g' src/main/resources/application.properties
     
     
 

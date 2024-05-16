@@ -44,8 +44,7 @@
 				"request": "launch",
 				"mainClass": "fr.inote.inoteApi.InoteApiApplication",
 				"projectName": "InoteApi",
-				"envFile":"${workspaceFolder}/../.env",
-				"args": "--spring.profiles.active=dev"
+				"envFile":"${workspaceFolder}/../.env"
 			}
 		]
 	},
