@@ -55,7 +55,7 @@ import static fr.inote.inoteApi.ConstantsForTests.*;
  * should be used when loading an ApplicationContext for test classes.
  * Nota : here used for using another database ok main app
  */
-// @ActiveProfiles("test")
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 
 /* Add Mockito functionalities to Junit 5 */

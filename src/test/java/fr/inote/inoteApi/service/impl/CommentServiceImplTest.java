@@ -46,7 +46,7 @@ import static org.assertj.core.api.Assertions.*;
  * definition profiles
  * should be used when loading an ApplicationContext for test classes
  */
-// @ActiveProfiles("test")
+@ActiveProfiles("test")
 
 /* Add Mockito functionalities to Junit 5 */
 @ExtendWith(MockitoExtension.class)
