@@ -75,7 +75,7 @@ jobs:
       
 
     - name: Package Jar with Maven
-      run: mvn -B package --file pom.xml -Dspring.profiles.active=test
+      run: mvn -B package --file pom.xml
       
     
     - name: Rename jar for deployement
