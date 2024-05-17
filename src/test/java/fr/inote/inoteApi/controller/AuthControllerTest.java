@@ -145,7 +145,6 @@ public class AuthControllerTest {
 
         /* CONTROLLER UNIT TEST */
         /* ============================================================ */
-        @SuppressWarnings("unchecked")
         @Test
         @DisplayName("Register a non existing user")
         void register_ShouldSuccess_WithNotExistingUser() throws Exception {
