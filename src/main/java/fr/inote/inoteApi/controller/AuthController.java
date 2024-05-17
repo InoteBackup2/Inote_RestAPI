@@ -79,7 +79,6 @@ public class AuthController {
     private final UserServiceImpl userService;
     private final JwtServiceImpl jwtService;
 
-    
     public AuthController(
             AuthenticationManager authenticationManager,
             UserServiceImpl userService,
@@ -102,6 +101,7 @@ public class AuthController {
      * @throws InoteRoleNotFoundException
      * @throws InoteInvalidPasswordFormatException
      */
+
     @PostMapping(path = Endpoint.REGISTER)
     public ResponseEntity<Map<String, String>> register(@RequestBody UserDto userDto) {
         Map<String, String> responseMsg = new HashMap<>();
@@ -121,9 +121,7 @@ public class AuthController {
         }
         responseMsg.put("msg", MessagesEn.ACTIVATION_NEED_ACTIVATION);
 
-
         return new ResponseEntity<>(responseMsg, HttpStatus.CREATED);
-
 
     }
 
@@ -149,7 +147,7 @@ public class AuthController {
         }
         responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
         return new ResponseEntity<>(responseMsg, HttpStatus.OK);
-        
+
     }
 
     /**
@@ -259,16 +257,15 @@ public class AuthController {
      * @date 14-05-2024
      */
     @GetMapping(path = Endpoint.GET_CURRENT_USER)
-    public ResponseEntity<Map<String, PublicUserDto>> getCurrentUser(@AuthenticationPrincipal User user)
+    public ResponseEntity<PublicUserDto> getCurrentUser(@AuthenticationPrincipal User user)
             throws InoteUserNotFoundException {
-        Map<String, PublicUserDto> responseMsg = new HashMap<>();
         if (user == null) {
             throw new InoteUserNotFoundException();
         }
         PublicUserDto publicUserDto = new PublicUserDto(user.getName(), user.getUsername(), null, user.isActif(),
                 user.getRole().getName().toString());
-
-        responseMsg.put("data", publicUserDto);
-        return new ResponseEntity<>(responseMsg, HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(publicUserDto);
     }
 }

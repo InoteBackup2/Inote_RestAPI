@@ -947,10 +947,10 @@ public class AuthController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 ObjectMapper mapper = new ObjectMapper();
-                Map<String, PublicUserDto> map = mapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, PublicUserDto>>() {
+                PublicUserDto currentUser = mapper.readValue(returnedResponse,
+                                new TypeReference<PublicUserDto>() {
                                 });
-                PublicUserDto currentUser = map.get("data");
+               
                 assertThat(currentUser.pseudo()).isEqualTo(this.userRef.getName());
                 assertThat(currentUser.username()).isEqualTo(this.userRef.getUsername());
         }

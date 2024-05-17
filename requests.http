@@ -23,7 +23,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"908862"
+    "code":"382995"
 }
 
 #### User sign in
@@ -32,7 +32,7 @@ POST http://localhost:8080/api/auth/sign_in HTTP/1.1
 Content-Type: application/json
 
 {
-  "username":"plume@kame-house.com",
+  "username":"obelix@kame-house.com",
   "password":"booqsfqfq4666HHHYFj$"
 }
 
@@ -76,7 +76,7 @@ Content-Type: application/json
 # Nota : Don't forget to set the good refresh UUID, sended when sign in
 GET http://localhost:8080/api/auth/current-user HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicGx1bWUiLCJleHAiOjE3MTU2OTAzOTMsInN1YiI6InBsdW1lQGthbWUtaG91c2UuY29tIn0.RNrkfH3Ft03mv6NQpiYE5HjqKTSyM_vTqRJ4NtQbsAk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoib2JlbGl4IiwiZXhwIjoxNzE1OTM2MzU3LCJzdWIiOiJvYmVsaXhAa2FtZS1ob3VzZS5jb20ifQ.1tP93mtlFkwRoFeFFNVF51BgQdlxq8iB_WZiuU_tMqE
 
 
 

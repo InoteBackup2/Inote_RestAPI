@@ -71,7 +71,9 @@
 			// Git
 			"mhutchie.git-graph",
 			// Test coverage
-			"ryanluker.vscode-coverage-gutters"
+			"ryanluker.vscode-coverage-gutters",
+			// Javadoc Generation
+			"madhavd1.javadoc-tools"
 		]
 	},
 }
