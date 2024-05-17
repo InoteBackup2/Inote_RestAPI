@@ -177,20 +177,13 @@ public class AuthController_IT {
                 /* Act & assert */
                 // Send request, print response, check returned status and primary checking
                 // (status code, content body type...)
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                ObjectMapper mapper = new ObjectMapper();
-                @SuppressWarnings("unchecked")
-                Map<String, String> map = mapper.readValue(returnedResponse, Map.class);
-                assertThat(map.size()).isEqualTo(1);
-                assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_NEED_ACTIVATION);
-
+                                .andExpect(MockMvcResultMatchers.content()
+                                                .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -932,7 +925,7 @@ public class AuthController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
-          @Test
+        @Test
         @DisplayName("Get the current user when he is connected")
         void IT_getCurrentUser_shouldSuccess_whenUserIsConnected() throws JsonProcessingException, Exception {
 
@@ -950,7 +943,7 @@ public class AuthController_IT {
                 PublicUserDto currentUser = mapper.readValue(returnedResponse,
                                 new TypeReference<PublicUserDto>() {
                                 });
-               
+
                 assertThat(currentUser.pseudo()).isEqualTo(this.userRef.getName());
                 assertThat(currentUser.username()).isEqualTo(this.userRef.getUsername());
         }
