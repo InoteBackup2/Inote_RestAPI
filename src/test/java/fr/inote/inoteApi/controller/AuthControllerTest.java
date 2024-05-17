@@ -153,18 +153,12 @@ public class AuthControllerTest {
                 when(this.userService.register(any(User.class))).thenReturn(this.userRef);
 
                 /* Act & assert */
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                ObjectMapper mapper = new ObjectMapper();
-                Map<String, String> map = mapper.readValue(returnedResponse, Map.class);
-                assertThat(map.size()).isEqualTo(1);
-                assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_NEED_ACTIVATION);
+                                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
 
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));
