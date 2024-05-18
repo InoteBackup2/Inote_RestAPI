@@ -35,8 +35,14 @@
 				"name": "Inote API application",
 				"request": "launch",
 				"mainClass": "fr.inote.inoteApi.InoteApiApplication",
-				"projectName": "InoteApi",
-				"envFile":"${workspaceFolder}/../.env"
+				"projectName": "InoteApi"
+				
+				/* Ceci n'est plus utile, tout la configuration pour le runner des test
+				   L'ajout de la ligne spring.config.import=optional:file:./../.env[.properties]
+				   dans le application.properties et le application-test.properties résoud tous les problèmes
+				   Penser à supprimer le commentaire après review et la ligne incriminé si OK
+				*/
+				// "envFile":"${workspaceFolder}/../.env"
 			}
 		]
 	},
