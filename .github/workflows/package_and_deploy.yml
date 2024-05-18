@@ -106,3 +106,4 @@ jobs:
           pid=$(lsof -i :8080 -t)
           kill -9 $pid
           nohup java -jar ./Inote_project/Inote_API.jar &
+          exit
