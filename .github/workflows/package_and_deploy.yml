@@ -94,3 +94,15 @@ jobs:
         source: "target/Inote_API.jar"
         target: "./Inote_project/" 
         strip_components: 1
+
+    - name: stop process if running and restart jar
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          pid=$(lsof -i :8080 -t)
+          kill -9 $pid
+          nohup java -jar ./Inote_project/Inote_API.jar &
