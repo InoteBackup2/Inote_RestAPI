@@ -1,13 +1,10 @@
 package fr.inote.inoteApi.controller.advice;
 
-import java.util.Map;
-
 import fr.inote.inoteApi.crossCutting.exceptions.*;
+
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import io.jsonwebtoken.MalformedJwtException;
@@ -16,194 +13,235 @@ import lombok.extern.slf4j.Slf4j;
 
 import static org.springframework.http.HttpStatus.*;
 
+import org.apache.tomcat.websocket.AuthenticationException;
 
 /**
- * Exception manager for controller layer
+ * Centralized exception manager for controller layer
+ * 
  * @author atsuhiko Mochizuki
  * @date 28/03/2024
  */
 
-@Slf4j
-
-/* The @RestControllerAdvice annotation in Spring is a specialization of @ControllerAdvice and
- * @ResponseBody. It is used for exception handling in Restful APIs and is commonly used to
- * handle exceptions in a centralized way for all controllers in an application.*/
-@RestControllerAdvice
+@Slf4j // For output errors in console
+@RestControllerAdvice // Exception Centralized manager
 public class ApplicationControllerAdvice {
 
-    /**
-     * Exception handler for problems with JWT (malformed and bad signature)
-     * <p>
-     * Nota : The @ExceptionHandler annotation allows you to define methods that
-     * handle specific exceptions thrown by your controller methods.
-     * These methods can be defined either within the same controller
-     * or in a separate class annotated with @ControllerAdvice for global exception
-     * handling.
-     * The @MalformedJwtException is a specific exception that occurs when a JWT
-     * (JSON Web Token)
-     * string contains an invalid number of period characters.
-     * The SignatureException occurs when there is a problem with the signature of a
-     * JSON Web Token.
-     * <p>
-     * Annotation @ResponseStatus is used in Spring applications to mark a method or exception
-     * class with the HTTP status code and reason message that should be returned.
-     * When the handler method is invoked, the status code is applied to the HTTP response,
-     * or if a specific exception is thrown.
-     *
-     * @param exception
-     * @return return a JSON object with 401 status code
+   /**
+     * Handle exception when jwt is malformed
+     * 
+     * @param ex exception
+     * @return 401 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
      */
-    @ExceptionHandler(value = {MalformedJwtException.class, SignatureException.class})
-    @ResponseStatus(UNAUTHORIZED) // return 401 Unauthorized status http status
-    public @ResponseBody ProblemDetail badCredentialsException(final Exception exception) {
+    @ExceptionHandler(value = MalformedJwtException.class)
+    private ProblemDetail MalformedJwtExceptionHandler(MalformedJwtException ex) {
 
-        log.error(exception.getMessage(), exception);
-
-        // ProblemDetails is proposed by Spring for return exceptions
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, "Invalid token");
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
     }
 
     /**
-     * Invalid credentials manager
-     * <p>
-     * Nota : The BadCredentialsException is a subclass of
-     * AuthenticationException in Spring Security. This exception is thrown
-     * when invalid authentication credentials are provided.
-     *
-     * @param exception
-     * @return an http response with json object with 401 status code
-     * when credentials are invalid
+     * Handle exception when problem with credentials signature append
+     * 
+     * @param ex exception
+     * @return 401 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
      */
-    @ResponseStatus(UNAUTHORIZED)
+    @ExceptionHandler(value = SignatureException.class)
+    private ProblemDetail SignatureExceptionHandler(SignatureException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when bad credentials
+     * 
+     * @param ex exception
+     * @return 401 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
     @ExceptionHandler(value = BadCredentialsException.class)
-    public @ResponseBody ProblemDetail badCredentialsException(final BadCredentialsException exception) {
+    private ProblemDetail BadCredentialsExceptionHandler(BadCredentialsException ex) {
 
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(UNAUTHORIZED, "Invalid credentials");
-        problemDetail.setProperty("Error", "Impossible authentication");
-
-        return problemDetail;
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
     }
-
-    @ResponseStatus(NOT_ACCEPTABLE)
-    @ExceptionHandler(value = InoteExistingEmailException.class)
-    public @ResponseBody ProblemDetail InoteExistingEmailException(final InoteExistingEmailException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteValidationNotFoundException.class)
-    public @ResponseBody ProblemDetail InoteValidationNotFoundException(final InoteValidationNotFoundException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(NOT_ACCEPTABLE)
-    @ExceptionHandler(value = InoteValidationExpiredException.class)
-    public @ResponseBody ProblemDetail InoteValidationExpiredException(final InoteValidationExpiredException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteUserNotFoundException.class)
-    public @ResponseBody ProblemDetail InoteUserNotFoundException(final InoteUserNotFoundException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteInvalidEmailException.class)
-    public @ResponseBody ProblemDetail InoteInvalidEmailException(final InoteInvalidEmailException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteInvalidPasswordFormatException.class)
-    public @ResponseBody ProblemDetail InoteInvalidPasswordFormatException(final InoteInvalidPasswordFormatException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteRoleNotFoundException.class)
-    public @ResponseBody ProblemDetail InoteRoleNotFoundException(final InoteRoleNotFoundException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = InoteJwtNotFoundException.class)
-    public @ResponseBody ProblemDetail InoteJwtNotFoundException(final InoteJwtNotFoundException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ResponseStatus(NOT_ACCEPTABLE)
-    @ExceptionHandler(value = InoteEmptyMessageCommentException.class)
-    public @ResponseBody ProblemDetail InoteEmptyMessageCommentException(final InoteEmptyMessageCommentException exception) {
-
-        log.error(exception.getMessage(), exception);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, exception.getMessage());
-        problemDetail.setProperty("Error", exception.getMessage());
-
-        return problemDetail;
-    }
-
-
 
     /**
-     * Default Exception manager
-     *
-     * @return Http response with 401 code, with json object body
+     * Handle exception when authentication object being invalid for whatever reason.
+     * 
+     * @param ex exception
+     * @return 401 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
      */
-    @ResponseStatus(UNAUTHORIZED)
+    @ExceptionHandler(value = AuthenticationException.class)
+    private ProblemDetail AuthenticationExceptionHandler(AuthenticationException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+    }
+
+    
+    
+    /**
+     * Handle exception when email is unknow in database
+     * 
+     * @param ex exception
+     * @return 406 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteExistingEmailException.class)
+    private ProblemDetail InoteExistingEmailExceptionHandler(Exception ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when validation is unknow in database
+     * 
+     * @param ex exception
+     * @return 404 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteValidationNotFoundException.class)
+    private ProblemDetail InoteValidationNotFoundExceptionHandler(Exception ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when validation is expired
+     * 
+     * @param ex exception
+     * @return 404 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteValidationExpiredException.class)
+    private ProblemDetail InoteValidationExpiredExceptionHandler(Exception ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when user is unknow in database
+     * 
+     * @param ex exception
+     * @return 404 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteUserNotFoundException.class)
+    private ProblemDetail InoteUserNotFoundExceptionHandler(Exception ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when email is malformed
+     * 
+     * @param ex exception
+     * @return 400 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteInvalidEmailException.class)
+    private ProblemDetail InoteInvalidEmailExceptiondeHandler(InoteInvalidEmailException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when password is invalid
+     * 
+     * @param ex exception
+     * @return 400 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteInvalidPasswordFormatException.class)
+    private ProblemDetail InoteInvalidPasswordFormatExceptionHandler(InoteInvalidPasswordFormatException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when role is unknow in database
+     * 
+     * @param ex exception
+     * @return 400 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteRoleNotFoundException.class)
+    private ProblemDetail InoteRoleNotFoundExceptionHandler(InoteRoleNotFoundException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when token is unknow in database
+     * 
+     * @param ex exception
+     * @return 400 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteJwtNotFoundException.class)
+    private ProblemDetail InoteJwtNotFoundException(InoteJwtNotFoundException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when comment message is empty
+     * 
+     * @param ex exception
+     * @return 406 status code and exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
+    @ExceptionHandler(value = InoteEmptyMessageCommentException.class)
+    private ProblemDetail InoteEmptyMessageCommentExceptionHandler(InoteEmptyMessageCommentException ex) {
+
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, ex.getMessage());
+    }
+
+    /**
+     * Default exception handler
+     * 
+     * @param ex Default type exception
+     * @return a 400 status code with exception cause
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
+     */
     @ExceptionHandler(value = Exception.class)
-    public Map<String, String> exceptionsHandler() {
-        return Map.of("Error", "Detected anomaly");
+    public ProblemDetail inoteDefaultExceptionHandler(Exception ex) {
+
+        // Loging error in console
+        log.error(ex.getMessage(), ex);
+
+        return ProblemDetail
+                .forStatusAndDetail(
+                        // return status code
+                        BAD_REQUEST,
+                        // return reason
+                        ex.getMessage());
     }
 }

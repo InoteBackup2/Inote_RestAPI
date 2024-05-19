@@ -18,7 +18,6 @@ import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -242,9 +241,9 @@ public class UserServiceImpl implements UserService {
      * @return
      */
 
-    public User activation(Map<String, String> activation)
+    public User activation(String activationCode)
             throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException {
-        Validation validation = this.validationService.getValidationFromCode(activation.get("code"));
+        Validation validation = this.validationService.getValidationFromCode(activationCode);
         if (Instant.now().isAfter(validation.getExpiration())) {
             throw new InoteValidationExpiredException();
         }
@@ -265,8 +264,8 @@ public class UserServiceImpl implements UserService {
      * @throws InoteMailException 
      * @throws MailException 
      */
-    public void changePassword(Map<String, String> email) throws InoteInvalidEmailException, MailException, InoteMailException {
-        User user = this.loadUserByUsername(email.get("email"));
+    public void changePassword(String email) throws InoteInvalidEmailException, MailException, InoteMailException {
+        User user = this.loadUserByUsername(email);
         this.validationService.createAndSave(user);
     }
 
