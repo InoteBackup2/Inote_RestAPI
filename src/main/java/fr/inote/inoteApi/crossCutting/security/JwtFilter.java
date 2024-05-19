@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.NonNull;
 
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.AUTHORIZATION;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,10 +78,10 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
 
             // Récupération of token in header request
-            final String authorization = request.getHeader("Authorization");
+            final String authorization = request.getHeader(AUTHORIZATION);
 
             // A token is present
-            if (authorization != null && authorization.startsWith("Bearer ")) {
+            if (authorization != null && authorization.startsWith(BEARER)) {
                 // Token cleaning
                 token = authorization.substring(7);
 

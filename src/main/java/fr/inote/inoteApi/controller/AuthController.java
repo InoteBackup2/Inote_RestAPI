@@ -7,7 +7,6 @@ import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.*;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +14,21 @@ import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Controller for account user routes
@@ -95,115 +96,136 @@ public class AuthController {
     /**
      * Create user account
      * 
-     * @param userDto
-     * @return ResponseEntity<String> response
+     * @param userDtoRequest 
+     * @return ResponseEntity<String> Response entity (http gestion facilities) that
+     *         contains type of data in response body
      * @throws InoteExistingEmailException
      * @throws InoteInvalidEmailException
      * @throws InoteRoleNotFoundException
      * @throws InoteInvalidPasswordFormatException
+     * 
+     * @author atsuhikoMochizuki
+     * @throws InoteMailException
+     * @throws MailException
+     * @date 19/05/2024
      */
 
     @PostMapping(path = Endpoint.REGISTER)
-    public ResponseEntity<String> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> register(@RequestBody UserDtoRequest userDtoRequest)
+            throws MailException, InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException,
+            InoteInvalidPasswordFormatException, InoteMailException {
+
         User userToRegister = User.builder()
-                .email(userDto.username())
-                .name(userDto.name())
-                .password(userDto.password())
+                .email(userDtoRequest.username())
+                .name(userDtoRequest.name())
+                .password(userDtoRequest.password())
                 .build();
-        try {
-            this.userService.register(userToRegister);
-        } catch (InoteMailException | InoteExistingEmailException | InoteInvalidEmailException
-                | InoteRoleNotFoundException
-                | InoteInvalidPasswordFormatException ex) {
-            
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-        
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(MessagesEn.ACTIVATION_NEED_ACTIVATION);
+
+        this.userService.register(userToRegister);
+
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(201))
+                .body(MessagesEn.ACTIVATION_NEED_ACTIVATION);
     }
 
     /**
      * Activate a user using the code provided on registration
      * 
-     * @param activationCode
-     * @return
+     * @param activationCode a String for activation code provided by email on
+     *                       registration
+     * @return a response entity that contains status code and a msg that concerns
+     *         request
+     * 
      * @throws InoteValidationNotFoundException
      * @throws InoteUserNotFoundException
      * @throws InoteValidationExpiredException
+     * 
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
      */
     @PostMapping(path = Endpoint.ACTIVATION)
-    public ResponseEntity<Map<String, String>> activation(@RequestBody Map<String, String> activationCode) {
-        Map<String, String> responseMsg = new HashMap<>();
+    public ResponseEntity<String> activation(@RequestBody ActivationDtoRequest activationDtoRequest)
+            throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException {
 
-        try {
-            this.userService.activation(activationCode);
-        } catch (InoteValidationNotFoundException | InoteValidationExpiredException | InoteUserNotFoundException ex) {
-            responseMsg.put("msg", ex.getMessage());
-            responseMsg.put("msg", ex.getMessage());
-            return new ResponseEntity<>(responseMsg, HttpStatus.BAD_REQUEST);
-        }
-        responseMsg.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
-        return new ResponseEntity<>(responseMsg, HttpStatus.OK);
+        this.userService.activation(activationDtoRequest.code());
+
+        return ResponseEntity
+                .status(OK)
+                .body(MessagesEn.ACTIVATION_OF_USER_OK);
 
     }
 
     /**
      * Authenticate an user and give him a JWT token for secured actions in app
      *
-     * @param authenticationDto
+     * @param authenticationDtorequest that contains required user informations
      * @return a JWT token if user is authenticated or null
+     * 
+     * @author atsuhikoMochizuki
+     * @date 19-05-2024
      */
     @PostMapping(path = Endpoint.SIGN_IN)
-    public ResponseEntity<Map<String, String>> signIn(@NotNull @RequestBody AuthenticationDto authenticationDto) {
-        final Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authenticationDto.username(),
-                        authenticationDto.password()));
+    public ResponseEntity<SignInDtoresponse> signIn(@RequestBody AuthenticationDtoRequest authenticationDtorequest) throws AuthenticationException{
+        
+        Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationDtorequest.username(),
+                        authenticationDtorequest.password()));
+        UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
+        Map<String, String> map = this.jwtService.generate(userDetails.getUsername());
+        SignInDtoresponse signInDtoresponse = new SignInDtoresponse(map.get(BEARER), map.get(REFRESH));
 
-        if (authenticate.isAuthenticated()) {
-            return new ResponseEntity<>(this.jwtService.generate(authenticationDto.username()), HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity
+                .status(OK)
+                .body(signInDtoresponse);
     }
 
     /**
-     * Send a password change request
+     * Change password
      *
-     * @param email
+     * @param email of user concerned
      * @throws InoteMailException
      * @throws MailException
+     * 
+     * @author atsuhikoMochizuki
+     * @throws InoteInvalidEmailException
+     * @date 19-05-2024
      */
     @PostMapping(path = Endpoint.CHANGE_PASSWORD)
-    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> email)
-            throws MailException, InoteMailException {
-        try {
-            this.userService.changePassword(email);
-        } catch (UsernameNotFoundException | InoteInvalidEmailException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDtoRequest changePasswordDtoRequest)
+            throws MailException, InoteMailException, InoteInvalidEmailException {
+        this.userService.changePassword(changePasswordDtoRequest.email());
 
-        return new ResponseEntity<>(MessagesEn.ACTIVATION_NEED_ACTIVATION, HttpStatus.OK);
+        return ResponseEntity
+                .status(OK)
+                .body(MessagesEn.ACTIVATION_NEED_ACTIVATION);
     }
 
     /**
      * Validate the new password with activation code provided on change password
      * request
      *
-     * @param newPasswordDto informationsSendedInBodeRequest
+     * @param requiredInfos NewPasswordDto that contains email, code and
+     *                      passwordToChange
+     * @return status code whith associated comment
+     * 
+     * @author atsuhikoMochizuki
+     * @throws InoteInvalidPasswordFormatException
+     * @throws InoteValidationNotFoundException
+     * @throws UsernameNotFoundException
+     * @date 19-05-2024
      */
     @PostMapping(path = Endpoint.NEW_PASSWORD)
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordDto newPasswordDto) {
-        try {
-            this.userService.newPassword(
-                    newPasswordDto.email(),
-                    newPasswordDto.password(),
-                    newPasswordDto.code());
-        } catch (UsernameNotFoundException | InoteValidationNotFoundException
-                | InoteInvalidPasswordFormatException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> newPassword(@RequestBody PasswordDtoRequest passwordDtoRequest)
+            throws UsernameNotFoundException, InoteValidationNotFoundException, InoteInvalidPasswordFormatException {
 
-        return new ResponseEntity<>(MessagesEn.NEW_PASSWORD_SUCCESS, HttpStatus.OK);
+        this.userService.newPassword(
+                passwordDtoRequest.email(),
+                passwordDtoRequest.password(),
+                passwordDtoRequest.code());
+
+        return ResponseEntity
+                .status(OK)
+                .body(MessagesEn.NEW_PASSWORD_SUCCESS);
     }
 
     /**
@@ -211,36 +233,55 @@ public class AuthController {
      *
      * @param refreshConnectionDto the value of refresh token
      * @return the value of new bearer and refresh token
+     * @throws InoteExpiredRefreshTokenException
+     * @throws InoteJwtNotFoundException
      */
+
+    /**
+     * 
+     * @param refreshConnectionDto RefreshConnectionDto
+     * @return
+     * @throws InoteJwtNotFoundException
+     * @throws InoteExpiredRefreshTokenException
+     */ 
     @PostMapping(path = Endpoint.REFRESH_TOKEN)
-    public @ResponseBody ResponseEntity<SignInResponseDto> refreshConnectionWithRefreshTokenValue(
-            @RequestBody RefreshConnectionDto refreshConnectionDto) {
+    public ResponseEntity<SignInDtoresponse> refreshConnectionWithRefreshTokenValue(
+        @RequestBody RefreshConnectionDtoRequest refreshConnectionDto)
+            throws InoteJwtNotFoundException, InoteExpiredRefreshTokenException {
 
         Map<String, String> response;
 
-        try {
-            response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
-        } catch (InoteJwtNotFoundException | InoteExpiredRefreshTokenException ex) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        response = this.jwtService.refreshConnectionWithRefreshTokenValue(refreshConnectionDto.refresh());
 
-        SignInResponseDto signInResponseDto = new SignInResponseDto(
+        SignInDtoresponse signInResponseDto = new SignInDtoresponse(
                 response.get(BEARER),
                 response.get(REFRESH));
-        return new ResponseEntity<>(signInResponseDto, HttpStatus.CREATED);
+        return ResponseEntity
+                .status(CREATED)
+                .body(signInResponseDto);
     }
 
     /**
      * user signout
+     * @throws InoteJwtNotFoundException 
      */
+
+     /**
+      * User sign out
+      *
+      * @return status code with associated comment
+      * @throws InoteJwtNotFoundException
+      * @author atsuhikoMochizuki
+      * @date 19-05-2024
+      */
     @PostMapping(path = Endpoint.SIGN_OUT)
-    public ResponseEntity<String> signOut() {
-        try {
-            this.jwtService.signOut();
-        } catch (InoteJwtNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(MessagesEn.USER_SIGNOUT_SUCCESS, HttpStatus.OK);
+    public ResponseEntity<String> signOut() throws InoteJwtNotFoundException {
+        
+        this.jwtService.signOut();
+        
+        return ResponseEntity
+            .status(OK)
+            .body(MessagesEn.USER_SIGNOUT_SUCCESS);
     }
 
     /**
@@ -254,12 +295,12 @@ public class AuthController {
      * @date 14-05-2024
      */
     @GetMapping(path = Endpoint.GET_CURRENT_USER)
-    public ResponseEntity<PublicUserDto> getCurrentUser(@AuthenticationPrincipal User user)
+    public ResponseEntity<PublicUserDtoRequest> getCurrentUser(@AuthenticationPrincipal User user)
             throws InoteUserNotFoundException {
         if (user == null) {
             throw new InoteUserNotFoundException();
         }
-        PublicUserDto publicUserDto = new PublicUserDto(user.getName(), user.getUsername(), null, user.isActif(),
+        PublicUserDtoRequest publicUserDto = new PublicUserDtoRequest(user.getName(), user.getUsername(), null, user.isActif(),
                 user.getRole().getName().toString());
         return ResponseEntity
                 .status(HttpStatus.OK)

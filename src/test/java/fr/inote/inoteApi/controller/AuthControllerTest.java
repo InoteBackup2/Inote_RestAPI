@@ -25,24 +25,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -133,7 +131,7 @@ public class AuthControllerTest {
                         .refreshToken(this.refreshTokenRef)
                         .build();
 
-        private UserDto userDtoRef = new UserDto(
+        private UserDtoRequest userDtoRef = new UserDtoRequest(
                         this.userRef.getName(),
                         this.userRef.getUsername(),
                         this.userRef.getPassword());
@@ -157,7 +155,8 @@ public class AuthControllerTest {
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
+                                .andExpect(MockMvcResultMatchers.content()
+                                                .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
 
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));
@@ -175,54 +174,49 @@ public class AuthControllerTest {
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));
         }
 
-        @SuppressWarnings("unchecked")
         @Test
         @DisplayName("Activate an user with good code")
         void activation_ShouldSuccess_whenCodeIsCorrect() throws Exception {
 
                 /* Arrange */
-                when(this.userService.activation(anyMap())).thenReturn(this.userRef);
+                when(this.userService.activation(anyString())).thenReturn(this.userRef);
 
                 /* Act & assert */
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", "123456");
-                ResultActions response = this.mockMvc.perform(
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest("123456");
+
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(MockMvcResultMatchers.content()
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE));
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                ObjectMapper mapper = new ObjectMapper();
-                Map<String, String> map = mapper.readValue(returnedResponse, Map.class);
-                assertThat(map.size()).isEqualTo(1);
-                assertThat(map.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+                                                .contentType("text/plain;charset=UTF-8"))
+                                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.ACTIVATION_OF_USER_OK));
 
                 /* Mocking invocation check */
-                verify(this.userService, times(1)).activation(anyMap());
+                verify(this.userService, times(1)).activation(anyString());
         }
 
         @Test
         @DisplayName("Activate an user with bad code")
         void activation_ShouldFail_whenCodeIsNotCorrect() throws Exception {
                 /* Arrange */
-                when(this.userService.activation(anyMap())).thenThrow(InoteValidationNotFoundException.class);
+                when(this.userService.activation(anyString())).thenThrow(InoteValidationNotFoundException.class);
 
                 /* Act & assert */
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", "BadCode");
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest("badCode");
+
                 this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                                .andExpect(MockMvcResultMatchers.content().contentType("application/problem+json"));
         }
 
         @Test
@@ -230,30 +224,28 @@ public class AuthControllerTest {
         void signIn_ShouldSuccess_WhenExistInSecurityContext() throws Exception {
 
                 /* Arrange */
-                AuthenticationDto userDtoTest = new AuthenticationDto(REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
                 Authentication mockInterface = Mockito.mock(Authentication.class, Mockito.CALLS_REAL_METHODS);
                 when(this.authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                                 .thenReturn(mockInterface);
 
                 doAnswer(invocation -> {
-                        // String value = invocation.getArgument(0);
-                        mockInterface.setAuthenticated(true);
-                        return true;
-                }).when(mockInterface).isAuthenticated();
-
+                        return this.userRef;
+                })
+                                .when(mockInterface)
+                                .getPrincipal();
                 Map<String, String> mockResponse = new HashMap<>();
-                mockResponse.put("bearer", REFERENCE_USER_BEARER);
-                mockResponse.put("refresh", REFERENCE_USER_REFRESH_TOKEN);
-
-                when(this.jwtServiceImpl.generate(REFERENCE_USER_EMAIL)).thenReturn(mockResponse);
+                mockResponse.put(BEARER, REFERENCE_USER_BEARER);
+                mockResponse.put(REFRESH, REFERENCE_USER_REFRESH_TOKEN);
+                when(this.jwtServiceImpl.generate(anyString())).thenReturn(mockResponse);
 
                 /* Act & assert */
+                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(REFERENCE_USER_EMAIL,
+                                REFERENCE_USER_PASSWORD);
                 this.mockMvc.perform(post(Endpoint.SIGN_IN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(userDtoTest)))
+                                .content(this.objectMapper.writeValueAsString(authenticationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers
-                                                .content()
-                                                .json(mockResponse.toString()))
+                                                .content().contentType(MediaType.APPLICATION_JSON_VALUE))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -262,30 +254,23 @@ public class AuthControllerTest {
         void signIn_ShouldFail_WhenUserNotExistsInSecurityContext() throws Exception {
 
                 /* Arrange */
-                AuthenticationDto userDtoTest = new AuthenticationDto(REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
-                Authentication mockInterface = Mockito.mock(Authentication.class, Mockito.CALLS_REAL_METHODS);
-                when(this.authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                                .thenReturn(mockInterface);
-
-                doAnswer(invocation -> {
-                        mockInterface.setAuthenticated(false);
-                        return false;
-                })
-                                .when(mockInterface)
-                                .isAuthenticated();
+                doThrow(BadCredentialsException.class).when(this.authenticationManager).authenticate(any());
 
                 /* Act & assert */
+                AuthenticationDtoRequest userDtoTest = new AuthenticationDtoRequest("BadUsername", "badPassword");
+                                
                 this.mockMvc.perform(post(Endpoint.SIGN_IN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(userDtoTest)))
                                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                                
         }
 
         @Test
         @DisplayName("Change password of existing user")
         void changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
                 /* Arrange */
-                doNothing().when(this.userService).changePassword(anyMap());
+                doNothing().when(this.userService).changePassword(anyString());
 
                 /* Act & assert */
                 Map<String, String> usernameMap = new HashMap<>();
@@ -300,7 +285,7 @@ public class AuthControllerTest {
         @DisplayName("Attempt to change password of a non existing user")
         void changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
                 /* Arrange */
-                doThrow(UsernameNotFoundException.class).when(this.userService).changePassword(anyMap());
+                doThrow(UsernameNotFoundException.class).when(this.userService).changePassword(anyString());
 
                 /* Act & assert */
                 Map<String, String> usernameMap = new HashMap<>();
@@ -315,7 +300,7 @@ public class AuthControllerTest {
         @DisplayName("Attempt to change password with bad formated email")
         void changePassword_ShouldFail_WhenEmailIsBadFormated() throws Exception {
                 /* Arrange */
-                doThrow(InoteInvalidEmailException.class).when(this.userService).changePassword(anyMap());
+                doThrow(InoteInvalidEmailException.class).when(this.userService).changePassword(anyString());
 
                 /* Act & assert */
                 Map<String, String> usernameMap = new HashMap<>();
@@ -334,7 +319,7 @@ public class AuthControllerTest {
                 doNothing().when(this.userService).newPassword(anyString(), anyString(), anyString());
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
@@ -355,7 +340,7 @@ public class AuthControllerTest {
                                 anyString(), anyString());
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
@@ -374,7 +359,7 @@ public class AuthControllerTest {
                                 anyString(), anyString());
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
                                 this.validationRef.getUser().getEmail(),
                                 "0000000000000000000",
                                 this.validationRef.getUser().getPassword());
@@ -382,7 +367,7 @@ public class AuthControllerTest {
                 this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
         @Test
@@ -394,7 +379,7 @@ public class AuthControllerTest {
                                 anyString(), anyString());
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 "1234");
@@ -414,7 +399,7 @@ public class AuthControllerTest {
                                 .thenReturn(refreshToken);
 
                 /* Act & assert */
-                RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto(this.jwtRef
+                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest(this.jwtRef
                                 .getRefreshToken()
                                 .getContentValue());
 
@@ -433,7 +418,7 @@ public class AuthControllerTest {
                                 .thenThrow(InoteJwtNotFoundException.class);
 
                 /* Act & assert */
-                RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("bad_refresh_token_value");
+                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest("bad_refresh_token_value");
 
                 this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -450,7 +435,7 @@ public class AuthControllerTest {
                                 .thenThrow(InoteExpiredRefreshTokenException.class);
 
                 /* Act & assert */
-                RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("bad_refresh_token_value");
+                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest("bad_refresh_token_value");
 
                 this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)

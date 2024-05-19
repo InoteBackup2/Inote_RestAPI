@@ -7,7 +7,6 @@ import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Map;
 
 public interface UserService extends UserDetailsService {
 
@@ -40,7 +39,7 @@ public interface UserService extends UserDetailsService {
      * @return
      */
 
-    User activation(Map<String, String> activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException;
+    User activation(String activation) throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException;
 
     /**
      * Ensure that password is 8 to 64 characters long and contains a mix of upper and lower case characters,

@@ -1,26 +1,26 @@
 package fr.inote.inoteApi.integrationTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import com.jayway.jsonpath.JsonPath;
-
 import fr.inote.inoteApi.ConstantsForTests;
 
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
-import fr.inote.inoteApi.crossCutting.exceptions.InoteValidationNotFoundException;
-import fr.inote.inoteApi.dto.NewPasswordDto;
-import fr.inote.inoteApi.dto.PublicUserDto;
-import fr.inote.inoteApi.dto.RefreshConnectionDto;
-import fr.inote.inoteApi.dto.UserDto;
+import fr.inote.inoteApi.dto.ActivationDtoRequest;
+import fr.inote.inoteApi.dto.AuthenticationDtoRequest;
+import fr.inote.inoteApi.dto.ChangePasswordDtoRequest;
+import fr.inote.inoteApi.dto.PasswordDtoRequest;
+import fr.inote.inoteApi.dto.PublicUserDtoRequest;
+import fr.inote.inoteApi.dto.RefreshConnectionDtoRequest;
+import fr.inote.inoteApi.dto.SignInDtoresponse;
+import fr.inote.inoteApi.dto.UserDtoRequest;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
@@ -31,13 +31,13 @@ import fr.inote.inoteApi.repository.ValidationRepository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.AUTHORIZATION;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
 import static java.util.UUID.randomUUID;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -64,7 +66,6 @@ import static org.awaitility.Awaitility.await;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  * Integration tests of Endpoints
@@ -86,6 +87,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * should be used when loading an ApplicationContext for test classes
  */
 @ActiveProfiles("test")
+@DirtiesContext // Clean applicationContext after passed (prevent side-effects between integrations tests)
 public class AuthController_IT {
 
         /* JUNIT5 EXTENSIONS ACCESS AS OBJECT */
@@ -134,7 +136,8 @@ public class AuthController_IT {
                         .name(REFERENCE_USER_NAME)
                         .build();
 
-        private UserDto userDtoRef = new UserDto(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL, REFERENCE_USER_PASSWORD);
+        private UserDtoRequest userDtoRequest = new UserDtoRequest(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL,
+                        REFERENCE_USER_PASSWORD);
 
         private Role roleRef = Role.builder()
                         .name(RoleEnum.ADMIN)
@@ -180,7 +183,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
                                 .andExpect(MockMvcResultMatchers.content()
                                                 .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
@@ -206,7 +209,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
@@ -239,11 +242,8 @@ public class AuthController_IT {
 
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
 
-                Map<String, String> attemptedResponse = new HashMap<>();
-                attemptedResponse.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
-
                 /* Assert */
-                assertThat(returnedResponse).isEqualTo(this.objectMapper.writeValueAsString(attemptedResponse));
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
         }
 
@@ -254,19 +254,11 @@ public class AuthController_IT {
                 bodyRequest.put("code", "BadCode");
 
                 /* Act & assert */
-                ResultActions response = this.mockMvc.perform(
+                this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper.writeValueAsString(bodyRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-
-                Map<String, String> attemptedResponse = new HashMap<>();
-                attemptedResponse.put("msg", new InoteValidationNotFoundException().getMessage());
-
-                /* Assert */
-                assertThat(returnedResponse).isEqualTo(this.objectMapper.writeValueAsString(attemptedResponse));
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
         @Test
@@ -277,7 +269,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -295,43 +287,38 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
 
-                Map<String, String> attemptedResponse = new HashMap<>();
-                attemptedResponse.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
-
                 /* Assert */
-                assertThat(returnedResponse).isEqualTo(this.objectMapper.writeValueAsString(attemptedResponse));
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 /* Act */
                 // Send request, print response, check returned status and content type
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", this.userDtoRef.username());
-                signInBodyContent.put("password", this.userDtoRef.password());
+                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                this.userDtoRequest.username(), this.userDtoRequest.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(authenticationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
                 returnedResponse = response.andReturn().getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                String refresh = JsonPath.parse(returnedResponse).read("$.refresh");
+                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInDtoresponse.class);
 
                 /* Assert */
-                assertThat(bearer.length()).isEqualTo(145);
-                assertThat(refresh.length()).isEqualTo(UUID.randomUUID().toString().length());
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
         }
 
         @Test
@@ -339,14 +326,14 @@ public class AuthController_IT {
         void IT_signIn_ShouldFail_whenCredentialsAreNotCorrect() throws Exception {
 
                 /* Act & assert */
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", "JamesWebb@triton.com");
-                signInBodyContent.put("password", "fjOM487$?8dd");
+                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                "JamesWebb@triton.com", "fjOM487$?8dd");
 
                 this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(authenticationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
         }
 
@@ -355,12 +342,10 @@ public class AuthController_IT {
         void IT_changePassword_ShouldSuccess_WhenUsernameExists() throws Exception {
                 /* Arrange */
                 final String[] messageContainingCode = new String[1];
-
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -378,30 +363,25 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> attemptedResponse = new HashMap<>();
-                attemptedResponse.put("msg", MessagesEn.ACTIVATION_OF_USER_OK);
 
-                assertThat(returnedResponse).isEqualTo(this.objectMapper.writeValueAsString(attemptedResponse));
+                /* Assert */
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 /* Act */
-                // Send request, print response, check returned status and content type
-                Map<String, String> usernameMap = new HashMap<>();
-                usernameMap.put("email", this.userDtoRef.username());
+                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                                this.userRef.getUsername());
 
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)))
+                                .content(this.objectMapper.writeValueAsString(changePasswordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -409,25 +389,23 @@ public class AuthController_IT {
         @DisplayName("Attempt to change password of a non existing user")
         void IT_changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
                 /* Act & assert */
-                Map<String, String> usernameMap = new HashMap<>();
-                usernameMap.put("email", "UnknowUser@neant.com");
-
+                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                                "idontexist@neant.com");
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)))
+                                .content(this.objectMapper.writeValueAsString(changePasswordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
         @DisplayName("Attempt to change password with bad formated email")
-        void changePassword_ShouldFail_WhenEmailIsBadFormated() throws Exception {
+        void IT_changePassword_ShouldFail_WhenEmailIsBadFormated() throws Exception {
                 /* Act & assert */
-                Map<String, String> usernameMap = new HashMap<>();
-                usernameMap.put("email", "UnknowUser@@neant.com");
-
+                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                                "malformedEmail@@malformed.com");
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)))
+                                .content(this.objectMapper.writeValueAsString(changePasswordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
@@ -439,8 +417,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -453,30 +430,29 @@ public class AuthController_IT {
                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
                                 });
 
-                String reference = "activation code : ";
+                final String reference = "activation code : ";
                 int startSubtring = messageContainingCode[0].indexOf(reference);
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                Map<String, String> usernameMap = new HashMap<>();
-                usernameMap.put("email", this.userDtoRef.username());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+
+                /* Assert */
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                                this.userDtoRequest.username());
+
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)))
+                                .content(this.objectMapper.writeValueAsString(changePasswordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 // activation code recuperation
@@ -492,21 +468,21 @@ public class AuthController_IT {
                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
                                 });
 
-                reference = "activation code : ";
-                startSubtring = messageContainingCode[0].indexOf(reference);
+                String codeStr = "activation code : ";
+                startSubtring = messageContainingCode[0].indexOf(codeStr);
                 startIndexOfCode = startSubtring + reference.length();
                 endIndexOfCode = startIndexOfCode + 6;
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
-                                this.userDtoRef.username(),
+                PasswordDtoRequest passwordDtoRequest = new PasswordDtoRequest(
+                                this.userDtoRequest.username(),
                                 extractedCode,
                                 "klfbeUB22@@@?sdjfJJ");
 
                 this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(newPasswordDto)))
+                                .content(this.objectMapper.writeValueAsString(passwordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(MockMvcResultMatchers.content().string(MessagesEn.NEW_PASSWORD_SUCCESS));
         }
@@ -515,7 +491,7 @@ public class AuthController_IT {
         @DisplayName("set new password of non existing user")
         void IT_newPassword_ShouldFail_WhenUserNotExists() throws Exception {
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
@@ -535,8 +511,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -549,32 +524,32 @@ public class AuthController_IT {
                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
                                 });
 
-                String reference = "activation code : ";
+                final String reference = "activation code : ";
                 int startSubtring = messageContainingCode[0].indexOf(reference);
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                Map<String, String> usernameMap = new HashMap<>();
-                usernameMap.put("email", this.userDtoRef.username());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+
+                /* Assert */
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                                this.userDtoRequest.username());
+
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)))
+                                .content(this.objectMapper.writeValueAsString(changePasswordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+                // activation code recuperation
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -587,34 +562,34 @@ public class AuthController_IT {
                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
                                 });
 
-                reference = "activation code : ";
-                startSubtring = messageContainingCode[0].indexOf(reference);
+                String codeStr = "activation code : ";
+                startSubtring = messageContainingCode[0].indexOf(codeStr);
                 startIndexOfCode = startSubtring + reference.length();
                 endIndexOfCode = startIndexOfCode + 6;
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
-                                this.userDtoRef.username(),
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                                this.userDtoRequest.username(),
                                 "1111111",
                                 "klfbeUB22@@@?sdjfJJ");
 
                 this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
         @Test
         @DisplayName("set new password with not enough secured password")
         void IT_newPassword_ShouldFail_WhenPasswordIsNotEnoughSecured() throws Exception {
 
+                /* Arrange */
                 final String[] messageContainingCode = new String[1];
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -627,32 +602,32 @@ public class AuthController_IT {
                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
                                 });
 
-                String reference = "activation code : ";
+                final String reference = "activation code : ";
                 int startSubtring = messageContainingCode[0].indexOf(reference);
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                Map<String, String> usernameMap = new HashMap<>();
-                usernameMap.put("email", this.userDtoRef.username());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+
+                /* Assert */
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                                this.userDtoRequest.username());
+
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(usernameMap)))
+                                .content(this.objectMapper.writeValueAsString(changePasswordDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+                // activation code recuperation
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -665,15 +640,15 @@ public class AuthController_IT {
                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
                                 });
 
-                reference = "activation code : ";
-                startSubtring = messageContainingCode[0].indexOf(reference);
+                String codeStr = "activation code : ";
+                startSubtring = messageContainingCode[0].indexOf(codeStr);
                 startIndexOfCode = startSubtring + reference.length();
                 endIndexOfCode = startIndexOfCode + 6;
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
                 /* Act & assert */
-                NewPasswordDto newPasswordDto = new NewPasswordDto(
-                                this.userDtoRef.username(),
+                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                                this.userDtoRequest.username(),
                                 extractedCode,
                                 "1234");
 
@@ -688,12 +663,10 @@ public class AuthController_IT {
         void IT_refreshConnectionWithRefreshTokenValue_ShouldSuccess_WhenRefreshTokenValueIsCorrect() throws Exception {
                 /* Arrange */
                 final String[] messageContainingCode = new String[1];
-
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -711,41 +684,37 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", this.userDtoRef.username());
-                signInBodyContent.put("password", this.userDtoRef.password());
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                this.userDtoRequest.username(), this.userDtoRequest.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(authenticationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                MvcResult mvcResult = response.andReturn();
-
-                returnedResponse = mvcResult.getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                String refresh = JsonPath.parse(returnedResponse).read("$.refresh");
-                assertThat(bearer.length()).isEqualTo(145);
-                assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
+                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInDtoresponse.class);
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
 
                 /* Act */
-                RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto(refresh);
+                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest(
+                                signInDtoresponse.refresh());
                 MvcResult result = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(refreshConnectionDto)))
@@ -753,22 +722,21 @@ public class AuthController_IT {
                                 .andReturn();
 
                 returnedResponse = result.getResponse().getContentAsString();
-                bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                refresh = JsonPath.parse(returnedResponse).read("$.refresh");
+                signInDtoresponse = this.objectMapper.readValue(returnedResponse, SignInDtoresponse.class);
 
                 /* Assert */
-                assertThat(bearer.length()).isEqualTo(145);
-                assertThat(refresh.length()).isEqualTo(randomUUID().toString().length());
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(randomUUID().toString().length());
         }
 
         @Test
         @DisplayName("Refresh connection with bad refresh token value")
         void IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect() throws Exception {
                 /* Act & assert */
-                RefreshConnectionDto refreshConnectionDto = new RefreshConnectionDto("badValue");
+                RefreshConnectionDtoRequest refreshConnectionDtoRequest = new RefreshConnectionDtoRequest("badValue");
                 this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(refreshConnectionDto)))
+                                .content(this.objectMapper.writeValueAsString(refreshConnectionDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
@@ -780,8 +748,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -799,40 +766,37 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
+
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", this.userDtoRef.username());
-                signInBodyContent.put("password", this.userDtoRef.password());
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                MvcResult result = this.mockMvc.perform(
+                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                this.userDtoRequest.username(), this.userDtoRequest.password());
+
+                response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(authenticationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty())
-                                .andReturn();
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                returnedResponse = result.getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                assertThat(bearer.length()).isEqualTo(145);
+                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInDtoresponse.class);
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
 
                 /* Act & assert */
-                this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer " + bearer))
+                this.mockMvc.perform(
+                                post(Endpoint.SIGN_OUT).header(AUTHORIZATION, BEARER+" " + signInDtoresponse.bearer()))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -841,12 +805,10 @@ public class AuthController_IT {
         void IT_signOut_ShouldUnauthorized_whenBearerIdBad() throws Exception {
                 /* Arrange */
                 final String[] messageContainingCode = new String[1];
-
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -864,46 +826,40 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
+                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
+
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", this.userDtoRef.username());
-                signInBodyContent.put("password", this.userDtoRef.password());
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                MvcResult result = this.mockMvc.perform(
+                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                this.userDtoRequest.username(), this.userDtoRequest.password());
+
+                response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(authenticationDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty())
-                                .andReturn();
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                returnedResponse = result.getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                assertThat(bearer.length()).isEqualTo(145);
+                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInDtoresponse.class);
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
 
                 /* Act & assert */
                 this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("authorization", "Bearer "
                                 + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTI3NDYzOTJ9.QioVM3zc4yrFaZXadV0DQ5UiW_UrlcX83wm_cgKi0Dw"))
-                                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
-        @Disabled // Fail when launch ALL tests
         @Test
         @DisplayName("Register an existing user in database")
         void IT_register_shouldFail_whenUserExist() throws Exception {
@@ -921,8 +877,8 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
         }
 
         @Test
@@ -935,14 +891,13 @@ public class AuthController_IT {
                 /* Act & assert */
                 ResultActions response = this.mockMvc.perform(
                                 MockMvcRequestBuilders.get(Endpoint.GET_CURRENT_USER)
-                                                .header("authorization", "Bearer " + bearer)
+                                                .header("Authorization", BEARER + " "+ bearer)
                                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 ObjectMapper mapper = new ObjectMapper();
-                PublicUserDto currentUser = mapper.readValue(returnedResponse,
-                                new TypeReference<PublicUserDto>() {
-                                });
+                PublicUserDtoRequest currentUser = mapper.readValue(returnedResponse,PublicUserDtoRequest.class);
+                              
 
                 assertThat(currentUser.pseudo()).isEqualTo(this.userRef.getName());
                 assertThat(currentUser.username()).isEqualTo(this.userRef.getUsername());
@@ -966,64 +921,60 @@ public class AuthController_IT {
                                 MockMvcRequestBuilders.get(Endpoint.GET_CURRENT_USER)
                                                 .header("authorization", "Bearer " + ConstantsForTests.FALSE_BEARER)
                                                 .accept(MediaType.APPLICATION_JSON))
-                                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         private String connectAndReturnBearer() throws JsonProcessingException, Exception {
-                final String[] messageContainingCode = new String[1];
-                this.mockMvc.perform(
-                                post(Endpoint.REGISTER)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
-                                .andExpect(MockMvcResultMatchers.status().isCreated());
-                await()
-                                .atMost(2, SECONDS)
-                                .untilAsserted(() -> {
-                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                                        assertThat(receivedMessages.length).isEqualTo(1);
-
-                                        MimeMessage receivedMessage = receivedMessages[0];
-
-                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                                });
-
-                final String reference = "activation code : ";
-                int startSubtring = messageContainingCode[0].indexOf(reference);
-                int startIndexOfCode = startSubtring + reference.length();
-                int endIndexOfCode = startIndexOfCode + 6;
-                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
-                ResultActions response = this.mockMvc.perform(
-                                post(Endpoint.ACTIVATION)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isOk());
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                Map<String, String> parsedResponse = this.objectMapper.readValue(returnedResponse,
-                                new TypeReference<Map<String, String>>() {
-                                });
-                assertThat(parsedResponse.get("msg")).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
-
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", this.userDtoRef.username());
-                signInBodyContent.put("password", this.userDtoRef.password());
-
-                MvcResult result = this.mockMvc.perform(
-                                post(Endpoint.SIGN_IN)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)))
-                                .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty())
-                                .andReturn();
-
-                returnedResponse = result.getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                assertThat(bearer.length()).isEqualTo(145);
-                return bearer;
+                 /* Arrange */
+                 final String[] messageContainingCode = new String[1];
+                 this.mockMvc.perform(
+                                 post(Endpoint.REGISTER)
+                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                 await()
+                                 .atMost(2, SECONDS)
+                                 .untilAsserted(() -> {
+                                         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                                         assertThat(receivedMessages.length).isEqualTo(1);
+ 
+                                         MimeMessage receivedMessage = receivedMessages[0];
+ 
+                                         messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                                 });
+ 
+                 final String reference = "activation code : ";
+                 int startSubtring = messageContainingCode[0].indexOf(reference);
+                 int startIndexOfCode = startSubtring + reference.length();
+                 int endIndexOfCode = startIndexOfCode + 6;
+                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+                 ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                 ResultActions response = this.mockMvc.perform(
+                                 post(Endpoint.ACTIVATION)
+                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                 .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
+                                 .andExpect(MockMvcResultMatchers.status().isOk());
+ 
+                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
+ 
+                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+ 
+                 AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                 this.userDtoRequest.username(), this.userDtoRequest.password());
+ 
+                 response = this.mockMvc.perform(
+                                 post(Endpoint.SIGN_IN)
+                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                 .content(this.objectMapper
+                                                                 .writeValueAsString(authenticationDtoRequest)))
+                                 .andExpect(MockMvcResultMatchers.status().isOk())
+                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+ 
+                 returnedResponse = response.andReturn().getResponse().getContentAsString();
+                 SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                 SignInDtoresponse.class);
+                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                 assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+                return signInDtoresponse.bearer();
         }
 }

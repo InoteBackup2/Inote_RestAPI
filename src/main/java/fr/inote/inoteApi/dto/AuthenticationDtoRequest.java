@@ -1,5 +1,5 @@
 package fr.inote.inoteApi.dto;
 
-public record AuthenticationDto(
+public record AuthenticationDtoRequest(
         String username,
         String password) {}

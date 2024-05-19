@@ -10,9 +10,12 @@ import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
+import fr.inote.inoteApi.dto.ActivationDtoRequest;
+import fr.inote.inoteApi.dto.AuthenticationDtoRequest;
 import fr.inote.inoteApi.dto.CommentDtoRequest;
 import fr.inote.inoteApi.dto.CommentDtoResponse;
-import fr.inote.inoteApi.dto.UserDto;
+import fr.inote.inoteApi.dto.SignInDtoresponse;
+import fr.inote.inoteApi.dto.UserDtoRequest;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -29,6 +32,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -41,8 +45,11 @@ import javax.mail.internet.MimeMessage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.AUTHORIZATION;
+import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,6 +70,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * should be used when loading an ApplicationContext for test classes
  */
 @ActiveProfiles("test")
+@DirtiesContext // Clean applicationContext after passed (prevent side-effects between integrations tests)
 public class CommentController_IT {
 
         /* JUNIT5 EXTENSIONS ACCESS AS OBJECT */
@@ -125,7 +133,7 @@ public class CommentController_IT {
                         .role(roleForTest)
                         .build();
 
-        private UserDto userDtoRef = new UserDto(this.userRef.getName(),
+        private UserDtoRequest userDtoRef = new UserDtoRequest(this.userRef.getName(),
                         this.userRef.getUsername(), this.userRef.getPassword());
 
         /* FIXTURES */
@@ -150,12 +158,12 @@ public class CommentController_IT {
         void IT_create_shouldSuccess_whenMessageIsNotEmpty() throws Exception {
 
                 /* Act */
-                this.bearerAuthorization = this.connectUserAndReturnBearer();
+                this.bearerAuthorization = this.connectAndReturnBearer();
 
                 // Send request, print response, check returned status and primary checking
                 // (status code, content body type...)
                 ResultActions response = this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -176,20 +184,20 @@ public class CommentController_IT {
         @DisplayName("Create a comment with message empty or blank")
         void create_shouldFail_whenMessageIsEmptyOrBlank() throws Exception {
 
-                this.bearerAuthorization = this.connectUserAndReturnBearer();
+                this.bearerAuthorization = this.connectAndReturnBearer();
 
                 // Act & assert
                 CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
                 CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(commentDto_Request_empty)))
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(commentDto_Request_blank)))
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
@@ -203,7 +211,7 @@ public class CommentController_IT {
                 String bearer = this.connectTesterAndReturnBearer();
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + bearer)
+                .header(AUTHORIZATION, BEARER+" " + bearer)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(this.commentDtoRequestRef)))
                                 .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -214,33 +222,33 @@ public class CommentController_IT {
         void getComments_ShouldSuccess_WhenUserHavePermissions() throws Exception {
 
                 /* Arrange */
-                this.bearerAuthorization = this.connectUserAndReturnBearer();
+                this.bearerAuthorization = this.connectAndReturnBearer();
 
                 final String message1 = "this application is really crap";
                 final String message2 = "What in God's name have I done to use such an application?";
                 final String message3 = "I'm puzzled by this application...";
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message1))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message2))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message3))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 /* Act & assert */
                 MvcResult result = this.mockMvc.perform(get(Endpoint.COMMENT_GET_ALL)
-                                .header("authorization", "Bearer " + this.bearerAuthorization))
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(MockMvcResultMatchers.content()
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -258,26 +266,26 @@ public class CommentController_IT {
         void getComments_ShouldBeForbidden_WhenUserNotHavePermisssions() throws Exception {
 
                 /* Arrange */
-                this.bearerAuthorization = this.connectUserAndReturnBearer();
+                this.bearerAuthorization = this.connectAndReturnBearer();
 
                 final String message1 = "this application is really crap";
                 final String message2 = "What in God's name have I done to use such an application?";
                 final String message3 = "I'm puzzled by this application...";
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message1))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message2))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
-                                .header("authorization", "Bearer " + this.bearerAuthorization)
+                .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message3))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -304,60 +312,58 @@ public class CommentController_IT {
          * @date 11/04/2024
          * @author AtsuhikoMochizuki
          */
-        private String connectUserAndReturnBearer() throws Exception {
-                final String[] messageContainingCode = new String[1];
-                this.mockMvc.perform(
-                                post(Endpoint.REGISTER)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
-                await()
-                                .atMost(5, SECONDS)
-                                .untilAsserted(() -> {
-                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                                        assertThat(receivedMessages.length).isEqualTo(1);
-
-                                        MimeMessage receivedMessage = receivedMessages[0];
-
-                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                                });
-
-                final String reference = "activation code : ";
-                int startSubstring = messageContainingCode[0].indexOf(reference);
-                int startIndexOfCode = startSubstring + reference.length();
-                int endIndexOfCode = startIndexOfCode + 6;
-                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                Map<String, String> bodyRequest = new HashMap<>();
-                bodyRequest.put("code", extractedCode);
-
-                ResultActions response = this.mockMvc.perform(
-                                post(Endpoint.ACTIVATION)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(bodyRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isOk());
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-                String returnedMsg = JsonPath.parse(returnedResponse).read("$.msg");
-                assertThat(returnedMsg).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
-
-                Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", this.userDtoRef.username());
-                signInBodyContent.put("password", this.userDtoRef.password());
-
-                response = this.mockMvc.perform(
-                                post(Endpoint.SIGN_IN)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(signInBodyContent)));
-                response.andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.bearer").isNotEmpty())
-                                .andExpect(jsonPath("$.refresh").isNotEmpty());
-
-                returnedResponse = response.andReturn().getResponse().getContentAsString();
-                String bearer = JsonPath.parse(returnedResponse).read("$.bearer");
-                assertThat(bearer.length()).isEqualTo(145);
-
-                return bearer;
+        private String connectAndReturnBearer() throws JsonProcessingException, Exception {
+                 /* Arrange */
+                 final String[] messageContainingCode = new String[1];
+                 this.mockMvc.perform(
+                                 post(Endpoint.REGISTER)
+                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                 await()
+                                 .atMost(2, SECONDS)
+                                 .untilAsserted(() -> {
+                                         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                                         assertThat(receivedMessages.length).isEqualTo(1);
+ 
+                                         MimeMessage receivedMessage = receivedMessages[0];
+ 
+                                         messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                                         assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                                 });
+ 
+                 final String reference = "activation code : ";
+                 int startSubtring = messageContainingCode[0].indexOf(reference);
+                 int startIndexOfCode = startSubtring + reference.length();
+                 int endIndexOfCode = startIndexOfCode + 6;
+                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+                 ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                 ResultActions response = this.mockMvc.perform(
+                                 post(Endpoint.ACTIVATION)
+                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                 .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
+                                 .andExpect(MockMvcResultMatchers.status().isOk());
+ 
+                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
+ 
+                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+ 
+                 AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                                 this.userDtoRef.username(), this.userDtoRef.password());
+ 
+                 response = this.mockMvc.perform(
+                                 post(Endpoint.SIGN_IN)
+                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                 .content(this.objectMapper
+                                                                 .writeValueAsString(authenticationDtoRequest)))
+                                 .andExpect(MockMvcResultMatchers.status().isOk())
+                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+ 
+                 returnedResponse = response.andReturn().getResponse().getContentAsString();
+                 SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                 SignInDtoresponse.class);
+                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                 assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+                return signInDtoresponse.bearer();
         }
 
         /**
@@ -379,7 +385,7 @@ public class CommentController_IT {
                                 .password(REFERENCE_USER2_PASSWORD)
                                 .role(roleForTest)
                                 .build();
-                UserDto anotherUserDto = new UserDto(anotherUser.getName(), anotherUser.getUsername(),
+                UserDtoRequest anotherUserDto = new UserDtoRequest(anotherUser.getName(), anotherUser.getUsername(),
                                 anotherUser.getPassword());
 
                 // No Endpoint for this method

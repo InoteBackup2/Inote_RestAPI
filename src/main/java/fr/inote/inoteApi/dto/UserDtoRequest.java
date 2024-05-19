@@ -1,6 +1,6 @@
 package fr.inote.inoteApi.dto;
 
-public record UserDto(
+public record UserDtoRequest(
     String name,
     String username,
     String password

@@ -11,8 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import fr.inote.inoteApi.crossCutting.exceptions.*;
@@ -351,9 +349,7 @@ public class UserServiceImplTest {
         when(this.userRepository.save(any(User.class))).thenReturn(this.userRef);
 
         /* Act */
-        Map<String, String> code = new HashMap<>();
-        code.put("code", "123456");
-        User activatedUser = this.userService.activation(code);
+        User activatedUser = this.userService.activation("123456");
 
         /* Assert */
         assertThat(activatedUser).isEqualTo(this.userRef);
@@ -373,9 +369,7 @@ public class UserServiceImplTest {
                 .thenThrow(InoteValidationNotFoundException.class);
 
         /* Act */
-        Map<String, String> code = new HashMap<>();
-        code.put("code", "123456");
-        Throwable thrown = catchThrowable(() -> this.userService.activation(code));
+        Throwable thrown = catchThrowable(() -> this.userService.activation("123456"));
 
         /* Assert */
         assertThat(thrown).isInstanceOf(InoteValidationNotFoundException.class);
@@ -392,9 +386,7 @@ public class UserServiceImplTest {
         when(this.userRepository.findById(any())).thenReturn(Optional.empty());
 
         /* Act */
-        Map<String, String> code = new HashMap<>();
-        code.put("code", "123456");
-        Throwable thrown = catchThrowable(() -> this.userService.activation(code));
+        Throwable thrown = catchThrowable(() -> this.userService.activation("123456"));
         assertThat(thrown).isInstanceOf(InoteUserNotFoundException.class);
 
         /* Verify */

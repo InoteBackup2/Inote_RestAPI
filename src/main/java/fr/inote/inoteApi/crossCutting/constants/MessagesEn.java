@@ -28,6 +28,7 @@ public class MessagesEn {
     public static final String USER_ERROR_USER_NOT_FOUND = "User not found in database";
     public static final String ACTIVATION_OF_USER_OK = "User activation succeed";
     public static final String USER_SIGNOUT_SUCCESS = "User deconnection success";
+    public static final String USER_ERROR_DETECTED = "User error detected";
 
     //ROLES
     public static final String ROLE_ERROR_NOT_FOUND = "The asked role doesn't exists in database";
