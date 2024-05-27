@@ -16,34 +16,36 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping(Endpoint.REGISTER)
-                //.allowedOrigins(FRONTEND_HOST)	// MUST BE rEPLACED!
-                .allowedOrigins("*") // WARNING IT IS FOR DEV
+                .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.ACTIVATION)
-                //.allowedOrigins(FRONTEND_HOST)
-                .allowedOrigins("*")
+                .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.SIGN_IN)
-                //.allowedOrigins(FRONTEND_HOST)
-                .allowedOrigins("*")
+                .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
                 // .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.GET_CURRENT_USER)
-                //.allowedOrigins(FRONTEND_HOST)
-                .allowedOrigins("*")
+                .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("GET")
                 .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+                
+                registry.addMapping(Endpoint.SIGN_OUT)
+                .allowedOrigins(FRONTEND_HOST)
+                .allowedMethods("POST")
+                .allowedHeaders("Content-Type", "Authorization")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
-    }
+            }
 }
 
 // @Configuration
