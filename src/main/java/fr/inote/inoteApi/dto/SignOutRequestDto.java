@@ -1,6 +1,6 @@
 package fr.inote.inoteApi.dto;
 
-public record SignOutDtoRequest(
+public record SignOutRequestDto(
         String bearer
 ) {
 }

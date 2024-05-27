@@ -131,7 +131,7 @@ public class AuthControllerTest {
                         .refreshToken(this.refreshTokenRef)
                         .build();
 
-        private UserDtoRequest userDtoRef = new UserDtoRequest(
+        private RegisterRequestDto registerRequestDto = new RegisterRequestDto(
                         this.userRef.getName(),
                         this.userRef.getUsername(),
                         this.userRef.getPassword());
@@ -153,7 +153,7 @@ public class AuthControllerTest {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
                                 .andExpect(MockMvcResultMatchers.content()
                                                 .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
@@ -173,7 +173,7 @@ public class AuthControllerTest {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRef)))
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
                 /* Mocking invocation check */
                 verify(this.userService, times(1)).register(any(User.class));
@@ -187,7 +187,7 @@ public class AuthControllerTest {
                 when(this.userService.activation(anyString())).thenReturn(this.userRef);
 
                 /* Act & assert */
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest("123456");
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto("123456");
 
                 this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
@@ -209,7 +209,7 @@ public class AuthControllerTest {
                 when(this.userService.activation(anyString())).thenThrow(InoteValidationNotFoundException.class);
 
                 /* Act & assert */
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest("badCode");
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto("badCode");
 
                 this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
@@ -239,7 +239,7 @@ public class AuthControllerTest {
                 when(this.jwtServiceImpl.generate(anyString())).thenReturn(mockResponse);
 
                 /* Act & assert */
-                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(REFERENCE_USER_EMAIL,
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(REFERENCE_USER_EMAIL,
                                 REFERENCE_USER_PASSWORD);
                 this.mockMvc.perform(post(Endpoint.SIGN_IN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -257,7 +257,7 @@ public class AuthControllerTest {
                 doThrow(BadCredentialsException.class).when(this.authenticationManager).authenticate(any());
 
                 /* Act & assert */
-                AuthenticationDtoRequest userDtoTest = new AuthenticationDtoRequest("BadUsername", "badPassword");
+                SignInRequestDto userDtoTest = new SignInRequestDto("BadUsername", "badPassword");
                                 
                 this.mockMvc.perform(post(Endpoint.SIGN_IN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -319,7 +319,7 @@ public class AuthControllerTest {
                 doNothing().when(this.userService).newPassword(anyString(), anyString(), anyString());
 
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
@@ -340,7 +340,7 @@ public class AuthControllerTest {
                                 anyString(), anyString());
 
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
@@ -359,7 +359,7 @@ public class AuthControllerTest {
                                 anyString(), anyString());
 
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
                                 this.validationRef.getUser().getEmail(),
                                 "0000000000000000000",
                                 this.validationRef.getUser().getPassword());
@@ -379,7 +379,7 @@ public class AuthControllerTest {
                                 anyString(), anyString());
 
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 "1234");
@@ -399,7 +399,7 @@ public class AuthControllerTest {
                                 .thenReturn(refreshToken);
 
                 /* Act & assert */
-                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest(this.jwtRef
+                RefreshRequestDto refreshConnectionDto = new RefreshRequestDto(this.jwtRef
                                 .getRefreshToken()
                                 .getContentValue());
 
@@ -418,7 +418,7 @@ public class AuthControllerTest {
                                 .thenThrow(InoteJwtNotFoundException.class);
 
                 /* Act & assert */
-                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest("bad_refresh_token_value");
+                RefreshRequestDto refreshConnectionDto = new RefreshRequestDto("bad_refresh_token_value");
 
                 this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -435,7 +435,7 @@ public class AuthControllerTest {
                                 .thenThrow(InoteExpiredRefreshTokenException.class);
 
                 /* Act & assert */
-                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest("bad_refresh_token_value");
+                RefreshRequestDto refreshConnectionDto = new RefreshRequestDto("bad_refresh_token_value");
 
                 this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)

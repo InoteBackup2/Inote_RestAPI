@@ -13,14 +13,14 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
-import fr.inote.inoteApi.dto.ActivationDtoRequest;
-import fr.inote.inoteApi.dto.AuthenticationDtoRequest;
-import fr.inote.inoteApi.dto.ChangePasswordDtoRequest;
-import fr.inote.inoteApi.dto.PasswordDtoRequest;
-import fr.inote.inoteApi.dto.PublicUserDtoRequest;
-import fr.inote.inoteApi.dto.RefreshConnectionDtoRequest;
-import fr.inote.inoteApi.dto.SignInDtoresponse;
-import fr.inote.inoteApi.dto.UserDtoRequest;
+import fr.inote.inoteApi.dto.ActivationRequestDto;
+import fr.inote.inoteApi.dto.SignInRequestDto;
+import fr.inote.inoteApi.dto.ChangePasswordRequestDto;
+import fr.inote.inoteApi.dto.NewPasswordRequestDto;
+import fr.inote.inoteApi.dto.PublicUserRequestDto;
+import fr.inote.inoteApi.dto.RefreshRequestDto;
+import fr.inote.inoteApi.dto.RegisterRequestDto;
+import fr.inote.inoteApi.dto.SignInResponseDto;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.entity.Validation;
@@ -136,7 +136,7 @@ public class AuthController_IT {
                         .name(REFERENCE_USER_NAME)
                         .build();
 
-        private UserDtoRequest userDtoRequest = new UserDtoRequest(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL,
+        private RegisterRequestDto registerRequestDto = new RegisterRequestDto(REFERENCE_USER_NAME, REFERENCE_USER_EMAIL,
                         REFERENCE_USER_PASSWORD);
 
         private Role roleRef = Role.builder()
@@ -183,7 +183,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)))
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated())
                                 .andExpect(MockMvcResultMatchers.content()
                                                 .string(MessagesEn.ACTIVATION_NEED_ACTIVATION));
@@ -209,7 +209,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)))
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
                 await()
                                 .atMost(2, SECONDS)
@@ -269,7 +269,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -287,7 +287,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -301,8 +301,8 @@ public class AuthController_IT {
 
                 /* Act */
                 // Send request, print response, check returned status and content type
-                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
-                                this.userDtoRequest.username(), this.userDtoRequest.password());
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                this.registerRequestDto.username(), this.registerRequestDto.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
@@ -313,8 +313,8 @@ public class AuthController_IT {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
                 returnedResponse = response.andReturn().getResponse().getContentAsString();
-                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                SignInDtoresponse.class);
+                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
 
                 /* Assert */
                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
@@ -326,7 +326,7 @@ public class AuthController_IT {
         void IT_signIn_ShouldFail_whenCredentialsAreNotCorrect() throws Exception {
 
                 /* Act & assert */
-                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
                                 "JamesWebb@triton.com", "fjOM487$?8dd");
 
                 this.mockMvc.perform(
@@ -345,7 +345,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -363,7 +363,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -376,7 +376,7 @@ public class AuthController_IT {
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
                 /* Act */
-                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                ChangePasswordRequestDto changePasswordDtoRequest = new ChangePasswordRequestDto(
                                 this.userRef.getUsername());
 
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
@@ -389,7 +389,7 @@ public class AuthController_IT {
         @DisplayName("Attempt to change password of a non existing user")
         void IT_changePassword_ShouldFail_WhenUsernameNotExist() throws Exception {
                 /* Act & assert */
-                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                ChangePasswordRequestDto changePasswordDtoRequest = new ChangePasswordRequestDto(
                                 "idontexist@neant.com");
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -401,7 +401,7 @@ public class AuthController_IT {
         @DisplayName("Attempt to change password with bad formated email")
         void IT_changePassword_ShouldFail_WhenEmailIsBadFormated() throws Exception {
                 /* Act & assert */
-                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
+                ChangePasswordRequestDto changePasswordDtoRequest = new ChangePasswordRequestDto(
                                 "malformedEmail@@malformed.com");
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -417,7 +417,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -435,7 +435,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -447,8 +447,8 @@ public class AuthController_IT {
                 /* Assert */
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
-                                this.userDtoRequest.username());
+                ChangePasswordRequestDto changePasswordDtoRequest = new ChangePasswordRequestDto(
+                                this.registerRequestDto.username());
 
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -475,8 +475,8 @@ public class AuthController_IT {
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
                 /* Act & assert */
-                PasswordDtoRequest passwordDtoRequest = new PasswordDtoRequest(
-                                this.userDtoRequest.username(),
+                NewPasswordRequestDto passwordDtoRequest = new NewPasswordRequestDto(
+                                this.registerRequestDto.username(),
                                 extractedCode,
                                 "klfbeUB22@@@?sdjfJJ");
 
@@ -491,7 +491,7 @@ public class AuthController_IT {
         @DisplayName("set new password of non existing user")
         void IT_newPassword_ShouldFail_WhenUserNotExists() throws Exception {
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
                                 this.validationRef.getUser().getEmail(),
                                 this.validationRef.getCode(),
                                 this.validationRef.getUser().getPassword());
@@ -511,7 +511,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -529,7 +529,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -541,8 +541,8 @@ public class AuthController_IT {
                 /* Assert */
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
-                                this.userDtoRequest.username());
+                ChangePasswordRequestDto changePasswordDtoRequest = new ChangePasswordRequestDto(
+                                this.registerRequestDto.username());
 
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -569,8 +569,8 @@ public class AuthController_IT {
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
-                                this.userDtoRequest.username(),
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
+                                this.registerRequestDto.username(),
                                 "1111111",
                                 "klfbeUB22@@@?sdjfJJ");
 
@@ -589,7 +589,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -607,7 +607,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -619,8 +619,8 @@ public class AuthController_IT {
                 /* Assert */
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                ChangePasswordDtoRequest changePasswordDtoRequest = new ChangePasswordDtoRequest(
-                                this.userDtoRequest.username());
+                ChangePasswordRequestDto changePasswordDtoRequest = new ChangePasswordRequestDto(
+                                this.registerRequestDto.username());
 
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -647,8 +647,8 @@ public class AuthController_IT {
                 extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
 
                 /* Act & assert */
-                PasswordDtoRequest newPasswordDto = new PasswordDtoRequest(
-                                this.userDtoRequest.username(),
+                NewPasswordRequestDto newPasswordDto = new NewPasswordRequestDto(
+                                this.registerRequestDto.username(),
                                 extractedCode,
                                 "1234");
 
@@ -666,7 +666,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -684,7 +684,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -695,8 +695,8 @@ public class AuthController_IT {
 
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
-                                this.userDtoRequest.username(), this.userDtoRequest.password());
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                this.registerRequestDto.username(), this.registerRequestDto.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
@@ -707,13 +707,13 @@ public class AuthController_IT {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
                 returnedResponse = response.andReturn().getResponse().getContentAsString();
-                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                SignInDtoresponse.class);
+                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
                 assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
 
                 /* Act */
-                RefreshConnectionDtoRequest refreshConnectionDto = new RefreshConnectionDtoRequest(
+                RefreshRequestDto refreshConnectionDto = new RefreshRequestDto(
                                 signInDtoresponse.refresh());
                 MvcResult result = this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -722,7 +722,7 @@ public class AuthController_IT {
                                 .andReturn();
 
                 returnedResponse = result.getResponse().getContentAsString();
-                signInDtoresponse = this.objectMapper.readValue(returnedResponse, SignInDtoresponse.class);
+                signInDtoresponse = this.objectMapper.readValue(returnedResponse, SignInResponseDto.class);
 
                 /* Assert */
                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
@@ -733,7 +733,7 @@ public class AuthController_IT {
         @DisplayName("Refresh connection with bad refresh token value")
         void IT_refreshConnectionWithRefreshTokenValue_ShouldFail_WhenRefreshTokenValueIsNotCorrect() throws Exception {
                 /* Act & assert */
-                RefreshConnectionDtoRequest refreshConnectionDtoRequest = new RefreshConnectionDtoRequest("badValue");
+                RefreshRequestDto refreshConnectionDtoRequest = new RefreshRequestDto("badValue");
                 this.mockMvc.perform(post(Endpoint.REFRESH_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(refreshConnectionDtoRequest)))
@@ -748,7 +748,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -766,7 +766,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -777,8 +777,8 @@ public class AuthController_IT {
 
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
-                                this.userDtoRequest.username(), this.userDtoRequest.password());
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                this.registerRequestDto.username(), this.registerRequestDto.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
@@ -789,8 +789,8 @@ public class AuthController_IT {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
                 returnedResponse = response.andReturn().getResponse().getContentAsString();
-                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                SignInDtoresponse.class);
+                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
                 assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
 
@@ -808,7 +808,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                 await()
                                 .atMost(2, SECONDS)
                                 .untilAsserted(() -> {
@@ -826,7 +826,7 @@ public class AuthController_IT {
                 int startIndexOfCode = startSubtring + reference.length();
                 int endIndexOfCode = startIndexOfCode + 6;
                 String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                 ResultActions response = this.mockMvc.perform(
                                 post(Endpoint.ACTIVATION)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -837,8 +837,8 @@ public class AuthController_IT {
 
                 assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
-                                this.userDtoRequest.username(), this.userDtoRequest.password());
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                this.registerRequestDto.username(), this.registerRequestDto.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
@@ -849,8 +849,8 @@ public class AuthController_IT {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
                 returnedResponse = response.andReturn().getResponse().getContentAsString();
-                SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                SignInDtoresponse.class);
+                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
                 assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
                 assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
 
@@ -877,7 +877,7 @@ public class AuthController_IT {
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(this.userDtoRequest)))
+                                                .content(this.objectMapper.writeValueAsString(this.registerRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
         }
 
@@ -896,7 +896,7 @@ public class AuthController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 ObjectMapper mapper = new ObjectMapper();
-                PublicUserDtoRequest currentUser = mapper.readValue(returnedResponse,PublicUserDtoRequest.class);
+                PublicUserRequestDto currentUser = mapper.readValue(returnedResponse,PublicUserRequestDto.class);
                               
 
                 assertThat(currentUser.pseudo()).isEqualTo(this.userRef.getName());
@@ -930,7 +930,7 @@ public class AuthController_IT {
                  this.mockMvc.perform(
                                  post(Endpoint.REGISTER)
                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRequest)));
+                                                 .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                  await()
                                  .atMost(2, SECONDS)
                                  .untilAsserted(() -> {
@@ -948,7 +948,7 @@ public class AuthController_IT {
                  int startIndexOfCode = startSubtring + reference.length();
                  int endIndexOfCode = startIndexOfCode + 6;
                  String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                 ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                 ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                  ResultActions response = this.mockMvc.perform(
                                  post(Endpoint.ACTIVATION)
                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -959,8 +959,8 @@ public class AuthController_IT {
  
                  assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
  
-                 AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
-                                 this.userDtoRequest.username(), this.userDtoRequest.password());
+                 SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                 this.registerRequestDto.username(), this.registerRequestDto.password());
  
                  response = this.mockMvc.perform(
                                  post(Endpoint.SIGN_IN)
@@ -971,8 +971,8 @@ public class AuthController_IT {
                                  .andExpect(content().contentType(MediaType.APPLICATION_JSON));
  
                  returnedResponse = response.andReturn().getResponse().getContentAsString();
-                 SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                 SignInDtoresponse.class);
+                 SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                 SignInResponseDto.class);
                  assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
                  assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
                 return signInDtoresponse.bearer();

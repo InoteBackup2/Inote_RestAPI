@@ -142,6 +142,10 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.NEW_PASSWORD).permitAll()
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
                                 // -> Secured endpoints
+                                .requestMatchers(POST, Endpoint.GET_CURRENT_USER).permitAll()
+                                .requestMatchers(POST, Endpoint.SIGN_OUT).permitAll()
+                                
+                                
                                 /* Examples */
                                 // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER",
                                 // "ROLE_MANAGER", "ROLE_ADMIN") // Role level

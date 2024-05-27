@@ -2,8 +2,8 @@ package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
-import fr.inote.inoteApi.dto.CommentDtoRequest;
-import fr.inote.inoteApi.dto.CommentDtoResponse;
+import fr.inote.inoteApi.dto.CommentRequestDto;
+import fr.inote.inoteApi.dto.CommentResponseDto;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -81,7 +81,7 @@ class CommentServiceImplTest {
                         .role(roleForTest)
                         .build();
 
-        private CommentDtoRequest commentDtoRequestRef = new CommentDtoRequest(
+        private CommentRequestDto commentDtoRequestRef = new CommentRequestDto(
                         "Application should provide most functionalities");
 
         private Comment commentRef = Comment.builder()
@@ -153,7 +153,7 @@ class CommentServiceImplTest {
                 assertThatExceptionOfType(InoteEmptyMessageCommentException.class)
                                 .isThrownBy(() -> this.commentService.createComment(commentDto2));
 
-                CommentDtoRequest commentDtoRequest3 = new CommentDtoRequest(null);
+                CommentRequestDto commentDtoRequest3 = new CommentRequestDto(null);
                 assertThatExceptionOfType(NullPointerException.class)
                                 .isThrownBy(() -> this.commentService.createComment(commentDtoRequest3.msg()));
         }
@@ -182,7 +182,7 @@ class CommentServiceImplTest {
                 when(this.commentRepository.findAll()).thenReturn(comments);
 
                 /*Act */
-                List<CommentDtoResponse> returnedList = this.commentService.getAll();
+                List<CommentResponseDto> returnedList = this.commentService.getAll();
 
                 /*Assert */
                 assertThat(returnedList.get(0).message()).isEqualTo(comments.get(0).getMessage());

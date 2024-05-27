@@ -1,5 +1,5 @@
 package fr.inote.inoteApi.dto;
 
-public record SignInDtoresponse(
+public record SignInResponseDto(
                 String bearer,
                 String refresh) {}

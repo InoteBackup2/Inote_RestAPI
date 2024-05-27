@@ -1,7 +1,7 @@
 package fr.inote.inoteApi.service.impl;
 
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
-import fr.inote.inoteApi.dto.CommentDtoResponse;
+import fr.inote.inoteApi.dto.CommentResponseDto;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.CommentRepository;
@@ -69,11 +69,11 @@ public class CommentServiceImpl implements CommentService {
      * @author atsuhiko Mochizuki
      * @date 11/04/2024
      */
-    public List<CommentDtoResponse> getAll() {
-        List<CommentDtoResponse> commentDtos = new ArrayList<>();
+    public List<CommentResponseDto> getAll() {
+        List<CommentResponseDto> commentDtos = new ArrayList<>();
         List<Comment> comments =Streamable.of(this.commentRepository.findAll()).toList();
         for(Comment item : comments){
-            commentDtos.add(new CommentDtoResponse(item.getId(), item.getMessage(), item.getUser().getId()));
+            commentDtos.add(new CommentResponseDto(item.getId(), item.getMessage(), item.getUser().getId()));
         }
         return  commentDtos;
     }

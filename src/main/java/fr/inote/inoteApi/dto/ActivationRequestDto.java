@@ -1,5 +1,5 @@
 package fr.inote.inoteApi.dto;
 
-public record ActivationDtoRequest(
+public record ActivationRequestDto(
     String code
 ) {}

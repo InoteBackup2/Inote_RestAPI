@@ -1,6 +1,6 @@
 package fr.inote.inoteApi.dto;
 
-public record CommentDtoResponse(
+public record CommentResponseDto(
         Integer id,
         String message,
         Integer UserId

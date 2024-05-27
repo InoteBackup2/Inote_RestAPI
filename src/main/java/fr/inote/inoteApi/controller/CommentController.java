@@ -3,8 +3,8 @@ package fr.inote.inoteApi.controller;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.CommentDtoRequest;
-import fr.inote.inoteApi.dto.CommentDtoResponse;
+import fr.inote.inoteApi.dto.CommentRequestDto;
+import fr.inote.inoteApi.dto.CommentResponseDto;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.service.CommentService;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
@@ -67,23 +67,23 @@ public class CommentController {
     }
 
     @PostMapping(Endpoint.CREATE_COMMENT)
-    public ResponseEntity<CommentDtoResponse> create(@RequestBody CommentDtoRequest commentDtoRequest)
+    public ResponseEntity<CommentResponseDto> create(@RequestBody CommentRequestDto commentRequestDto)
             throws InoteEmptyMessageCommentException {
         Comment returnValue = null;
         try {
-            returnValue = this.commentService.createComment(commentDtoRequest.msg());
+            returnValue = this.commentService.createComment(commentRequestDto.msg());
         } catch (InoteEmptyMessageCommentException ex) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
 
         }
-        CommentDtoResponse returnDtoValue = new CommentDtoResponse(returnValue.getId(), returnValue.getMessage(),
+        CommentResponseDto returnDtoValue = new CommentResponseDto(returnValue.getId(), returnValue.getMessage(),
                 returnValue.getUser().getId());
         return new ResponseEntity<>(returnDtoValue, HttpStatus.CREATED);
     }
 
     @GetMapping(value = Endpoint.COMMENT_GET_ALL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<CommentDtoResponse>> getComments() {
+    public ResponseEntity<List<CommentResponseDto>> getComments() {
         return new ResponseEntity<>(this.commentService.getAll(), HttpStatus.OK);
     }
 }
