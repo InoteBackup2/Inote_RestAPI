@@ -10,12 +10,12 @@ import com.jayway.jsonpath.JsonPath;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
-import fr.inote.inoteApi.dto.ActivationDtoRequest;
-import fr.inote.inoteApi.dto.AuthenticationDtoRequest;
-import fr.inote.inoteApi.dto.CommentDtoRequest;
-import fr.inote.inoteApi.dto.CommentDtoResponse;
-import fr.inote.inoteApi.dto.SignInDtoresponse;
-import fr.inote.inoteApi.dto.UserDtoRequest;
+import fr.inote.inoteApi.dto.ActivationRequestDto;
+import fr.inote.inoteApi.dto.SignInRequestDto;
+import fr.inote.inoteApi.dto.CommentRequestDto;
+import fr.inote.inoteApi.dto.CommentResponseDto;
+import fr.inote.inoteApi.dto.RegisterRequestDto;
+import fr.inote.inoteApi.dto.SignInResponseDto;
 import fr.inote.inoteApi.entity.Comment;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
@@ -116,7 +116,7 @@ public class CommentController_IT {
          */
         private MockMvc mockMvc;
 
-        private CommentDtoRequest commentDtoRequestRef = new CommentDtoRequest(
+        private CommentRequestDto commentDtoRequestRef = new CommentRequestDto(
                         "Application should provide most functionalities");
 
         private Comment commentRef = Comment.builder()
@@ -133,7 +133,7 @@ public class CommentController_IT {
                         .role(roleForTest)
                         .build();
 
-        private UserDtoRequest userDtoRef = new UserDtoRequest(this.userRef.getName(),
+        private RegisterRequestDto registerRequestDto = new RegisterRequestDto(this.userRef.getName(),
                         this.userRef.getUsername(), this.userRef.getPassword());
 
         /* FIXTURES */
@@ -173,8 +173,8 @@ public class CommentController_IT {
                 String serializedResult = result.getResponse().getContentAsString();
 
                 // Deserialization results
-                CommentDtoResponse returnedComment = this.objectMapper.readValue(serializedResult,
-                                CommentDtoResponse.class);
+                CommentResponseDto returnedComment = this.objectMapper.readValue(serializedResult,
+                                CommentResponseDto.class);
 
                 /* Assert */
                 assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
@@ -187,8 +187,8 @@ public class CommentController_IT {
                 this.bearerAuthorization = this.connectAndReturnBearer();
 
                 // Act & assert
-                CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
-                CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
+                CommentRequestDto commentDto_Request_empty = new CommentRequestDto("");
+                CommentRequestDto commentDto_Request_blank = new CommentRequestDto("      ");
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
@@ -231,19 +231,19 @@ public class CommentController_IT {
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message1))))
+                                .content(this.objectMapper.writeValueAsString(new CommentRequestDto(message1))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message2))))
+                                .content(this.objectMapper.writeValueAsString(new CommentRequestDto(message2))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message3))))
+                                .content(this.objectMapper.writeValueAsString(new CommentRequestDto(message3))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 /* Act & assert */
@@ -275,19 +275,19 @@ public class CommentController_IT {
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message1))))
+                                .content(this.objectMapper.writeValueAsString(new CommentRequestDto(message1))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message2))))
+                                .content(this.objectMapper.writeValueAsString(new CommentRequestDto(message2))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                 .header(AUTHORIZATION, BEARER+" " + this.bearerAuthorization)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(new CommentDtoRequest(message3))))
+                                .content(this.objectMapper.writeValueAsString(new CommentRequestDto(message3))))
                                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
                 /* Act & assert */
@@ -318,7 +318,7 @@ public class CommentController_IT {
                  this.mockMvc.perform(
                                  post(Endpoint.REGISTER)
                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                 .content(this.objectMapper.writeValueAsString(this.userDtoRef)));
+                                                 .content(this.objectMapper.writeValueAsString(this.registerRequestDto)));
                  await()
                                  .atMost(2, SECONDS)
                                  .untilAsserted(() -> {
@@ -336,7 +336,7 @@ public class CommentController_IT {
                  int startIndexOfCode = startSubtring + reference.length();
                  int endIndexOfCode = startIndexOfCode + 6;
                  String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                 ActivationDtoRequest activationDtoRequest = new ActivationDtoRequest(extractedCode);
+                 ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
                  ResultActions response = this.mockMvc.perform(
                                  post(Endpoint.ACTIVATION)
                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -347,8 +347,8 @@ public class CommentController_IT {
  
                  assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
  
-                 AuthenticationDtoRequest authenticationDtoRequest = new AuthenticationDtoRequest(
-                                 this.userDtoRef.username(), this.userDtoRef.password());
+                 SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                 this.registerRequestDto.username(), this.registerRequestDto.password());
  
                  response = this.mockMvc.perform(
                                  post(Endpoint.SIGN_IN)
@@ -359,8 +359,8 @@ public class CommentController_IT {
                                  .andExpect(content().contentType(MediaType.APPLICATION_JSON));
  
                  returnedResponse = response.andReturn().getResponse().getContentAsString();
-                 SignInDtoresponse signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                 SignInDtoresponse.class);
+                 SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                 SignInResponseDto.class);
                  assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
                  assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
                 return signInDtoresponse.bearer();
@@ -385,7 +385,7 @@ public class CommentController_IT {
                                 .password(REFERENCE_USER2_PASSWORD)
                                 .role(roleForTest)
                                 .build();
-                UserDtoRequest anotherUserDto = new UserDtoRequest(anotherUser.getName(), anotherUser.getUsername(),
+                                RegisterRequestDto anotherRegisterRequestDto = new RegisterRequestDto(anotherUser.getName(), anotherUser.getUsername(),
                                 anotherUser.getPassword());
 
                 // No Endpoint for this method
@@ -419,8 +419,8 @@ public class CommentController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 Map<String, String> signInBodyContent = new HashMap<>();
-                signInBodyContent.put("username", anotherUserDto.username());
-                signInBodyContent.put("password", anotherUserDto.password());
+                signInBodyContent.put("username", anotherRegisterRequestDto.username());
+                signInBodyContent.put("password", anotherRegisterRequestDto.password());
 
                 response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)

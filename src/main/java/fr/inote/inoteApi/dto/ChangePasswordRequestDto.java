@@ -1,5 +1,5 @@
 package fr.inote.inoteApi.dto;
 
-public record ChangePasswordDtoRequest(
+public record ChangePasswordRequestDto(
     String email
 ) {}

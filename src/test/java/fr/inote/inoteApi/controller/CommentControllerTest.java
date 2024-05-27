@@ -107,7 +107,7 @@ public class CommentControllerTest {
                         .role(roleForTest)
                         .build();
 
-        CommentDtoRequest commentDtoRequestRef = new CommentDtoRequest(
+        CommentRequestDto commentDtoRequestRef = new CommentRequestDto(
                         "Application should provide most functionalities");
 
         Comment commentRef = Comment.builder()
@@ -144,8 +144,8 @@ public class CommentControllerTest {
                 String contentAsString = result.getResponse().getContentAsString();
 
                 // Deserialization results
-                CommentDtoResponse returnedComment = this.objectMapper.readValue(contentAsString,
-                                CommentDtoResponse.class);
+                CommentResponseDto returnedComment = this.objectMapper.readValue(contentAsString,
+                                CommentResponseDto.class);
 
                 /* Assert */
                 assertThat(returnedComment.message()).isEqualTo(this.commentRef.getMessage());
@@ -161,8 +161,8 @@ public class CommentControllerTest {
                 when(this.commentService.createComment(anyString())).thenThrow(InoteEmptyMessageCommentException.class);
 
                 /* Act & assert */
-                CommentDtoRequest commentDto_Request_empty = new CommentDtoRequest("");
-                CommentDtoRequest commentDto_Request_blank = new CommentDtoRequest("      ");
+                CommentRequestDto commentDto_Request_empty = new CommentRequestDto("");
+                CommentRequestDto commentDto_Request_blank = new CommentRequestDto("      ");
                 this.mockMvc.perform(post(Endpoint.CREATE_COMMENT)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(commentDto_Request_empty)))
@@ -184,10 +184,10 @@ public class CommentControllerTest {
         void getComments_ShouldSuccess() throws Exception {
 
                 /* Arrange */
-                List<CommentDtoResponse> comments = new ArrayList<>();
-                comments.add(new CommentDtoResponse(1,"this application is really crap",1));
-                comments.add(new CommentDtoResponse(1,"What in God's name have I done to use such an application?",1));
-                comments.add(new CommentDtoResponse(1,"I'm puzzled by this application...",1));
+                List<CommentResponseDto> comments = new ArrayList<>();
+                comments.add(new CommentResponseDto(1,"this application is really crap",1));
+                comments.add(new CommentResponseDto(1,"What in God's name have I done to use such an application?",1));
+                comments.add(new CommentResponseDto(1,"I'm puzzled by this application...",1));
                 when(this.commentService.getAll()).thenReturn(comments);
 
                 /* Act & assert */

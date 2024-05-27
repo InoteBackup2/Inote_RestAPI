@@ -1,5 +1,5 @@
 package fr.inote.inoteApi.dto;
 
-public record RefreshConnectionDtoRequest(
+public record RefreshRequestDto(
         String refresh
 ) {}
