@@ -159,7 +159,7 @@ class JwtServiceImplTest {
                 .thenReturn(Optional.empty());
 
         /* Act & assert */
-        assertThatExceptionOfType(InoteUserException.class)
+        assertThatExceptionOfType(InoteNotAuthenticatedUserException.class)
                 .isThrownBy(() -> {
                     this.jwtService.findValidToken(this.jwtRef.getContentValue());
                 });
