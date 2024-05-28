@@ -227,7 +227,7 @@ public class ApplicationControllerAdvice {
      * Handle exception when user authentication fail
      * 
      * @param ex
-     * @return 403 status code and exception cause
+     * @return 401 status code and exception cause
      * 
      * @author atsuhikoMochizuki
      * @since 2024-05-28
@@ -235,7 +235,7 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(value = InoteNotAuthenticatedUserException.class)
     private ProblemDetail InoteNotAuthenticatedUserExceptionHandler(InoteNotAuthenticatedUserException ex) {
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(FORBIDDEN, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
     }
     
     /**
