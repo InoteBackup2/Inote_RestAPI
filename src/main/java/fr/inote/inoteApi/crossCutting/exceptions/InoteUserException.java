@@ -1,9 +1,8 @@
 package fr.inote.inoteApi.crossCutting.exceptions;
-
-import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.USER_ERROR_DETECTED;
+import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 
 public class InoteUserException extends Exception {
     public InoteUserException() {
-        super(USER_ERROR_DETECTED);
+        super(MessagesEn.UNSPECIFIED_ERROR_HAS_OCCURED);
     }
 }

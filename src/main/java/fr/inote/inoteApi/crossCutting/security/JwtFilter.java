@@ -19,6 +19,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import fr.inote.inoteApi.service.UserService;
 
+
 /**
  * Jwt filter, who perform JWT validation on a bearer token present in the HTTP
  * header. It is commonly used in conjunction with Spring Security and Spring
@@ -49,7 +50,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtServiceImpl jwtServiceImpl;
 
-    
     public JwtFilter(
             HandlerExceptionResolver handlerExceptionResolver,
             UserService utilisateurService,
@@ -142,6 +142,8 @@ public class JwtFilter extends OncePerRequestFilter {
              * Transmitting error to the our RestControllerAdvice, who centralize exceptions
              */
             handlerExceptionResolver.resolveException(request, response, null, exception);
+
         }
+
     }
 }

@@ -3,6 +3,7 @@ package fr.inote.inoteApi.crossCutting.security.impl;
 import fr.inote.inoteApi.crossCutting.constants.HttpRequestBody;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteExpiredRefreshTokenException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteJwtNotFoundException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteNotAuthenticatedUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.security.Jwt;
 import fr.inote.inoteApi.crossCutting.security.RefreshToken;
@@ -62,12 +63,13 @@ public class JwtServiceImpl implements JwtService {
      *
      * @param value value of token to search in database
      * @return the JWT
+     * @throws InoteNotAuthenticatedUserException 
      */
-    public Jwt findValidToken(String value) throws InoteUserException {
+    public Jwt findValidToken(String value) throws InoteUserException, InoteNotAuthenticatedUserException {
         return this.jwtRepository.findByContentValueAndDeactivatedAndExpired(
                 value,
                 false,
-                false).orElseThrow(() -> new InoteUserException());
+                false).orElseThrow(() -> new InoteNotAuthenticatedUserException());
     }
 
     /**

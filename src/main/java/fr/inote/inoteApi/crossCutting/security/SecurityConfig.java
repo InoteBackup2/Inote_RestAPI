@@ -143,7 +143,7 @@ public class SecurityConfig {
                                 .requestMatchers(POST, Endpoint.REFRESH_TOKEN).permitAll()
                                 // -> Secured endpoints
                                 .requestMatchers(POST, Endpoint.GET_CURRENT_USER).permitAll()
-                                .requestMatchers(POST, Endpoint.SIGN_OUT).permitAll()
+                                .requestMatchers(POST, Endpoint.SIGN_OUT).authenticated()
                                 
                                 
                                 /* Examples */
