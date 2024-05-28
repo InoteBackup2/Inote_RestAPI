@@ -42,9 +42,14 @@ public class WebConfig implements WebMvcConfigurer {
                 registry.addMapping(Endpoint.SIGN_OUT)
                 .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
-                .allowedHeaders("*")
+                .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials","Access-Control-Request-Method", "Access-Control-Request-Headers");
-
+                
+                registry.addMapping(Endpoint.CHANGE_PASSWORD)
+                .allowedOrigins(FRONTEND_HOST)
+                .allowedMethods("POST")
+                .allowedHeaders("Content-Type", "Authorization")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers");
             }
 }
 
