@@ -3,6 +3,7 @@ package fr.inote.inoteApi.crossCutting.security.impl;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteExpiredRefreshTokenException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteJwtNotFoundException;
+import fr.inote.inoteApi.crossCutting.exceptions.InoteNotAuthenticatedUserException;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
 import fr.inote.inoteApi.crossCutting.security.Jwt;
 import fr.inote.inoteApi.crossCutting.security.RefreshToken;
@@ -130,7 +131,7 @@ class JwtServiceImplTest {
     @Test
     @DisplayName("Search a valid token in db with existing token")
     void findValidToken_shouldSuccess_whenValueIsPresentAndDeactivatedExpiredStatusAreFalse()
-            throws InoteUserException {
+            throws InoteUserException, InoteNotAuthenticatedUserException {
 
         /* Arrange */
         when(this.jwtRepository.findByContentValueAndDeactivatedAndExpired(this.jwtRef.getContentValue(), false, false))

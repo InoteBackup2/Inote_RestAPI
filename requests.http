@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "pseudo":"asterix",
-    "username":"obelix@kame-house.com",
+    "username":"toto@kame-house.com",
     "password":"ssFF@@787$"
 }
 
@@ -23,7 +23,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"778255"
+    "code":"193875"
 }
 
 #### User sign in
@@ -32,14 +32,14 @@ POST http://localhost:8080/api/auth/sign_in HTTP/1.1
 Content-Type: application/json
 
 {
-  "username":"obelix@kame-house.com",
+  "username":"toto@kame-house.com",
   "password":"ssFF@@787$"
 }
 
 ### User sign out
 # Nota : Don't forget to set the good bearer given by server when sign in
 POST http://localhost:8080/api/auth/sign_out HTTP/1.1
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYXN0ZXJpeCIsImV4cCI6MTcxNjgyNzE1Miwic3ViIjoib2JlbGl4QGthbWUtaG91c2UuY29tIn0.pD-o31fe5sZSUi1OySwX1mzv1JFxAFvmOag5jWjh9j8
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYXN0ZXJpeCIsImV4cCI6MTcxNjg4NjEwMCwic3ViIjoidG90b0BrYW1lLWhvdXNlLmNvbSJ9.DvgStbeluZvK863bPY2W9JPvwg-p-leA6FXuFBSSyJ4
 
 ### Change password request
 # Nota : Don't forget to recuperate activation code
