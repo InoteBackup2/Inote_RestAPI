@@ -18,19 +18,19 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping(Endpoint.REGISTER)
                 .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
-                // .allowedHeaders("Content-Type", "Authorization")
+                .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.ACTIVATION)
                 .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
-                // .allowedHeaders("Content-Type", "Authorization")
+                .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.SIGN_IN)
                 .allowedOrigins(FRONTEND_HOST)
                 .allowedMethods("POST")
-                // .allowedHeaders("Content-Type", "Authorization")
+                .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
 
                 registry.addMapping(Endpoint.GET_CURRENT_USER)
@@ -50,6 +50,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("POST")
                 .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers");
+                
+                registry.addMapping(Endpoint.NEW_PASSWORD)
+                .allowedOrigins(FRONTEND_HOST)
+                .allowedMethods("POST")
+                .allowedHeaders("Content-Type", "Authorization")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers");
+                
+                
             }
 }
 
