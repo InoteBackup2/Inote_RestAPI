@@ -67,18 +67,17 @@ public class CommentController {
     }
 
     @PostMapping(Endpoint.CREATE_COMMENT)
-    public ResponseEntity<CommentResponseDto> create(@RequestBody CommentRequestDto commentRequestDto)
-            throws InoteEmptyMessageCommentException {
-        Comment returnValue = null;
-        try {
-            returnValue = this.commentService.createComment(commentRequestDto.msg());
-        } catch (InoteEmptyMessageCommentException ex) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-
-        }
-        CommentResponseDto returnDtoValue = new CommentResponseDto(returnValue.getId(), returnValue.getMessage(),
-                returnValue.getUser().getId());
-        return new ResponseEntity<>(returnDtoValue, HttpStatus.CREATED);
+    public ResponseEntity<CommentResponseDto> create(@RequestBody CommentRequestDto commentRequestDto) throws InoteEmptyMessageCommentException{
+        Comment returnValue = this.commentService.createComment(commentRequestDto.msg());
+        
+        CommentResponseDto returnDtoValue = 
+            new CommentResponseDto(
+                    returnValue.getId(), 
+                    returnValue.getMessage(),
+                    returnValue.getUser().getId());
+        return ResponseEntity
+            .status(201)
+            .body(returnDtoValue);
     }
 
     @GetMapping(value = Endpoint.COMMENT_GET_ALL, produces = MediaType.APPLICATION_JSON_VALUE)
