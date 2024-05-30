@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -234,6 +235,20 @@ public class ApplicationControllerAdvice {
      */
     @ExceptionHandler(value = InoteNotAuthenticatedUserException.class)
     private ProblemDetail InoteNotAuthenticatedUserExceptionHandler(InoteNotAuthenticatedUserException ex) {
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+    }
+
+    /**
+     * Handle exception when Jwt is expired
+     * @param ex
+     * @return 401 status code and exception cause
+     * 
+     * @author atsuhikoMochizuki
+     * @since 2024-05-30
+     */
+    @ExceptionHandler(value = ExpiredJwtException.class)
+    private ProblemDetail InoteExpiredJwtExceptionHandler(ExpiredJwtException ex) {
         log.error(ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
     }
