@@ -52,6 +52,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.AUTHORIZATION;
@@ -157,6 +158,7 @@ public class AuthController_IT {
         @BeforeEach
         void setUp() throws Exception {
                 this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+
                 // this.bearerAuthorization = this.connectUserAndReturnBearer();
         }
 
@@ -746,6 +748,91 @@ public class AuthController_IT {
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(refreshConnectionDtoRequest)))
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("Refresh connection in real time conditions, normal use case")
+        void IT_refreshConnectionWithRefreshTokenValue_shouldSuccess_inRealTimeConditons()
+                        throws JsonProcessingException, Exception {
+                /* Arrange */
+                /* Arrange */
+                final String[] messageContainingCode = new String[1];
+                this.mockMvc.perform(
+                                post(Endpoint.REGISTER)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(this.registerRequestDto)));
+                await()
+                                .atMost(2, SECONDS)
+                                .untilAsserted(() -> {
+                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+                                        assertThat(receivedMessages.length).isEqualTo(1);
+
+                                        MimeMessage receivedMessage = receivedMessages[0];
+
+                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+                                });
+
+                final String reference = "activation code : ";
+                int startSubtring = messageContainingCode[0].indexOf(reference);
+                int startIndexOfCode = startSubtring + reference.length();
+                int endIndexOfCode = startIndexOfCode + 6;
+                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
+                ResultActions response = this.mockMvc.perform(
+                                post(Endpoint.ACTIVATION)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+
+                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+
+                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+                                this.registerRequestDto.username(), this.registerRequestDto.password());
+
+                response = this.mockMvc.perform(
+                                post(Endpoint.SIGN_IN)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(authenticationDtoRequest)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+
+                /* Act & assert */
+                // 1- We await expiration of token and make sure that application is protected
+                TimeUnit.SECONDS.sleep(65);
+                this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("Authorization", "bearer "
+                                + signInDtoresponse.bearer()))
+                                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+
+                // 2- Send of refresh-token and recuperation of news Jwt & refresh-token
+                response = this.mockMvc.perform(
+                                post(Endpoint.REFRESH_TOKEN)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper.writeValueAsString(
+                                                                new RefreshRequestDto(signInDtoresponse.refresh()))))
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
+                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+
+                // // 4- We make sure that new token is functionnal
+                this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("Authorization", "bearer "
+                                + signInDtoresponse.bearer()))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.content().string(MessagesEn.USER_SIGNOUT_SUCCESS));
         }
 
         @Test
