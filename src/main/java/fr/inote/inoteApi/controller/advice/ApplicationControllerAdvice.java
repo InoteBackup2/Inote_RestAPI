@@ -1,5 +1,6 @@
 package fr.inote.inoteApi.controller.advice;
 
+import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 
 import org.springframework.http.ProblemDetail;
@@ -250,7 +251,7 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(value = ExpiredJwtException.class)
     private ProblemDetail InoteExpiredJwtExceptionHandler(ExpiredJwtException ex) {
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, MessagesEn.EXPIRED_TOKEN);
     }
     
     /**
