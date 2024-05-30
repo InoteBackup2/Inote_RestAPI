@@ -34,6 +34,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -152,6 +153,11 @@ public class AuthController_IT {
                         .creation(Instant.now())
                         .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
                         .build();
+
+        @Value("${jwt.validyTokenTimeInSeconds}")
+        private long VALIDITY_TOKEN_TIME_IN_SECONDS;
+        @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds}")
+        private long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS;
 
         /* FIXTURES */
         /* ============================================================ */
@@ -755,7 +761,6 @@ public class AuthController_IT {
         void IT_refreshConnectionWithRefreshTokenValue_shouldSuccess_inRealTimeConditons()
                         throws JsonProcessingException, Exception {
                 /* Arrange */
-                /* Arrange */
                 final String[] messageContainingCode = new String[1];
                 this.mockMvc.perform(
                                 post(Endpoint.REGISTER)
@@ -809,7 +814,7 @@ public class AuthController_IT {
 
                 /* Act & assert */
                 // 1- We await expiration of token and make sure that application is protected
-                TimeUnit.SECONDS.sleep(65);
+                TimeUnit.SECONDS.sleep(VALIDITY_TOKEN_TIME_IN_SECONDS+2);
                 this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("Authorization", "bearer "
                                 + signInDtoresponse.bearer()))
                                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
