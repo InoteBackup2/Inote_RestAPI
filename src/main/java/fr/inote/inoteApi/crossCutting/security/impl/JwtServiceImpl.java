@@ -61,10 +61,6 @@ public class JwtServiceImpl implements JwtService {
     /* ============================================================ */
 
     /*
-     * These values should be overwritten in test whith setters
-     */
-    @Value("${jwt.validyTokenTimeInSeconds}")
-    private long validityTokenTimeInSeconds;
 
     @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds}")
     private long additionalTimeForRefreshTokenInSeconds;
@@ -113,8 +109,6 @@ public class JwtServiceImpl implements JwtService {
                 .expirationStatus(false)
                 .creationDate(Instant.now())
                 .expirationDate(Instant.now()
-                        .plus(this.validityTokenTimeInSeconds, ChronoUnit.SECONDS)
-                        .plus(this.additionalTimeForRefreshTokenInSeconds, ChronoUnit.SECONDS))
                 .build();
 
         /* create the jwt and store in db for activation before expirationDate */

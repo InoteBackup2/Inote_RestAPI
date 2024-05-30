@@ -16,7 +16,7 @@
 				"previewLimit": 50,
 				"server": "127.0.0.1",
 				"port": 3306,
-				"driver": "MySQL",
+				"driver": "MariaDB",
 				"name": "inote",
 				"database": "inote",
 				"username": "moch",
@@ -75,5 +75,5 @@
 			// Code Generation(Getters,Setters...)
 			"jaland.java-generate-setters-getters-update-equals"
 		]
-	},
+	}
 }
