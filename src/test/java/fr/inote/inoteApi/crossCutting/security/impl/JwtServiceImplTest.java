@@ -29,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Key;
@@ -122,8 +123,8 @@ class JwtServiceImplTest {
      */
     final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU2FuZ29rdSIsImV4cCI6MTg2OTY3NTk5Niwic3ViIjoic2FuZ29rdUBpbm90ZS5mciJ9.ni8Z4Wiyo6-noGme2ydnP1vHl6joC0NkfQ-lxF501vY";
 
-    @Value("${jwt.validyTokenTimeInMin}")
-    private long VALIDITY_TOKEN_TIME_IN_MINUTES;
+    @Value("${jwt.validyTokenTimeInSeconds}")
+    private long VALIDITY_TOKEN_TIME_IN_SECONDS;
     
     /* FIXTURES */
     /* ============================================================ */
@@ -176,12 +177,20 @@ class JwtServiceImplTest {
 
     @Test
     @DisplayName("HMAC-SHA Key generation")
-    void getKey_shouldSuccess() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    void getKey_shouldSuccess() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException, SecurityException {
         /* Arrange */
 
         // Access to the private method using reflection
         Method privateMethod_getKey = JwtServiceImpl.class.getDeclaredMethod("getKey");
+        Field encryptionKey = JwtServiceImpl.class.getDeclaredField("ENCRYPTION_KEY");
+        Field validityTokenTimeInSeconds = JwtServiceImpl.class.getDeclaredField("VALIDITY_TOKEN_TIME_IN_SECONDS");
+        Field additionalTimeForRefreshTokenInSeconds = JwtServiceImpl.class.getDeclaredField("ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS");
+        
+
         privateMethod_getKey.setAccessible(true);
+        encryptionKey.setAccessible(true);
+        validityTokenTimeInSeconds.setAccessible(true);
+        additionalTimeForRefreshTokenInSeconds.setAccessible(true);
 
         /* Act */
         Key key = (Key) privateMethod_getKey.invoke(this.jwtService);
@@ -358,7 +367,7 @@ class JwtServiceImplTest {
         assertThat(claims.get("name")).isEqualTo(this.userRef.getName());
         assertThat(claims.getSubject()).isEqualTo(this.userRef.getEmail());
         assertThat(claims.getExpiration())
-                .isAfter(instantOfCreation.plus(VALIDITY_TOKEN_TIME_IN_MINUTES, ChronoUnit.MINUTES));
+                .isAfter(instantOfCreation.plus(VALIDITY_TOKEN_TIME_IN_SECONDS, ChronoUnit.SECONDS));
     }
 
     @Test
@@ -383,7 +392,7 @@ class JwtServiceImplTest {
         assertThat(claims.get("name")).isEqualTo(this.userRef.getName());
         assertThat(claims.getSubject()).isEqualTo(this.userRef.getEmail());
         assertThat(claims.getExpiration())
-                .isAfter(instantOfCreation.plus(VALIDITY_TOKEN_TIME_IN_MINUTES, ChronoUnit.MINUTES));
+                .isAfter(instantOfCreation.plus(VALIDITY_TOKEN_TIME_IN_SECONDS, ChronoUnit.SECONDS));
 
         String refreshToken = jwtMapTest.get("refresh");
         assertThat(refreshToken).isNotNull();
