@@ -23,7 +23,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"801620"
+    "code":"231978"
 }
 
 #### User sign in
@@ -68,7 +68,7 @@ POST http://localhost:8080/api/auth/refresh_token HTTP/1.1
 Content-Type: application/json
 
 {
-   "refresh":"98425f36-85af-406b-adc2-173cbeb456e7"
+   "refresh":"d2646d89-bea6-4bff-a24c-4580da2ebd87"
 }
 
 ### Get current user
@@ -85,7 +85,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTYxNDIwOTcsInN1YiI6Im9iZ
 #Nota : dont forget to set the good bearer
 POST http://localhost:8080/api/comment/create HTTP/1.1
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYXN0ZXJpeCIsImV4cCI6MTcxNzA2OTY0Nywic3ViIjoidG90b0BrYW1lLWhvdXNlLmNvbSJ9.ZOrOswmcIZXHjmfWx4wsKWjAH4Qjp0M94xsJbaDdfik
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b3RvQGthbWUtaG91c2UuY29tIiwibmFtZSI6ImFzdGVyaXgiLCJleHAiOjE3MTcwNzE4NzV9.CQ2t2NNnndXriC1OvUAAeX8IOWd5IeT1V1TuZdrRc1o
 
 {
     "msg": "Hello"

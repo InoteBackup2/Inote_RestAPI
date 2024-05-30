@@ -16,6 +16,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -51,9 +52,17 @@ public class JwtServiceImpl implements JwtService {
     /* CONSTANTS */
     /* ============================================================ */
     // Reference for encryption
+    @Value("${jwt.encryptionKey}")
+    private String ENCRYPTION_KEY;
 
-    // @Value("${jwt.encryptionKey}")
-    private final String ENCRYPTION_KEY = "7b751e0c0ca1e5f099bf9cca5a8217ee263bb8679303ddcc3cbfbe13ab79156e";
+    /*
+     * These values are loaded dynamically from the configuration files so that very
+     * short values can be set during testing.
+     */
+    @Value("${jwt.validyTokenTimeInMin}")
+    private long VALIDITY_TOKEN_TIME_IN_MINUTES;
+    @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInMin}")
+    private long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_MINUTES;
 
     /* PUBLIC METHODS */
     /* ============================================================ */
@@ -63,7 +72,7 @@ public class JwtServiceImpl implements JwtService {
      *
      * @param value value of token to search in database
      * @return the JWT
-     * @throws InoteNotAuthenticatedUserException 
+     * @throws InoteNotAuthenticatedUserException
      */
     public Jwt findValidToken(String value) throws InoteUserException, InoteNotAuthenticatedUserException {
         return this.jwtRepository.findByContentValueAndDeactivatedAndExpired(
@@ -95,7 +104,9 @@ public class JwtServiceImpl implements JwtService {
                 .contentValue(UUID.randomUUID().toString()) // Universal Unique IDentifier
                 .expirationStatus(false)
                 .creationDate(Instant.now())
-                .expirationDate(Instant.now().plus(REFRESH_TOKEN_VALIDITY_TIME_IN_MINUTES, ChronoUnit.MINUTES))
+                .expirationDate(Instant.now()
+                        .plus(VALIDITY_TOKEN_TIME_IN_MINUTES, ChronoUnit.MINUTES)
+                        .plus(ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_MINUTES, ChronoUnit.MINUTES))
                 .build();
 
         /* create the jwt and store in db for activation before expirationDate */
