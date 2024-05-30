@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,7 @@ import java.util.stream.Stream;
 import static fr.inote.inoteApi.ConstantsForTests.*;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
-import static fr.inote.inoteApi.crossCutting.security.JwtService.VALIDITY_TOKEN_TIME_IN_MINUTES;
+
 import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -121,6 +122,9 @@ class JwtServiceImplTest {
      */
     final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiU2FuZ29rdSIsImV4cCI6MTg2OTY3NTk5Niwic3ViIjoic2FuZ29rdUBpbm90ZS5mciJ9.ni8Z4Wiyo6-noGme2ydnP1vHl6joC0NkfQ-lxF501vY";
 
+    @Value("${jwt.validyTokenTimeInMin}")
+    private long VALIDITY_TOKEN_TIME_IN_MINUTES;
+    
     /* FIXTURES */
     /* ============================================================ */
     // @BeforeEach
