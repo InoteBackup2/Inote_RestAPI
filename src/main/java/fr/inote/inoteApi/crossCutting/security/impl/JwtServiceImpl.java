@@ -59,10 +59,10 @@ public class JwtServiceImpl implements JwtService {
      * These values are loaded dynamically from the configuration files so that very
      * short values can be set during testing.
      */
-    @Value("${jwt.validyTokenTimeInMin}")
-    private long VALIDITY_TOKEN_TIME_IN_MINUTES;
-    @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInMin}")
-    private long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_MINUTES;
+    @Value("${jwt.validyTokenTimeInSeconds}")
+    private long VALIDITY_TOKEN_TIME_IN_SECONDS;
+    @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds}")
+    private long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS;
 
     /* PUBLIC METHODS */
     /* ============================================================ */
@@ -105,8 +105,8 @@ public class JwtServiceImpl implements JwtService {
                 .expirationStatus(false)
                 .creationDate(Instant.now())
                 .expirationDate(Instant.now()
-                        .plus(VALIDITY_TOKEN_TIME_IN_MINUTES, ChronoUnit.MINUTES)
-                        .plus(ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_MINUTES, ChronoUnit.MINUTES))
+                        .plus(VALIDITY_TOKEN_TIME_IN_SECONDS, ChronoUnit.SECONDS)
+                        .plus(ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS, ChronoUnit.SECONDS))
                 .build();
 
         /* create the jwt and store in db for activation before expirationDate */
@@ -218,7 +218,7 @@ public class JwtServiceImpl implements JwtService {
      */
     private Map<String, String> generateJwt(User user) {
         final long currentTime = System.currentTimeMillis();
-        final long expirationTime = currentTime + VALIDITY_TOKEN_TIME_IN_MINUTES * 60 * 1000;
+        final long expirationTime = currentTime + VALIDITY_TOKEN_TIME_IN_SECONDS * 1000;
 
         final Map<String, Object> claims = Map.of(
                 "name", user.getName(),
