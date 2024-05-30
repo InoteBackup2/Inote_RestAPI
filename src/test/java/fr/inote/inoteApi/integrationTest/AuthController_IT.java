@@ -13,6 +13,7 @@ import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.exceptions.InoteUserException;
+import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.ActivationRequestDto;
 import fr.inote.inoteApi.dto.SignInRequestDto;
 import fr.inote.inoteApi.dto.ChangePasswordRequestDto;
@@ -34,7 +35,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -116,6 +116,9 @@ public class AuthController_IT {
         private JwtRepository jwtRepository;
 
         @Autowired
+        private JwtServiceImpl jwtService;
+
+        @Autowired
         private RoleRepository roleRepository;
 
         @Autowired
@@ -153,18 +156,16 @@ public class AuthController_IT {
                         .creation(Instant.now())
                         .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
                         .build();
-
-        @Value("${jwt.validyTokenTimeInSeconds}")
-        private long VALIDITY_TOKEN_TIME_IN_SECONDS;
-        @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds}")
-        private long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS;
+                        final String ENCRYPTION_KEY_FOR_TEST = "40c9201ff1204cfaa2b8eb5ac72bbe5020af8dfaa3b59cf243a5d41e04fb6b1907c490ef0686e646199d6629711cbccd953e11df4bbd913da2a8902f57e99a55";
 
         /* FIXTURES */
         /* ============================================================ */
         @BeforeEach
         void setUp() throws Exception {
                 this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
-
+                this.jwtService.setValidityTokenTimeInSeconds(5);
+                this.jwtService.setAdditionalTimeForRefreshTokenInSeconds(1000);
+                this.jwtService.setEncryptionKey(ENCRYPTION_KEY_FOR_TEST);
                 // this.bearerAuthorization = this.connectUserAndReturnBearer();
         }
 
@@ -814,7 +815,7 @@ public class AuthController_IT {
 
                 /* Act & assert */
                 // 1- We await expiration of token and make sure that application is protected
-                TimeUnit.SECONDS.sleep(VALIDITY_TOKEN_TIME_IN_SECONDS+2);
+                TimeUnit.SECONDS.sleep(this.jwtService.getValidityTokenTimeInSeconds()+2);
                 this.mockMvc.perform(post(Endpoint.SIGN_OUT).header("Authorization", "bearer "
                                 + signInDtoresponse.bearer()))
                                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());

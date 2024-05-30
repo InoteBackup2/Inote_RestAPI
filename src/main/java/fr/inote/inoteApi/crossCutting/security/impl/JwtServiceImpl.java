@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -43,7 +42,6 @@ public class JwtServiceImpl implements JwtService {
 
     /* PROPERTIES */
     /* ============================================================ */
-    
 
     /* DEPENDENCIES INJECTION */
     /* ============================================================ */
@@ -61,6 +59,10 @@ public class JwtServiceImpl implements JwtService {
     /* ============================================================ */
 
     /*
+     * These values should be overwritten in test whith setters
+     */
+    @Value("${jwt.validyTokenTimeInSeconds}")
+    private long validityTokenTimeInSeconds;
 
     @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds}")
     private long additionalTimeForRefreshTokenInSeconds;
@@ -109,6 +111,8 @@ public class JwtServiceImpl implements JwtService {
                 .expirationStatus(false)
                 .creationDate(Instant.now())
                 .expirationDate(Instant.now()
+                    .plusSeconds(this.getValidityTokenTimeInSeconds())
+                    .plusSeconds(this.getAdditionalTimeForRefreshTokenInSeconds()))
                 .build();
 
         /* create the jwt and store in db for activation before expirationDate */
