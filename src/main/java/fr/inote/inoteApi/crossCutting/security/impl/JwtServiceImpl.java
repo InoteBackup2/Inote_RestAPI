@@ -95,7 +95,7 @@ public class JwtServiceImpl implements JwtService {
                 .contentValue(UUID.randomUUID().toString()) // Universal Unique IDentifier
                 .expirationStatus(false)
                 .creationDate(Instant.now())
-                .expirationDate(Instant.now().plus(VALIDITY_TOKEN_TIME_IN_MINUTES, ChronoUnit.MINUTES))
+                .expirationDate(Instant.now().plus(REFRESH_TOKEN_VALIDITY_TIME_IN_MINUTES, ChronoUnit.MINUTES))
                 .build();
 
         /* create the jwt and store in db for activation before expirationDate */
@@ -207,7 +207,7 @@ public class JwtServiceImpl implements JwtService {
      */
     private Map<String, String> generateJwt(User user) {
         final long currentTime = System.currentTimeMillis();
-        final long expirationTime = currentTime + VALIDITY_TOKEN_TIME_IN_MINUTES * 60 * 1000; // 600s of validity
+        final long expirationTime = currentTime + VALIDITY_TOKEN_TIME_IN_MINUTES * 60 * 1000;
 
         final Map<String, Object> claims = Map.of(
                 "name", user.getName(),

@@ -49,5 +49,6 @@ public class MessagesEn {
 
         // MISCELLEANOUS
         public static final String UNSPECIFIED_ERROR_HAS_OCCURED = "An unspecified error has occurred";
+        public static final String EXPIRED_TOKEN = "The JWT has expired";
 
 }

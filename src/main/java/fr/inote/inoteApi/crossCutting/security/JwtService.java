@@ -9,7 +9,11 @@ import java.util.Map;
 
 public interface JwtService {
     
-    long VALIDITY_TOKEN_TIME_IN_MINUTES = 1;
+    final long VALIDITY_TOKEN_TIME_IN_MINUTES = 1;
+    final long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_MINUTES = 30;
+    
+    final long REFRESH_TOKEN_VALIDITY_TIME_IN_MINUTES = VALIDITY_TOKEN_TIME_IN_MINUTES + ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_MINUTES;
+    
 
     /**
      * Retrieve an token in database, actived and not expired
