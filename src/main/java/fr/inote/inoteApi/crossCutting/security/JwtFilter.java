@@ -49,6 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserService utilisateurService;
 
     private final JwtServiceImpl jwtServiceImpl;
+    
 
     public JwtFilter(
             HandlerExceptionResolver handlerExceptionResolver,

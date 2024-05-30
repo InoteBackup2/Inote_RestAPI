@@ -71,7 +71,9 @@
 			// Test coverage
 			"ryanluker.vscode-coverage-gutters",
 			// Javadoc Generation
-			"madhavd1.javadoc-tools"
+			"madhavd1.javadoc-tools",
+			// Code Generation(Getters,Setters...)
+			"jaland.java-generate-setters-getters-update-equals"
 		]
 	},
 }
