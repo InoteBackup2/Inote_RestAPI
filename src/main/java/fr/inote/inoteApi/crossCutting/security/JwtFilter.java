@@ -19,7 +19,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import fr.inote.inoteApi.service.UserService;
 
-
 /**
  * Jwt filter, who perform JWT validation on a bearer token present in the HTTP
  * header. It is commonly used in conjunction with Spring Security and Spring
@@ -93,35 +92,35 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 // username recuperation
                 username = jwtServiceImpl.extractUsername(token);
-            }
 
-            if (!isTokenExpired
-                    && tokenInDatabase.getUser().getEmail().equals(username)
+                if (!isTokenExpired
+                        && tokenInDatabase.getUser().getEmail().equals(username)
+                        /*
+                         * The SecurityContextHolder.getContext().getAuthentication() method is used in
+                         * Spring Security to retrieve the currently authenticated user’s information
+                         */
+                        && SecurityContextHolder.getContext().getAuthentication() == null) {
+
                     /*
-                     * The SecurityContextHolder.getContext().getAuthentication() method is used in
-                     * Spring Security to retrieve the currently authenticated user’s information
+                     * UserDetails interface represents information about a user. It contains
+                     * details such as the user’s username, password, authorities (roles), and
+                     * additional attributes
                      */
-                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = utilisateurService.loadUserByUsername(username);
 
-                /*
-                 * UserDetails interface represents information about a user. It contains
-                 * details such as the user’s username, password, authorities (roles), and
-                 * additional attributes
-                 */
-                UserDetails userDetails = utilisateurService.loadUserByUsername(username);
+                    /*
+                     * UsernamePasswordAuthenticationToken is a concrete implementation of the
+                     * Authentication interface used to represent the credentials of a user
+                     * attempting to authenticate. It is commonly used in scenarios where you want
+                     * to manually authenticate a user after their account is created or by other
+                     * means not involving the traditional login form
+                     */
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
 
-                /*
-                 * UsernamePasswordAuthenticationToken is a concrete implementation of the
-                 * Authentication interface used to represent the credentials of a user
-                 * attempting to authenticate. It is commonly used in scenarios where you want
-                 * to manually authenticate a user after their account is created or by other
-                 * means not involving the traditional login form
-                 */
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-
-                // Validate the authentication
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    // Validate the authentication
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
 
             /*

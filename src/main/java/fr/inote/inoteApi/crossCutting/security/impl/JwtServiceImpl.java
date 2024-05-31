@@ -14,6 +14,8 @@ import fr.inote.inoteApi.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,10 +33,15 @@ import java.util.stream.Collectors;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.REFRESH;
 
+@Getter
+@Setter
 @Slf4j
 @Transactional // transactional behavior.
 @Service
 public class JwtServiceImpl implements JwtService {
+
+    /* PROPERTIES */
+    /* ============================================================ */
 
     /* DEPENDENCIES INJECTION */
     /* ============================================================ */
@@ -51,18 +57,18 @@ public class JwtServiceImpl implements JwtService {
 
     /* CONSTANTS */
     /* ============================================================ */
-    // Reference for encryption
-    @Value("${jwt.encryptionKey}")
-    private String ENCRYPTION_KEY;
 
     /*
-     * These values are loaded dynamically from the configuration files so that very
-     * short values can be set during testing.
+     * These values should be overwritten in test whith setters
      */
     @Value("${jwt.validyTokenTimeInSeconds}")
-    private long VALIDITY_TOKEN_TIME_IN_SECONDS;
+    private long validityTokenTimeInSeconds;
+
     @Value("${jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds}")
-    private long ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS;
+    private long additionalTimeForRefreshTokenInSeconds;
+
+    @Value("${jwt.encryptionKey}")
+    private String encryptionKey;
 
     /* PUBLIC METHODS */
     /* ============================================================ */
@@ -105,8 +111,8 @@ public class JwtServiceImpl implements JwtService {
                 .expirationStatus(false)
                 .creationDate(Instant.now())
                 .expirationDate(Instant.now()
-                        .plus(VALIDITY_TOKEN_TIME_IN_SECONDS, ChronoUnit.SECONDS)
-                        .plus(ADDITIONAL_TIME_FOR_REFRESH_TOKEN_IN_SECONDS, ChronoUnit.SECONDS))
+                    .plusSeconds(this.getValidityTokenTimeInSeconds())
+                    .plusSeconds(this.getAdditionalTimeForRefreshTokenInSeconds()))
                 .build();
 
         /* create the jwt and store in db for activation before expirationDate */
@@ -218,7 +224,7 @@ public class JwtServiceImpl implements JwtService {
      */
     private Map<String, String> generateJwt(User user) {
         final long currentTime = System.currentTimeMillis();
-        final long expirationTime = currentTime + VALIDITY_TOKEN_TIME_IN_SECONDS * 1000;
+        final long expirationTime = currentTime + this.validityTokenTimeInSeconds * 1000;
 
         final Map<String, Object> claims = Map.of(
                 "name", user.getName(),
@@ -278,7 +284,7 @@ public class JwtServiceImpl implements JwtService {
      * @return the key
      */
     private Key getKey() {
-        final byte[] decoder = Decoders.BASE64.decode(ENCRYPTION_KEY);
+        final byte[] decoder = Decoders.BASE64.decode(encryptionKey);
         return Keys.hmacShaKeyFor(decoder);
     }
 
