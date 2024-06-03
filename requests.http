@@ -3,7 +3,6 @@
 @username = toto@kame-house.com
 @password = ssFF@@787$
 @passwordBis = chichi@@YYY14646_
-@activationCode = ""
 @email = sangoku@kame-house.com
 
 # USER ACCOUNT
@@ -45,11 +44,13 @@ Content-Type: {{contentType}}
   "password":"{{password}}"
 }
 
+@tokenBearer = {{restApi.response.body.bearer}}
+@tokenRefresh = {{restApi.response.body.refresh}}
 ### User sign out
 # Nota : Don't forget to set the good bearer given by server when sign in.
 
 POST http://localhost:8080/api/auth/sign_out HTTP/1.1
-Authorization: bearer {{restApi.response.body.bearer}}
+Authorization: bearer {{tokenBearer}}
 
 ### Change password request
 # Nota : Don't forget to recuperate activation code
@@ -79,26 +80,24 @@ POST http://localhost:8080/api/auth/refresh_token HTTP/1.1
 Content-Type: {{contentType}}
 
 {
-   "refresh":"{{restApi.response.body.refresh}}"
+   "refresh":"{{tokenRefresh}}"
 }
 
+@tokenBearer = {{restApi.response.body.bearer}}
+@tokenRefresh = {{restApi.response.body.refresh}}
 ### Get current user
 # Nota : Don't forget to set the good refresh UUID, sended when sign in
-# @name restApi
 GET http://localhost:8080/api/auth/current-user HTTP/1.1
 Content-Type: {{contentType}}
-Authorization: bearer {{restApi.response.body.bearer}}
-
-
+Authorization: bearer {{tokenBearer}}
 
 #COMMENTS
 #========================================================================
 ### Send a comment
 #Nota : dont forget to set the good bearer
-# @name restApi
 POST http://localhost:8080/api/comment/create HTTP/1.1
 Content-Type: {{contentType}}
-Authorization: bearer {{restApi.response.body.bearer}}
+Authorization: bearer {{tokenBearer}}
 
 {
     "msg": "Hello"
@@ -106,8 +105,7 @@ Authorization: bearer {{restApi.response.body.bearer}}
 
 ### Read All comments
 #Don't forget to set the good bearer
-# @name restApi
 GET http://localhost:8080/api/comments HTTP/1.1
 Content-Type: {{contentType}}
-Authorization: Bearer {{restApi.response.body.bearer}}
+Authorization: bearer {{tokenBearer}}
 
