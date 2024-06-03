@@ -1,3 +1,11 @@
+@contentType = application/json
+@pseudo = asterix
+@username = toto@kame-house.com
+@password = ssFF@@787$
+@passwordBis = chichi@@YYY14646_
+@activationCode = ""
+@email = sangoku@kame-house.com
+
 # USER ACCOUNT
 #=================================================================
 
@@ -8,74 +16,78 @@
 # Simulated Inbox mail is accessible at :
 # http://localhost:5000
 POST http://localhost:8080/api/auth/register HTTP/1.1
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-    "pseudo":"asterix",
-    "username":"toto@kame-house.com",
-    "password":"ssFF@@787$"
+    "pseudo":"{{pseudo}}",
+    "username":"{{username}}",
+    "password":"{{password}}"
 }
 
 #### Account activation
 # Nota : Pick the activation code in Validation table
 # or open fictionous mail box http://localhost:5000 (smtp-dev must be running)
 POST http://localhost:8080/api/auth/activation HTTP/1.1
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
     "code":"231978"
 }
 
 #### User sign in
+# @name restApi
 POST http://localhost:8080/api/auth/sign_in HTTP/1.1
 # Nota : keep the Bearer, it must be in headers of all secured endpoints
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-  "username":"toto@kame-house.com",
-  "password":"ssFF@@787$"
+  "username":"{{username}}",
+  "password":"{{password}}"
 }
 
 ### User sign out
-# Nota : Don't forget to set the good bearer given by server when sign in
+# Nota : Don't forget to set the good bearer given by server when sign in.
+
 POST http://localhost:8080/api/auth/sign_out HTTP/1.1
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYXN0ZXJpeCIsImV4cCI6MTcxNjg4NjEwMCwic3ViIjoidG90b0BrYW1lLWhvdXNlLmNvbSJ9.DvgStbeluZvK863bPY2W9JPvwg-p-leA6FXuFBSSyJ4
+Authorization: bearer {{restApi.response.body.bearer}}
 
 ### Change password request
 # Nota : Don't forget to recuperate activation code
 POST http://localhost:8080/api/auth/change_password HTTP/1.1
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-    "email":"sangoku@kame-house.com"
+    "email":"{{email}}"
 }
 
 ### Send a new password
 # Nota: Don't forget to set the good activation code
 POST http://localhost:8080/api/auth/new_password HTTP/1.1
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-    "email":"sangoku@kame-house.com",
+    "email":"{{email}}",
     "code":"782725",
-    "password": "chichi@@YYY14646_"
+    "password": "{{passwordBis}}"
 }
 
 
 ### Send refresh-token
 # Nota : Don't forget to set the good refresh UUID, sended when sign in
+# @name restApi
 POST http://localhost:8080/api/auth/refresh_token HTTP/1.1
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-   "refresh":"d2646d89-bea6-4bff-a24c-4580da2ebd87"
+   "refresh":"{{restApi.response.body.refresh}}"
 }
 
 ### Get current user
 # Nota : Don't forget to set the good refresh UUID, sended when sign in
+# @name restApi
 GET http://localhost:8080/api/auth/current-user HTTP/1.1
-Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTYxNDIwOTcsInN1YiI6Im9iZWxpeEBrYW1lLWhvdXNlLmNvbSIsIm5hbWUiOiJhc3Rlcml4In0.GlS1VZOfZ7p6_qOXuKrMs2urdnvFwcKsiPn5RaLxURM
+Content-Type: {{contentType}}
+Authorization: bearer {{restApi.response.body.bearer}}
 
 
 
@@ -83,9 +95,10 @@ Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTYxNDIwOTcsInN1YiI6Im9iZ
 #========================================================================
 ### Send a comment
 #Nota : dont forget to set the good bearer
+# @name restApi
 POST http://localhost:8080/api/comment/create HTTP/1.1
-Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b3RvQGthbWUtaG91c2UuY29tIiwibmFtZSI6ImFzdGVyaXgiLCJleHAiOjE3MTcwNzE4NzV9.CQ2t2NNnndXriC1OvUAAeX8IOWd5IeT1V1TuZdrRc1o
+Content-Type: {{contentType}}
+Authorization: bearer {{restApi.response.body.bearer}}
 
 {
     "msg": "Hello"
@@ -93,7 +106,8 @@ Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b3RvQGthbWUtaG91c2UuY29tI
 
 ### Read All comments
 #Don't forget to set the good bearer
+# @name restApi
 GET http://localhost:8080/api/comments HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW5nb2t1QGthbWUtaG91c2UuY29tIiwibmFtZSI6InNhbmdva3UiLCJleHAiOjE3MTMwMjg5NTd9.u-AV2Q1k5cm49EkX9-SJMFyvBa9stZzA0uw77ksspbo
+Content-Type: {{contentType}}
+Authorization: Bearer {{restApi.response.body.bearer}}
 
