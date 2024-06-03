@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "pseudo":"asterix",
-    "username":"toto@kame-house.com",
+    "username":"totoa@kame-house.com",
     "password":"ssFF@@787$"
 }
 
@@ -23,7 +23,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: application/json
 
 {
-    "code":"231978"
+    "code":"797108"
 }
 
 #### User sign in
@@ -32,7 +32,7 @@ POST http://localhost:8080/api/auth/sign_in HTTP/1.1
 Content-Type: application/json
 
 {
-  "username":"toto@kame-house.com",
+  "username":"totoa@kame-house.com",
   "password":"ssFF@@787$"
 }
 
