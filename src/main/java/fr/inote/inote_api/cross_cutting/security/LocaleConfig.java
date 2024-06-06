@@ -7,6 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
+/** Locale configuration
+ * 
+ * @author FYHenry
+ * @date 06/05/2024
+ * 
+ * <p>Implements automatic localization by <em>Accept-Language</em> HTTP header.</p>
+ * <p>The messages resources are in the <em>i18n</em> directory.</p>
+ */
 @Configuration
 public class LocaleConfig {
     @Bean
