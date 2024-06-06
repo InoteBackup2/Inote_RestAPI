@@ -3,6 +3,7 @@
     {
       "name": "inote.backend.mail.notreply",
       "type": "java.lang.String",
+      "defaultValue": "notreply@inote.fr",
       "description": "E-mail address of remote SMTP server"
     },
     {
@@ -13,11 +14,13 @@
     {
       "name": "jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds",
       "type": "java.lang.Integer",
+      "defaultValue": 3600,
       "description": "A description for 'jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds'"
     },
     {
       "name": "jwt.validyTokenTimeInSeconds",
       "type": "java.lang.Integer",
+      "defaultValue": 3600,
       "description": "A description for 'jwt.validyTokenTimeInSeconds'"
     },
     {
