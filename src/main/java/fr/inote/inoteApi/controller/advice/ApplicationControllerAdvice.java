@@ -253,7 +253,21 @@ public class ApplicationControllerAdvice {
         log.error(ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, MessagesEn.EXPIRED_TOKEN);
     }
-    
+
+    /**
+     * Handle exception when refresh token is expired
+     * @param ex
+     * @return 400 status code and exception cause
+     * 
+     * @author atsuhikoMochizuki
+     * @since 2024-06-04
+     */
+    @ExceptionHandler(value = InoteExpiredRefreshTokenException.class)
+    private ProblemDetail InoteExpiredRefreshTokenExceptionHandler(InoteExpiredRefreshTokenException ex) {
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+    }
+
     /**
      * Default exception handler
      * 
