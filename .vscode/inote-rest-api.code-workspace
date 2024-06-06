@@ -34,7 +34,7 @@
 				"type": "java",
 				"name": "Inote API application",
 				"request": "launch",
-				"mainClass": "fr.inote.inoteApi.InoteApiApplication",
+				"mainClass": "fr.inote.inote_api.InoteApiApplication",
 				"projectName": "InoteApi"
 				
 				/* Ceci n'est plus utile, tout la configuration pour le runner des test

@@ -1,12 +1,29 @@
-{"properties": [
-  {
-    "name": "inote.backend.mail.notreply",
-    "type": "java.lang.String",
-    "description": "E-mail address of remote SMTP server"
-  },
-  {
-    "name": "inote.frontend.host",
-    "type": "java.lang.String",
-    "description": "Web address of frontend HTTP server"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "inote.backend.mail.notreply",
+      "type": "java.lang.String",
+      "description": "E-mail address of remote SMTP server"
+    },
+    {
+      "name": "inote.frontend.host",
+      "type": "java.lang.String",
+      "description": "Web address of frontend HTTP server"
+    },
+    {
+      "name": "jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds",
+      "type": "java.lang.Integer",
+      "description": "A description for 'jwt.jwtValidityRefreshTokenAdditionalTimeToTokenInSeconds'"
+    },
+    {
+      "name": "jwt.validyTokenTimeInSeconds",
+      "type": "java.lang.Integer",
+      "description": "A description for 'jwt.validyTokenTimeInSeconds'"
+    },
+    {
+      "name": "jwt.encryptionKey",
+      "type": "java.lang.String",
+      "description": "A description for 'jwt.encryptionKey'"
+    }
+  ]
+}
