@@ -6,13 +6,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import fr.inote.inote_api.cross_cutting.constants.MessagesEn;
-import fr.inote.inote_api.cross_cutting.exceptions.*;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteEmptyMessageCommentException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteExistingEmailException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteInvalidEmailException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteInvalidPasswordFormatException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteJwtNotFoundException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteNotAuthenticatedUserException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteRoleNotFoundException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteUserNotFoundException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteValidationExpiredException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteValidationNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import org.apache.tomcat.websocket.AuthenticationException;
 
