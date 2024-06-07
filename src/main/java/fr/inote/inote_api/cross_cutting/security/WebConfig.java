@@ -1,9 +1,12 @@
 package fr.inote.inote_api.cross_cutting.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import fr.inote.inote_api.cross_cutting.constants.Endpoint;
 
@@ -38,6 +41,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET")
                 .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+
+                registry.addMapping("/api/hello")
+                .allowedOrigins(FRONTEND_HOST)
+                .allowedMethods("GET")
+                .allowedHeaders("Content-Type", "Authorization")
+                .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
                 
                 registry.addMapping(Endpoint.SIGN_OUT)
                 .allowedOrigins(FRONTEND_HOST)
@@ -56,9 +65,19 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("POST")
                 .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers");
-                
-                
-            }
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
+        return localeChangeInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(localeChangeInterceptor());
+    }
 }
 
 // @Configuration

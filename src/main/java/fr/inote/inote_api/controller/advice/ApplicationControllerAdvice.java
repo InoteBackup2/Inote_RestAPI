@@ -1,11 +1,11 @@
 package fr.inote.inote_api.controller.advice;
 
+import org.springframework.context.MessageSource;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import fr.inote.inote_api.cross_cutting.constants.MessagesEn;
 import fr.inote.inote_api.cross_cutting.exceptions.InoteEmptyMessageCommentException;
 import fr.inote.inote_api.cross_cutting.exceptions.InoteExistingEmailException;
 import fr.inote.inote_api.cross_cutting.exceptions.InoteInvalidEmailException;
@@ -26,6 +26,8 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+import java.util.Locale;
+
 import org.apache.tomcat.websocket.AuthenticationException;
 
 /**
@@ -39,6 +41,12 @@ import org.apache.tomcat.websocket.AuthenticationException;
 @RestControllerAdvice // Exception Centralized manager
 public class ApplicationControllerAdvice {
 
+    private final MessageSource messageSource;
+
+    public ApplicationControllerAdvice(MessageSource messageSource){
+        this.messageSource = messageSource;
+    }
+
    /**
      * Handle exception when jwt is malformed
      * 
@@ -51,7 +59,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail MalformedJwtExceptionHandler(MalformedJwtException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getLocalizedMessage());
     }
 
     /**
@@ -66,7 +74,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail SignatureExceptionHandler(SignatureException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getLocalizedMessage());
     }
 
     /**
@@ -81,7 +89,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail BadCredentialsExceptionHandler(BadCredentialsException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getLocalizedMessage());
     }
 
     /**
@@ -96,7 +104,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail AuthenticationExceptionHandler(AuthenticationException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getLocalizedMessage());
     }
 
     
@@ -110,10 +118,10 @@ public class ApplicationControllerAdvice {
      * @date 19-05-2024
      */
     @ExceptionHandler(value = InoteExistingEmailException.class)
-    private ProblemDetail InoteExistingEmailExceptionHandler(Exception ex) {
+    private ProblemDetail InoteExistingEmailExceptionHandler(Exception ex, Locale locale) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, ex.getLocalizedMessage());
     }
 
     /**
@@ -128,7 +136,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteValidationNotFoundExceptionHandler(Exception ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getLocalizedMessage());
     }
 
     /**
@@ -143,7 +151,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteValidationExpiredExceptionHandler(Exception ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getLocalizedMessage());
     }
 
     /**
@@ -158,7 +166,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteUserNotFoundExceptionHandler(Exception ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getLocalizedMessage());
     }
 
     /**
@@ -173,7 +181,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteInvalidEmailExceptiondeHandler(InoteInvalidEmailException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getLocalizedMessage());
     }
 
     /**
@@ -188,7 +196,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteInvalidPasswordFormatExceptionHandler(InoteInvalidPasswordFormatException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getLocalizedMessage());
     }
 
     /**
@@ -203,7 +211,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteRoleNotFoundExceptionHandler(InoteRoleNotFoundException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getLocalizedMessage());
     }
 
     /**
@@ -218,7 +226,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteJwtNotFoundException(InoteJwtNotFoundException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getLocalizedMessage());
     }
 
     /**
@@ -233,7 +241,7 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteEmptyMessageCommentExceptionHandler(InoteEmptyMessageCommentException ex) {
 
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(NOT_ACCEPTABLE, ex.getLocalizedMessage());
     }
 
     /**
@@ -248,7 +256,7 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(value = InoteNotAuthenticatedUserException.class)
     private ProblemDetail InoteNotAuthenticatedUserExceptionHandler(InoteNotAuthenticatedUserException ex) {
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, ex.getLocalizedMessage());
     }
 
     /**
@@ -260,9 +268,14 @@ public class ApplicationControllerAdvice {
      * @since 2024-05-30
      */
     @ExceptionHandler(value = ExpiredJwtException.class)
-    private ProblemDetail InoteExpiredJwtExceptionHandler(ExpiredJwtException ex) {
+    private ProblemDetail InoteExpiredJwtExceptionHandler(ExpiredJwtException ex, Locale locale) {
         log.error(ex.getMessage(), ex);
-        return ProblemDetail.forStatusAndDetail(UNAUTHORIZED, MessagesEn.EXPIRED_TOKEN);
+        return ProblemDetail.forStatusAndDetail(
+            UNAUTHORIZED,
+            messageSource.getMessage(
+                "miscelleanous.EXPIRED_TOKEN",
+                null,
+                locale));
     }
     
     /**
@@ -284,6 +297,6 @@ public class ApplicationControllerAdvice {
                         // return status code
                         BAD_REQUEST,
                         // return reason
-                        ex.getMessage());
+                        ex.getLocalizedMessage());
     }
 }

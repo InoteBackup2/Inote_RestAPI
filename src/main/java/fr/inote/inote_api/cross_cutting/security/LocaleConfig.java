@@ -2,9 +2,11 @@ package fr.inote.inote_api.cross_cutting.security;
 
 import java.util.Locale;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 /** Locale configuration
@@ -18,17 +20,17 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 @Configuration
 public class LocaleConfig {
     @Bean
-    public AcceptHeaderLocaleResolver getLocaleResolver() {
-        final AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
-        acceptHeaderLocaleResolver.setDefaultLocale(Locale.ENGLISH);
-        return acceptHeaderLocaleResolver;
+    public LocaleResolver localeResolver() {
+        final AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+        //localeResolver.setDefaultLocale(Locale.ENGLISH);
+        return localeResolver;
     }
 
     @Bean
-    public ResourceBundleMessageSource getMessageSource() {
-        final ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
-        resourceBundleMessageSource.setBasename("i18n/messages");
-        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
-        return resourceBundleMessageSource;
+    public MessageSource messageSource() {
+        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("i18n/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 }

@@ -1,11 +1,21 @@
 package fr.inote.inote_api.service.impl;
 
-import static fr.inote.inote_api.ConstantsForTests.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static fr.inote.inote_api.ConstantsForTests.REFERENCE_USER2_EMAIL;
+import static fr.inote.inote_api.ConstantsForTests.REFERENCE_USER2_NAME;
+import static fr.inote.inote_api.ConstantsForTests.REFERENCE_USER2_PASSWORD;
+import static fr.inote.inote_api.ConstantsForTests.REFERENCE_USER_EMAIL;
+import static fr.inote.inote_api.ConstantsForTests.REFERENCE_USER_NAME;
+import static fr.inote.inote_api.ConstantsForTests.REFERENCE_USER_PASSWORD;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,7 +36,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import fr.inote.inote_api.cross_cutting.enums.RoleEnum;
-import fr.inote.inote_api.cross_cutting.exceptions.*;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteExistingEmailException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteInvalidEmailException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteInvalidPasswordFormatException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteMailException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteRoleNotFoundException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteUserNotFoundException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteValidationExpiredException;
+import fr.inote.inote_api.cross_cutting.exceptions.InoteValidationNotFoundException;
 import fr.inote.inote_api.entity.Role;
 import fr.inote.inote_api.entity.User;
 import fr.inote.inote_api.entity.Validation;
@@ -35,7 +52,6 @@ import fr.inote.inote_api.repository.UserRepository;
 import fr.inote.inote_api.repository.ValidationRepository;
 import fr.inote.inote_api.service.UserService;
 import fr.inote.inote_api.service.ValidationService;
-import fr.inote.inote_api.service.impl.UserServiceImpl;
 
 /**
  * Unit tests of service UserService

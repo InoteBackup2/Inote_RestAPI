@@ -5,6 +5,11 @@
 @passwordBis = chichi@@YYY14646_
 @email = sangoku@kame-house.com
 
+# HELLO !
+
+GET http://localhost:8080/api/hello?user=Truc HTTP/1.1
+Accept-Language: en
+
 # USER ACCOUNT
 #=================================================================
 
