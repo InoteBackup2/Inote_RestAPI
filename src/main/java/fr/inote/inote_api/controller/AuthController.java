@@ -1,5 +1,6 @@
 package fr.inote.inote_api.controller;
 
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.inote.inote_api.cross_cutting.constants.Endpoint;
@@ -24,6 +26,7 @@ import fr.inote.inote_api.dto.*;
 import fr.inote.inote_api.entity.User;
 import fr.inote.inote_api.service.impl.UserServiceImpl;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static fr.inote.inote_api.cross_cutting.constants.HttpRequestBody.BEARER;
@@ -81,14 +84,17 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserServiceImpl userService;
     private final JwtServiceImpl jwtService;
+    private final ResourceBundleMessageSource source;
 
     public AuthController(
             AuthenticationManager authenticationManager,
             UserServiceImpl userService,
-            JwtServiceImpl jwtService) {
+            JwtServiceImpl jwtService,
+            ResourceBundleMessageSource source) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtService = jwtService;
+        this.source = source;
     }
 
     /* PUBLIC METHODS */
@@ -112,9 +118,17 @@ public class AuthController {
      */
 
     @PostMapping(path = Endpoint.REGISTER)
-    public ResponseEntity<String> register(@RequestBody RegisterRequestDto registerRequestDto)
-            throws MailException, InoteExistingEmailException, InoteInvalidEmailException, InoteRoleNotFoundException,
-            InoteInvalidPasswordFormatException, InoteMailException {
+    public ResponseEntity<String> register(
+                @RequestHeader(name = "Accept-Language", required = false)
+                final Locale locale,
+                @RequestBody
+                final RegisterRequestDto registerRequestDto)
+            throws MailException,
+                InoteExistingEmailException,
+                InoteInvalidEmailException,
+                InoteRoleNotFoundException,
+                InoteInvalidPasswordFormatException,
+                InoteMailException {
 
         User userToRegister = User.builder()
                 .email(registerRequestDto.username())
@@ -126,7 +140,10 @@ public class AuthController {
 
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(201))
-                .body(MessagesEn.ACTIVATION_NEED_ACTIVATION);
+                .body(source.getMessage(
+                        "activation.ACTIVATION_NEED_ACTIVATION",
+                        null,
+                        locale));
     }
 
     /**
@@ -145,14 +162,23 @@ public class AuthController {
      * @date 19-05-2024
      */
     @PostMapping(path = Endpoint.ACTIVATION)
-    public ResponseEntity<String> activation(@RequestBody ActivationRequestDto activationRequestDto)
-            throws InoteValidationNotFoundException, InoteValidationExpiredException, InoteUserNotFoundException {
+    public ResponseEntity<String> activation(
+                @RequestHeader(name = "Accept-Language", required = false)
+                final Locale locale,
+                @RequestBody
+                ActivationRequestDto activationRequestDto)
+            throws InoteValidationNotFoundException,
+                InoteValidationExpiredException,
+                InoteUserNotFoundException {
 
         this.userService.activation(activationRequestDto.code());
 
         return ResponseEntity
                 .status(OK)
-                .body(MessagesEn.ACTIVATION_OF_USER_OK);
+                .body(source.getMessage(
+                        "user.ACTIVATION_OF_USER_OK",
+                        null,
+                        locale));
 
     }
 
