@@ -47,7 +47,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.NestedServletException;
 
 import javax.mail.internet.MimeMessage;
 import java.time.Instant;
@@ -959,12 +958,12 @@ public class AuthController_IT {
         void IT_getCurrentUser_shouldSuccess_whenUserIsConnected() throws JsonProcessingException, Exception {
 
                 /* Arrange */
-                String bearer = this.connectAndReturnBearer();
+                SignInResponseDto signInResponseDto = this.connectAndReturnAllCredentials();
 
                 /* Act & assert */
                 ResultActions response = this.mockMvc.perform(
                                 MockMvcRequestBuilders.get(Endpoint.GET_CURRENT_USER)
-                                                .header("Authorization", BEARER + " " + bearer)
+                                                .header("Authorization", BEARER + " " + signInResponseDto.bearer())
                                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
                 String returnedResponse = response.andReturn().getResponse().getContentAsString();
@@ -996,60 +995,60 @@ public class AuthController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
-        private String connectAndReturnBearer() throws JsonProcessingException, Exception {
-                /* Arrange */
-                final String[] messageContainingCode = new String[1];
-                this.mockMvc.perform(
-                                post(Endpoint.REGISTER)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper
-                                                                .writeValueAsString(this.registerRequestDto)));
-                await()
-                                .atMost(2, SECONDS)
-                                .untilAsserted(() -> {
-                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                                        assertThat(receivedMessages.length).isEqualTo(1);
+        // private String connectAndReturnBearer() throws JsonProcessingException, Exception {
+        //         /* Arrange */
+        //         final String[] messageContainingCode = new String[1];
+        //         this.mockMvc.perform(
+        //                         post(Endpoint.REGISTER)
+        //                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+        //                                         .content(this.objectMapper
+        //                                                         .writeValueAsString(this.registerRequestDto)));
+        //         await()
+        //                         .atMost(2, SECONDS)
+        //                         .untilAsserted(() -> {
+        //                                 MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        //                                 assertThat(receivedMessages.length).isEqualTo(1);
 
-                                        MimeMessage receivedMessage = receivedMessages[0];
+        //                                 MimeMessage receivedMessage = receivedMessages[0];
 
-                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                                });
+        //                                 messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
+        //                                 assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
+        //                         });
 
-                final String reference = "activation code : ";
-                int startSubtring = messageContainingCode[0].indexOf(reference);
-                int startIndexOfCode = startSubtring + reference.length();
-                int endIndexOfCode = startIndexOfCode + 6;
-                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
-                ResultActions response = this.mockMvc.perform(
-                                post(Endpoint.ACTIVATION)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isOk());
+        //         final String reference = "activation code : ";
+        //         int startSubtring = messageContainingCode[0].indexOf(reference);
+        //         int startIndexOfCode = startSubtring + reference.length();
+        //         int endIndexOfCode = startIndexOfCode + 6;
+        //         String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
+        //         ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
+        //         ResultActions response = this.mockMvc.perform(
+        //                         post(Endpoint.ACTIVATION)
+        //                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+        //                                         .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
+        //                         .andExpect(MockMvcResultMatchers.status().isOk());
 
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+        //         String returnedResponse = response.andReturn().getResponse().getContentAsString();
 
-                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
+        //         assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
 
-                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
-                                this.registerRequestDto.username(), this.registerRequestDto.password());
+        //         SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
+        //                         this.registerRequestDto.username(), this.registerRequestDto.password());
 
-                response = this.mockMvc.perform(
-                                post(Endpoint.SIGN_IN)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper
-                                                                .writeValueAsString(authenticationDtoRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        //         response = this.mockMvc.perform(
+        //                         post(Endpoint.SIGN_IN)
+        //                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+        //                                         .content(this.objectMapper
+        //                                                         .writeValueAsString(authenticationDtoRequest)))
+        //                         .andExpect(MockMvcResultMatchers.status().isOk())
+        //                         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                returnedResponse = response.andReturn().getResponse().getContentAsString();
-                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
-                                SignInResponseDto.class);
-                assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
-                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
-                return signInDtoresponse.bearer();
-        }
+        //         returnedResponse = response.andReturn().getResponse().getContentAsString();
+        //         SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+        //                         SignInResponseDto.class);
+        //         assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
+        //         assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+        //         return signInDtoresponse.bearer();
+        // }
 
         private SignInResponseDto connectAndReturnAllCredentials() throws JsonProcessingException, Exception {
                 /* Arrange */
