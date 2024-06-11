@@ -30,7 +30,7 @@ POST http://localhost:8080/api/auth/activation HTTP/1.1
 Content-Type: {{contentType}}
 
 {
-    "code":"110221"
+    "code":"453583"
 }
 
 #### User sign in
@@ -108,3 +108,15 @@ Authorization: bearer {{tokenBearer}}
 GET http://localhost:8080/api/comments HTTP/1.1
 Content-Type: {{contentType}}
 Authorization: bearer {{tokenBearer}}
+
+#USERS
+#========================================================================
+
+### Get an user by username
+GET http://localhost:8080/api/users/get-user HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: bearer {{tokenBearer}}
+
+{
+    "username": "{{email}}"
+}
