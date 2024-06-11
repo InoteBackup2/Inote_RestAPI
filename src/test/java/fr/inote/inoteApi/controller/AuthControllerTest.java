@@ -293,7 +293,7 @@ public class AuthControllerTest {
                 this.mockMvc.perform(post(Endpoint.CHANGE_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(usernameMap)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
         @Test
@@ -348,7 +348,7 @@ public class AuthControllerTest {
                 this.mockMvc.perform(post(Endpoint.NEW_PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(newPasswordDto)))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
         @Test
