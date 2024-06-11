@@ -4,6 +4,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 public class ConstantsForTests {
+        public static final String REFERENCE_PSEUDONYME = "SangokuDu93";
         public static final String REFERENCE_USER_NAME = "Sangoku";
         public static final String REFERENCE_USER_EMAIL = "sangoku@inote.fr";
         public static final String REFERENCE_USER_PASSWORD = "Chichi1?ddI@@!";

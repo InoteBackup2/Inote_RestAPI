@@ -5,6 +5,7 @@ import fr.inote.inoteApi.crossCutting.exceptions.*;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -266,6 +267,20 @@ public class ApplicationControllerAdvice {
     private ProblemDetail InoteExpiredRefreshTokenExceptionHandler(InoteExpiredRefreshTokenException ex) {
         log.error(ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+    }
+
+     /**
+     * Handle exception when username is not found
+     * @param ex
+     * @return 404 status code and exception cause
+     * 
+     * @author atsuhikoMochizuki
+     * @since 2024-06-11
+     */
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    private ProblemDetail UsernameNotFoundExceptionExceptionHandler(UsernameNotFoundException ex) {
+        log.error(ex.getMessage(), ex);
+        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
     }
 
     /**

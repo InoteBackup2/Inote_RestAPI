@@ -40,6 +40,9 @@ public class User implements UserDetails {
     @Getter
     private boolean actif = false;
 
+    private String pseudonyme;
+    private String avatar;
+
     /* Private attributes in relations with others entities <=> foreign key*/
     /* ============================================================ */
     @ManyToOne

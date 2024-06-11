@@ -118,6 +118,7 @@ public class AuthController {
         User userToRegister = User.builder()
                 .email(registerRequestDto.username())
                 .name(registerRequestDto.pseudo())
+                .pseudonyme(registerRequestDto.pseudo())
                 .password(registerRequestDto.password())
                 .build();
 
@@ -192,7 +193,7 @@ public class AuthController {
      */
     @PostMapping(path = Endpoint.CHANGE_PASSWORD)
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequestDto changePasswordRequestDto)
-            throws MailException, InoteMailException, InoteInvalidEmailException {
+            throws UsernameNotFoundException, MailException, InoteMailException, InoteInvalidEmailException {
         this.userService.changePassword(changePasswordRequestDto.email());
 
         return ResponseEntity
