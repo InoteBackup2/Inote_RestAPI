@@ -2,12 +2,10 @@ package fr.inote.inoteApi.controller;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.UserRequestDto;
 import fr.inote.inoteApi.entity.User;
@@ -26,21 +24,14 @@ public class UserController {
     /* DEPENDENCIES INJECTION */
     /* ============================================================ */
     private final UserServiceImpl userService;
-    private final AuthenticationManager authenticationManager;
 
-    private final JwtServiceImpl jwtService;
-
-    public UserController(AuthenticationManager authenticationManager,
-            UserServiceImpl userService,
-            JwtServiceImpl jwtService) {
-        this.authenticationManager = authenticationManager;
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
-        this.jwtService = jwtService;
     }
 
     /* Endpoints */
     /* ============================================================ */
-    @GetMapping(path=USER)
+    @GetMapping(path = USER)
     public ResponseEntity<PublicUserResponseDto> getUser(@RequestBody UserRequestDto userRequestDto) {
         User requestedUser = this.userService.loadUserByUsername(userRequestDto.username());
 

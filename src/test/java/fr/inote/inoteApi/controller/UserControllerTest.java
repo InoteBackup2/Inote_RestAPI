@@ -39,8 +39,8 @@ import fr.inote.inoteApi.service.impl.UserServiceImpl;
 /**
  * Unit tests of User controller layer
  *
- * @author atsuhiko Mochizuki
- * @date 2021-06-11
+ * @author atsuhikoMochizuki
+ * @date 2024-06-11
  */
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
