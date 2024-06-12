@@ -3,6 +3,7 @@ package fr.inote.inoteApi.controller;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class UserController {
 
     /* Endpoints */
     /* ============================================================ */
-    @GetMapping(path = USER)
+    @PostMapping(path = USER)
     public ResponseEntity<PublicUserResponseDto> getUser(@RequestBody UserRequestDto userRequestDto) {
         User requestedUser = this.userService.loadUserByUsername(userRequestDto.username());
 

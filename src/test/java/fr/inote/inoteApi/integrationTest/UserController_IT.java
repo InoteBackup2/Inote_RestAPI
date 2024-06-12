@@ -150,7 +150,7 @@ public class UserController_IT {
                 SignInResponseDto credentials = this.connectAndReturnAllCredentials();
                 UserRequestDto userRequestDto = new UserRequestDto(this.userRef.getUsername());
 
-                ResultActions response = this.mockMvc.perform(get(Endpoint.USER)
+                ResultActions response = this.mockMvc.perform(post(Endpoint.USER)
                                 .header("Authorization", BEARER + " " + credentials.bearer())
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(userRequestDto)))
@@ -175,7 +175,7 @@ public class UserController_IT {
                 SignInResponseDto credentials = this.connectAndReturnAllCredentials();
                 UserRequestDto userRequestDto = new UserRequestDto("quisuije@dansqueletatjerre.fr");
 
-                this.mockMvc.perform(get(Endpoint.USER)
+                this.mockMvc.perform(post(Endpoint.USER)
                                 .header("Authorization", BEARER + " " + credentials.bearer())
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(this.objectMapper.writeValueAsString(userRequestDto)))
