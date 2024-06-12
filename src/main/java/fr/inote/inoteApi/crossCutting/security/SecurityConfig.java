@@ -144,7 +144,7 @@ public class SecurityConfig {
                                 // -> Secured endpoints
                                 .requestMatchers(POST, Endpoint.GET_CURRENT_USER).permitAll()
                                 .requestMatchers(POST, Endpoint.SIGN_OUT).authenticated()
-                                .requestMatchers(GET, Endpoint.USER).authenticated()
+                                .requestMatchers(POST, Endpoint.USER).authenticated()
                                 
                                 
                                 
