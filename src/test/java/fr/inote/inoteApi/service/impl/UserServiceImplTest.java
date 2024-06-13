@@ -11,12 +11,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
+
 
 import fr.inote.inoteApi.crossCutting.exceptions.*;
 import fr.inote.inoteApi.entity.Validation;
 import fr.inote.inoteApi.repository.ValidationRepository;
 import fr.inote.inoteApi.service.ValidationService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -97,6 +101,15 @@ public class UserServiceImplTest {
             .role(roleForTest)
             .build();
 
+            private User userRef2 = User.builder()
+            .email("piccolo@namek.org")
+            .name("pic-picSenzuFreez")
+            .password("Picc@@lO128!")
+            .role(roleForTest)
+            .build();
+
+            
+
     private Validation validationRef = Validation.builder()
             .code("123456")
             .user(this.userRef)
@@ -104,11 +117,22 @@ public class UserServiceImplTest {
             .expiration(Instant.now().plus(5, ChronoUnit.MINUTES))
             .build();
 
+    private ArrayList<User> usersList = new ArrayList<>();
+    
+
+
     /* FIXTURES */
     /* ============================================================ */
     @BeforeEach
     void init() {
-        this.userRepository.save(this.userRef);
+        this.usersList.add(this.userRef);
+        this.usersList.add(this.userRef2);
+        
+
+        Iterator<User> it = this.usersList.iterator();
+        while(it.hasNext()){
+            this.userRepository.save(it.next());
+        }
     }
 
     /* SERVICE UNIT TESTS */
@@ -515,5 +539,18 @@ public class UserServiceImplTest {
                     this.validationRef.getCode());
         });
     }
+
+    @Test
+    @DisplayName("Get all users when at least one is present")
+    void list_ShouldSuccess_WhenAnUserExists(){
+
+        /* Arrange */
+        when(this.userRepository.findAll()).thenReturn(this.usersList);
+
+        /* Act & asert */
+        assertThat(this.userServiceImpl.list()).isEqualTo(this.usersList);
+    }
+    
+
 
 }

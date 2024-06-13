@@ -11,7 +11,11 @@ import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.UserRequestDto;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.service.impl.UserServiceImpl;
+
+import static fr.inote.inoteApi.crossCutting.constants.Endpoint.GET_ALL_USERS;
 import static fr.inote.inoteApi.crossCutting.constants.Endpoint.USER;
+
+import java.util.List;
 
 /**
  * Controller for related Users operations
@@ -46,4 +50,13 @@ public class UserController {
                 .status(HttpStatusCode.valueOf(200))
                 .body(publicUserResponseDto);
     }
+
+    @GetMapping(path = GET_ALL_USERS)
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = this.userService.list();
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(200))
+                .body(users);
+    }
+   
 }

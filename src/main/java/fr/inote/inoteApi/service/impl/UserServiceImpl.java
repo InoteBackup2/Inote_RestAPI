@@ -18,6 +18,8 @@ import fr.inote.inoteApi.repository.RoleRepository;
 import fr.inote.inoteApi.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -114,8 +116,8 @@ public class UserServiceImpl implements UserService {
      * @return the user
      * @throws InoteExistingEmailException
      * @author Atsuhiko Mochizuki
-     * @throws InoteMailException 
-     * @throws MailException 
+     * @throws InoteMailException
+     * @throws MailException
      * @date 26/03/2024
      */
     @Override
@@ -133,8 +135,6 @@ public class UserServiceImpl implements UserService {
         return userToRegister;
     }
 
-    
-
     /* PRIVATE METHODS */
     /* ============================================================ */
 
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
      * <li>encryption of password with Bcrypt</li>
      * </ul>
      *
-     * @return the saved user if success 
+     * @return the saved user if success
      * @throws InoteExistingEmailException
      * @author atsuhiko Mochizuki
      * @date 26/03/2024
@@ -231,8 +231,6 @@ public class UserServiceImpl implements UserService {
 
         return this.userRepository.save(user);
     }
-    
-
 
     /**
      * Activate an user
@@ -261,8 +259,8 @@ public class UserServiceImpl implements UserService {
      * Change password user
      *
      * @param email
-     * @throws InoteMailException 
-     * @throws MailException 
+     * @throws InoteMailException
+     * @throws MailException
      */
     public void changePassword(String email) throws InoteInvalidEmailException, MailException, InoteMailException {
         User user = this.loadUserByUsername(email);
@@ -295,19 +293,21 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // /**
-    // * Get all users
-    // *
-    // * @return a list containing all users
-    // */
-    // public List<User> list() {
-    // final Iterable<User> utilisateurIterable =
-    // this.utilisateurRepository.findAll();
-    // List<User> users = new ArrayList<User>();
-    // for (User user : utilisateurIterable) {
-    // users.add(user);
-    // }
-    // return users;
-    // }
+    /**
+     * Get all users
+     *
+     * @return a list containing all users
+     * 
+     * @author atsuhikoMochizuki
+     * @since 2024-06-13
+     */
+    public List<User> list() {
+        List<User> users = new ArrayList<>();
+        Iterable<User> iterable = this.userRepository.findAll();
+        for(User item:iterable){
+            users.add(item);
+        }
+        return users;
+    }
 
 }
