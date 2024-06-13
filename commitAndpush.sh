@@ -35,7 +35,7 @@ git commit -m"$actualBranch : $TEXT"
 echo -e "\033[32m OK\033[0m"
 
 echo -e "\033[93m -- Push last changes on default remote repository...\033[0m"
-git push origin main
+git push origin $actualBranch
 echo -e "\033[32m OK\033[0m"
 
 echo -e "\033[93m -- Update last changes on Root project...\033[0m"
