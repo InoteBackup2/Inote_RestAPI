@@ -26,7 +26,5 @@ public class ConstantsForTests {
 
         public static final String REFERENCE_WITH_USER_ROLE_PSEUDONYME = "user-insignifiant";
         public static final String REFERENCE_WITH_USER_ROLE_EMAIL = "user@inote.fr";
-        public static final String REFERENCE_WITh_USER_ROLE_PASSWORD = "JeSuisTr@np@rent3?";
-
-        
+        public static final String REFERENCE_WITH_USER_ROLE_PASSWORD = "Tr@np@r1nt";
 }
