@@ -12,7 +12,7 @@ public class Endpoint {
     public static final String COMMENT_GET_ALL = "/api/comments";
     public static final String GET_CURRENT_USER = "/api/auth/current-user";
     public static final String USER = "/api/users/get-user";
-    public static final String GET_ALL_USERS = "/api/users/get-all-user";
+    public static final String GET_ALL_USERS = "/api/users/get-all-users";
     
     
     

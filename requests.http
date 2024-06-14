@@ -120,3 +120,9 @@ Authorization: bearer {{tokenBearer}}
 {
     "username": "{{email}}"
 }
+
+### Get all users
+GET http://localhost:8080/api/users/get-all-users HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: bearer {{tokenBearer}}
+
