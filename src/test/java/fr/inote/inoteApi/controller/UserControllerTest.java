@@ -6,7 +6,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
+import fr.inote.inoteApi.dto.ProtectedUserResponseDto;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.UserRequestDto;
 import fr.inote.inoteApi.entity.Role;
@@ -48,86 +53,142 @@ import fr.inote.inoteApi.service.impl.UserServiceImpl;
 @ActiveProfiles("test")
 public class UserControllerTest {
 
-    /* DEPENDENCIES INJECTION */
-    /* ============================================================ */
+        /* DEPENDENCIES INJECTION */
+        /* ============================================================ */
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    /* ObjectMapper provide functionalities for read and write JSON data's */
-    @Autowired
-    private ObjectMapper objectMapper;
+        /* ObjectMapper provide functionalities for read and write JSON data's */
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @MockBean
-    private UserServiceImpl userService;
+        @MockBean
+        private UserServiceImpl userService;
 
-    @MockBean
-    private AuthenticationManager authenticationManager;
-    @MockBean
-    private JwtServiceImpl jwtServiceImpl;
+        @MockBean
+        private AuthenticationManager authenticationManager;
+        @MockBean
+        private JwtServiceImpl jwtServiceImpl;
 
-    /* REFERENCES FOR MOCKING */
-    /* ============================================================ */
-    Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
+        /* REFERENCES FOR MOCKING */
+        /* ============================================================ */
+        Role roleForTest = Role.builder().name(RoleEnum.ADMIN).build();
 
-    private User userRef = User.builder()
-            .email(REFERENCE_USER_NAME)
-            .name(REFERENCE_USER_NAME)
-            .password(REFERENCE_USER_PASSWORD)
-            .role(roleForTest)
-            .build();
+        private User userRef = User.builder()
+                        .email(REFERENCE_USER_NAME)
+                        .name(REFERENCE_USER_NAME)
+                        .password(REFERENCE_USER_PASSWORD)
+                        .role(roleForTest)
+                        .build();
 
-    /* FIXTURES */
-    /* ============================================================ */
-    // @BeforeEach
-    // void init() {}
+        private User userRef2 = User.builder()
+                        .email("piccolo@namek.org")
+                        .name("pic-picSenzuFreez")
+                        .password("Picc@@lO128!")
+                        .role(roleForTest)
+                        .build();
 
-    /* CONTROLLER UNIT TEST */
-    /* ============================================================ */
-    @Test
-    @DisplayName("Get by username an existing user")
-    void getUser_ShouldSuccess_WhenUserExists() throws Exception {
+        /* FIXTURES */
+        /* ============================================================ */
+        // @BeforeEach
+        // void init() {}
 
-        /* Arrange */
-        when(this.userService.loadUserByUsername(this.userRef.getUsername()))
-                .thenReturn(this.userRef);
+        /* CONTROLLER UNIT TEST */
+        /* ============================================================ */
+        @Test
+        @DisplayName("Get by username an existing user")
+        void getUser_ShouldSuccess_WhenUserExists() throws Exception {
 
-        /* Act */
-        UserRequestDto userRequestDto = new UserRequestDto(this.userRef.getUsername());
+                /* Arrange */
+                when(this.userService.loadUserByUsername(this.userRef.getUsername()))
+                                .thenReturn(this.userRef);
 
-        ResultActions response = this.mockMvc.perform(get(Endpoint.USER)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(this.objectMapper.writeValueAsString(userRequestDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                /* Act */
+                UserRequestDto userRequestDto = new UserRequestDto(this.userRef.getUsername());
 
-        /* Assert */
-        String serializedResponse = response.andReturn().getResponse().getContentAsString();
-        PublicUserResponseDto parsedResponse = this.objectMapper.readValue(serializedResponse,
-                new TypeReference<PublicUserResponseDto>() {
-                });
+                ResultActions response = this.mockMvc.perform(post(Endpoint.USER)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(userRequestDto)))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        assertThat(parsedResponse.pseudonyme()).isEqualTo(this.userRef.getPseudonyme());
-        assertThat(parsedResponse.username()).isEqualTo(this.userRef.getUsername());
-        assertThat(parsedResponse.avatar()).isEqualTo(this.userRef.getAvatar());
-        assertThat(parsedResponse.actif()).isEqualTo(this.userRef.isActif());
-        assertThat(parsedResponse.role()).isEqualTo(this.userRef.getRole());
-    }
+                /* Assert */
+                String serializedResponse = response.andReturn().getResponse().getContentAsString();
+                PublicUserResponseDto parsedResponse = this.objectMapper.readValue(serializedResponse,
+                                new TypeReference<PublicUserResponseDto>() {
+                                });
 
-    @Test
-    @DisplayName("Get by username an non-existing user")
-    void getUser_ShouldFailed_WhenUserNotExists() throws Exception {
+                assertThat(parsedResponse.pseudonyme()).isEqualTo(this.userRef.getPseudonyme());
+                assertThat(parsedResponse.username()).isEqualTo(this.userRef.getUsername());
+                assertThat(parsedResponse.avatar()).isEqualTo(this.userRef.getAvatar());
+                assertThat(parsedResponse.actif()).isEqualTo(this.userRef.isActif());
+                assertThat(parsedResponse.role()).isEqualTo(this.userRef.getRole());
+        }
 
-        /* Arrange */
-        when(this.userService.loadUserByUsername(anyString()))
-                .thenThrow(UsernameNotFoundException.class);
+        @Test
+        @DisplayName("Get by username an non-existing user")
+        void getUser_ShouldFailed_WhenUserNotExists() throws Exception {
 
-        /* Act */
-        UserRequestDto userRequestDto = new UserRequestDto("quisuije@dansqueletatjerre.fr");
+                /* Arrange */
+                when(this.userService.loadUserByUsername(anyString()))
+                                .thenThrow(UsernameNotFoundException.class);
 
-        this.mockMvc.perform(get(Endpoint.USER)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(this.objectMapper.writeValueAsString(userRequestDto)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof UsernameNotFoundException))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+                /* Act */
+                UserRequestDto userRequestDto = new UserRequestDto("quisuije@dansqueletatjerre.fr");
+
+                this.mockMvc.perform(post(Endpoint.USER)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(userRequestDto)))
+                                .andExpect(result -> assertTrue(
+                                                result.getResolvedException() instanceof UsernameNotFoundException))
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        }
+
+        @Test
+        @DisplayName("Get all users when at least one is present")
+        void list_ShouldSuccess_WhenAnUserExists() throws Exception {
+
+                /* Arrange */
+                List<User> users = new ArrayList<>();
+                users.add(this.userRef);
+                users.add(this.userRef2);
+                List<ProtectedUserResponseDto> protectedUserDtos = new ArrayList<>();
+                for (User item : users) {
+                        protectedUserDtos.add(
+                                        new ProtectedUserResponseDto(
+                                                        item.getName(),
+                                                        item.getEmail(),
+                                                        item.isActif(),
+                                                        item.getPseudonyme(),
+                                                        item.getAvatar(),
+                                                        item.getRole().getName().toString()));
+                }
+
+                when(this.userService.list()).thenReturn(users);
+
+                /* Act & assert */
+                ResultActions response = this.mockMvc.perform(get(Endpoint.GET_ALL_USERS))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+
+                String serializedResponse = response.andReturn().getResponse().getContentAsString();
+                List<ProtectedUserResponseDto> parsedResponse = this.objectMapper.readValue(serializedResponse,
+                                new TypeReference<List<ProtectedUserResponseDto>>() {
+                                });
+                assertThat(parsedResponse).isEqualTo(protectedUserDtos);
+        }
+
+        @Test
+        @DisplayName("Get all users when none user exists")
+        void list_ShouldReturnNull_WhenNoneUserExists() throws Exception {
+
+                /* Arrange */
+                List<User> users = new ArrayList<>();
+                when(this.userService.list()).thenReturn(users);
+
+                /* Act & assert */
+                ResultActions response = this.mockMvc.perform(get(Endpoint.GET_ALL_USERS))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+
+                assertThat(response.andReturn().getResponse().getContentAsString()).isEqualTo("[]");
+        }
 }
