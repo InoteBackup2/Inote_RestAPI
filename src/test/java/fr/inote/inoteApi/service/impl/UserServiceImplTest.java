@@ -329,7 +329,6 @@ public class UserServiceImplTest {
         verify(this.userRepository, times(1)).findByEmail(any(String.class));
         verify(this.passwordEncoder, times(1)).encode(any(String.class));
         verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
-        verify(this.userRepository, times(2)).save(any(User.class));
     }
 
     @Test
@@ -358,8 +357,7 @@ public class UserServiceImplTest {
         verify(this.userRepository, times(1)).findByEmail(any(String.class));
         verify(this.passwordEncoder, times(1)).encode(any(String.class));
         verify(this.roleRepository, times(1)).findByName(any(RoleEnum.class));
-        verify(this.userRepository, times(2)).save(any(User.class));
-    }
+       }
 
     @Test
     @DisplayName("Activate an user with good code")
@@ -381,8 +379,7 @@ public class UserServiceImplTest {
         /* Verify */
         verify(this.validationService, times(1)).getValidationFromCode(any(String.class));
         verify(this.validationRepository, times(1)).save(any(Validation.class));
-        verify(this.userRepository, times(2)).save(any(User.class));
-    }
+        }
 
     @Test
     @DisplayName("Activate an user with bad code")

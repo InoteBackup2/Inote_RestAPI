@@ -13,6 +13,7 @@ import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
 import fr.inote.inoteApi.dto.ActivationRequestDto;
+import fr.inote.inoteApi.dto.ProtectedUserRequestDto;
 import fr.inote.inoteApi.dto.SignInRequestDto;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.RegisterRequestDto;
@@ -42,6 +43,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.internet.MimeMessage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
@@ -52,6 +55,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -110,6 +114,7 @@ public class UserController_IT {
                         .role(this.roleRef)
                         .email(REFERENCE_USER_EMAIL)
                         .name(REFERENCE_USER_NAME)
+                        .actif(true)
                         .build();
 
         private RegisterRequestDto registerRequestDto = new RegisterRequestDto(REFERENCE_PSEUDONYME,
@@ -118,14 +123,19 @@ public class UserController_IT {
 
         final String ENCRYPTION_KEY_FOR_TEST = "40c9201ff1204cfaa2b8eb5ac72bbe5020af8dfaa3b59cf243a5d41e04fb6b1907c490ef0686e646199d6629711cbccd953e11df4bbd913da2a8902f57e99a55";
 
+        List<User> users = new ArrayList<>();
+        List<ProtectedUserRequestDto> protectedUserDtos = new ArrayList<>();
+
         /* FIXTURES */
         /* ============================================================ */
         @BeforeEach
         void setUp() throws Exception {
+
                 this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
                 this.jwtService.setValidityTokenTimeInSeconds(1800);
                 this.jwtService.setAdditionalTimeForRefreshTokenInSeconds(1000);
                 this.jwtService.setEncryptionKey(ENCRYPTION_KEY_FOR_TEST);
+                this.userRepository.deleteAll();
         }
 
         @AfterEach
@@ -181,6 +191,58 @@ public class UserController_IT {
                                 .andExpect(status().isNotFound())
                                 .andExpect(result -> assertTrue(
                                                 result.getResolvedException() instanceof UsernameNotFoundException));
+        }
+
+        @Test
+        @DisplayName("Get by username an existing user when bearer is not present")
+        void getUser_ShouldFailed_WhenBearerIsOmitted() throws Exception {
+
+                /* Act */
+                UserRequestDto userRequestDto = new UserRequestDto(this.userRef.getUsername());
+
+                this.mockMvc.perform(post(Endpoint.USER)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(userRequestDto)))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("Get all users when at least one is present")
+        void list_ShouldSuccess_WhenAnUserExists() throws Exception {
+
+                /* Arrange */
+                this.protectedUserDtos.clear();
+                protectedUserDtos = new ArrayList<>();
+                this.protectedUserDtos.add(new ProtectedUserRequestDto(
+                                this.userRef.getPseudonyme(),
+                                this.userRef.getEmail(),
+                                this.userRef.isActif(),
+                                this.userRef.getPseudonyme(),
+                                this.userRef.getAvatar(),
+                                this.userRef.getRole().getName().toString()));
+
+                /* Act & assert */
+                SignInResponseDto credentials = this.connectAndReturnAllCredentials();
+                ResultActions response = this.mockMvc.perform(get(Endpoint.GET_ALL_USERS)
+                                .header("Authorization", BEARER + " " + credentials.bearer()))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+
+                String serializedResponse = response.andReturn().getResponse().getContentAsString();
+                List<ProtectedUserRequestDto> parsedResponse = this.objectMapper.readValue(serializedResponse,
+                                new TypeReference<List<ProtectedUserRequestDto>>() {
+                                });
+
+                assertThat(parsedResponse).isEqualTo(this.protectedUserDtos);
+        }
+
+        @Test
+        @DisplayName("Get all users when bearer is ommited")
+        void list_ShouldReturnForbidden_WhenBearerIsOmmited() throws Exception {
+
+                /* Act & assert */
+               this.mockMvc.perform(get(Endpoint.GET_ALL_USERS))
+                              .andExpect(MockMvcResultMatchers.status().isForbidden());
+
         }
 
         /* UTILS */
