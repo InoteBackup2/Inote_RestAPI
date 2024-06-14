@@ -1,9 +1,9 @@
 @contentType = application/json
-@pseudo = sangoku
-@username = sangoku@kame-house.com
-@password = ssFF@@787$
+@pseudo = mochizuki
+@username = mochizuki@inote.fr
+@password = @Tsu@hil145!
 @passwordBis = chichi@@YYY14646_
-@email = sangoku@kame-house.com
+@email = mochizuki@inote.fr
 
 # USER ACCOUNT
 #=================================================================
@@ -113,7 +113,7 @@ Authorization: bearer {{tokenBearer}}
 #========================================================================
 
 ### Get an user by username
-GET http://localhost:8080/api/users/get-user HTTP/1.1
+POST http://localhost:8080/api/users/get-user HTTP/1.1
 Content-Type: {{contentType}}
 Authorization: bearer {{tokenBearer}}
 

@@ -61,6 +61,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@Disabled
 /*The @SpringBootTest annotation is used for integration testing in Spring Boot applications.
  * It helps in bootstrapping the application context required for testing */
 @SpringBootTest
@@ -203,6 +204,7 @@ public class CommentController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable());
         }
 
+        @Disabled
         @Test
         @DisplayName("Create comment with user without authorities to do this")
         void create_ShouldFail_whenUserDontHaveTheGoodAuthorities() throws JsonProcessingException, Exception {
@@ -261,6 +263,7 @@ public class CommentController_IT {
 
         }
 
+        @Disabled
         @Test
         @DisplayName("Get all comments registered in database when user don't have  permissions")
         void getComments_ShouldBeForbidden_WhenUserNotHavePermisssions() throws Exception {

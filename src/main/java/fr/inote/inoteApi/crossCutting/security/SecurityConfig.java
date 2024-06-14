@@ -144,9 +144,8 @@ public class SecurityConfig {
                                 // -> Secured endpoints
                                 .requestMatchers(POST, Endpoint.GET_CURRENT_USER).authenticated()
                                 .requestMatchers(POST, Endpoint.SIGN_OUT).authenticated()
-                                .requestMatchers(POST, Endpoint.USER).authenticated()
-                                
-                                
+                                .requestMatchers(POST, Endpoint.USER).hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(GET, Endpoint.GET_ALL_USERS).hasAuthority("ROLE_ADMIN")
                                 
                                 /* Examples */
                                 // .requestMatchers(POST, Endpoint.CREATE_COMMENT).hasAnyAuthority("ROLE_USER",

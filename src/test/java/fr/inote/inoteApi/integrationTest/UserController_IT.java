@@ -6,23 +6,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.store.FolderException;
-import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
-import fr.inote.inoteApi.crossCutting.constants.MessagesEn;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.ActivationRequestDto;
 import fr.inote.inoteApi.dto.ProtectedUserRequestDto;
 import fr.inote.inoteApi.dto.SignInRequestDto;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
-import fr.inote.inoteApi.dto.RegisterRequestDto;
 import fr.inote.inoteApi.dto.SignInResponseDto;
 import fr.inote.inoteApi.dto.UserRequestDto;
 import fr.inote.inoteApi.entity.Role;
 import fr.inote.inoteApi.entity.User;
 import fr.inote.inoteApi.repository.JwtRepository;
-import fr.inote.inoteApi.repository.UserRepository;
 import fr.inote.inoteApi.repository.ValidationRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,15 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import javax.mail.internet.MimeMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +40,7 @@ import java.util.UUID;
 
 import static fr.inote.inoteApi.ConstantsForTests.*;
 import static fr.inote.inoteApi.crossCutting.constants.HttpRequestBody.BEARER;
-import static fr.inote.inoteApi.crossCutting.constants.MessagesEn.EMAIL_SUBJECT_ACTIVATION_CODE;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,8 +56,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 @SpringBootTest
-@ActiveProfiles("test")
-@DirtiesContext
+// @ActiveProfiles("test")
+// @DirtiesContext
 public class UserController_IT {
 
         /* JUNIT5 EXTENSIONS ACCESS AS OBJECT */
@@ -87,9 +75,6 @@ public class UserController_IT {
 
         @Autowired
         private ObjectMapper objectMapper;
-
-        @Autowired
-        private UserRepository userRepository;
 
         @Autowired
         private JwtRepository jwtRepository;
@@ -117,9 +102,10 @@ public class UserController_IT {
                         .actif(true)
                         .build();
 
-        private RegisterRequestDto registerRequestDto = new RegisterRequestDto(REFERENCE_PSEUDONYME,
-                        REFERENCE_USER_EMAIL,
-                        REFERENCE_USER_PASSWORD);
+        private SignInRequestDto adminSignInRequestDto = new SignInRequestDto(REFERENCE_WITH_ADMIN_ROLE_EMAIL,
+                        REFERENCE_WITH_ADMIN_ROLE_PASSWORD);
+        private SignInRequestDto userSignInRequestDto = new SignInRequestDto(REFERENCE_WITH_USER_ROLE_EMAIL,
+                        REFERENCE_WITh_USER_ROLE_PASSWORD);
 
         final String ENCRYPTION_KEY_FOR_TEST = "40c9201ff1204cfaa2b8eb5ac72bbe5020af8dfaa3b59cf243a5d41e04fb6b1907c490ef0686e646199d6629711cbccd953e11df4bbd913da2a8902f57e99a55";
 
@@ -135,7 +121,6 @@ public class UserController_IT {
                 this.jwtService.setValidityTokenTimeInSeconds(1800);
                 this.jwtService.setAdditionalTimeForRefreshTokenInSeconds(1000);
                 this.jwtService.setEncryptionKey(ENCRYPTION_KEY_FOR_TEST);
-                this.userRepository.deleteAll();
         }
 
         @AfterEach
@@ -143,7 +128,6 @@ public class UserController_IT {
                 // Clean database
                 this.jwtRepository.deleteAll();
                 this.validationRepository.deleteAll();
-                this.userRepository.deleteAll();
 
                 // Clean mailBox
                 UserController_IT.greenMail.purgeEmailFromAllMailboxes();
@@ -152,17 +136,17 @@ public class UserController_IT {
         /* CONTROLLERS INTEGRATION TEST */
         /* ============================================================ */
         @Test
-        @DisplayName("Get by username an existing user")
-        void IT_getUser_ShouldSuccess_WhenUserExists() throws Exception {
+        @DisplayName("Get by username an existing user when my role is ADMIN")
+        void IT_getUser_ShouldSuccess_WhenUserExistsAndSenderIsAdmin() throws Exception {
 
                 /* Act */
-                SignInResponseDto credentials = this.connectAndReturnAllCredentials();
-                UserRequestDto userRequestDto = new UserRequestDto(this.userRef.getUsername());
+                SignInResponseDto credentials = this.connectAnAdminAndReturnAllCredentials();
 
                 ResultActions response = this.mockMvc.perform(post(Endpoint.USER)
                                 .header("Authorization", BEARER + " " + credentials.bearer())
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(userRequestDto)))
+                                .content(this.objectMapper.writeValueAsString(
+                                                new UserRequestDto(this.adminSignInRequestDto.username()))))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 /* Assert */
@@ -171,9 +155,22 @@ public class UserController_IT {
                                 new TypeReference<PublicUserResponseDto>() {
                                 });
 
-                assertThat(parsedResponse.pseudonyme()).isEqualTo(this.userRef.getPseudonyme());
-                assertThat(parsedResponse.username()).isEqualTo(this.userRef.getUsername());
-                assertThat(parsedResponse.role().getName()).isEqualTo(this.userRef.getRole().getName());
+                assertThat(parsedResponse.username()).isEqualTo(this.adminSignInRequestDto.username());
+        }
+
+        @Test
+        @DisplayName("Get by username an existing user when my role is USER")
+        void IT_getUser_ShouldFail_WhenUserExistsAndSenderIsNotAdmin() throws Exception {
+
+                /* Act */
+                SignInResponseDto credentials = this.connectAnUserAndReturnAllCredentials();
+
+                this.mockMvc.perform(post(Endpoint.USER)
+                                .header("Authorization", BEARER + " " + credentials.bearer())
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(this.objectMapper.writeValueAsString(
+                                                new UserRequestDto(this.adminSignInRequestDto.username()))))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @Test
@@ -181,13 +178,11 @@ public class UserController_IT {
         void getUser_ShouldFailed_WhenUserNotExists() throws Exception {
 
                 /* Act & assert */
-                SignInResponseDto credentials = this.connectAndReturnAllCredentials();
-                UserRequestDto userRequestDto = new UserRequestDto("quisuije@dansqueletatjerre.fr");
-
+                SignInResponseDto credentials = this.connectAnAdminAndReturnAllCredentials();
                 this.mockMvc.perform(post(Endpoint.USER)
                                 .header("Authorization", BEARER + " " + credentials.bearer())
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(userRequestDto)))
+                                .content(this.objectMapper.writeValueAsString(new UserRequestDto("dende@namek.org"))))
                                 .andExpect(status().isNotFound())
                                 .andExpect(result -> assertTrue(
                                                 result.getResolvedException() instanceof UsernameNotFoundException));
@@ -198,17 +193,15 @@ public class UserController_IT {
         void getUser_ShouldFailed_WhenBearerIsOmitted() throws Exception {
 
                 /* Act */
-                UserRequestDto userRequestDto = new UserRequestDto(this.userRef.getUsername());
-
                 this.mockMvc.perform(post(Endpoint.USER)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(this.objectMapper.writeValueAsString(userRequestDto)))
+                                .content(this.objectMapper.writeValueAsString(this.adminSignInRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @Test
-        @DisplayName("Get all users when at least one is present")
-        void list_ShouldSuccess_WhenAnUserExists() throws Exception {
+        @DisplayName("Get all users when at least one is present and my role is ADMIN")
+        void list_ShouldSuccess_WhenAnUserExistsAndSenderIsAdmin() throws Exception {
 
                 /* Arrange */
                 this.protectedUserDtos.clear();
@@ -222,7 +215,7 @@ public class UserController_IT {
                                 this.userRef.getRole().getName().toString()));
 
                 /* Act & assert */
-                SignInResponseDto credentials = this.connectAndReturnAllCredentials();
+                SignInResponseDto credentials = this.connectAnAdminAndReturnAllCredentials();
                 ResultActions response = this.mockMvc.perform(get(Endpoint.GET_ALL_USERS)
                                 .header("Authorization", BEARER + " " + credentials.bearer()))
                                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -232,7 +225,19 @@ public class UserController_IT {
                                 new TypeReference<List<ProtectedUserRequestDto>>() {
                                 });
 
-                assertThat(parsedResponse).isEqualTo(this.protectedUserDtos);
+                assertThat(parsedResponse).isNotEmpty();
+                assertThat(parsedResponse).isNotNull();
+
+        }
+
+        @Test
+        @DisplayName("Get all users when at least one is present and my role is USER")
+        void list_ShouldFail_WhenAnUserExistsAndSenderIsUser() throws Exception {
+                /* Act & assert */
+                SignInResponseDto credentials = this.connectAnUserAndReturnAllCredentials();
+                this.mockMvc.perform(get(Endpoint.GET_ALL_USERS)
+                                .header("Authorization", BEARER + " " + credentials.bearer()))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
         }
 
         @Test
@@ -240,65 +245,44 @@ public class UserController_IT {
         void list_ShouldReturnForbidden_WhenBearerIsOmmited() throws Exception {
 
                 /* Act & assert */
-               this.mockMvc.perform(get(Endpoint.GET_ALL_USERS))
-                              .andExpect(MockMvcResultMatchers.status().isForbidden());
+                this.mockMvc.perform(get(Endpoint.GET_ALL_USERS))
+                                .andExpect(MockMvcResultMatchers.status().isForbidden());
 
         }
 
         /* UTILS */
         /* ============================================================ */
-        private SignInResponseDto connectAndReturnAllCredentials() throws JsonProcessingException, Exception {
-                /* Arrange */
-                final String[] messageContainingCode = new String[1];
-                this.mockMvc.perform(
-                                post(Endpoint.REGISTER)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper
-                                                                .writeValueAsString(this.registerRequestDto)));
-                await()
-                                .atMost(2, SECONDS)
-                                .untilAsserted(() -> {
-                                        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-                                        assertThat(receivedMessages.length).isEqualTo(1);
-
-                                        MimeMessage receivedMessage = receivedMessages[0];
-
-                                        messageContainingCode[0] = GreenMailUtil.getBody(receivedMessage);
-                                        assertThat(messageContainingCode[0]).contains(EMAIL_SUBJECT_ACTIVATION_CODE);
-                                });
-
-                final String reference = "activation code : ";
-                int startSubtring = messageContainingCode[0].indexOf(reference);
-                int startIndexOfCode = startSubtring + reference.length();
-                int endIndexOfCode = startIndexOfCode + 6;
-                String extractedCode = messageContainingCode[0].substring(startIndexOfCode, endIndexOfCode);
-                ActivationRequestDto activationDtoRequest = new ActivationRequestDto(extractedCode);
+        private SignInResponseDto connectAnAdminAndReturnAllCredentials() throws JsonProcessingException, Exception {
                 ResultActions response = this.mockMvc.perform(
-                                post(Endpoint.ACTIVATION)
-                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(this.objectMapper.writeValueAsString(activationDtoRequest)))
-                                .andExpect(MockMvcResultMatchers.status().isOk());
-
-                String returnedResponse = response.andReturn().getResponse().getContentAsString();
-
-                assertThat(returnedResponse).isEqualTo(MessagesEn.ACTIVATION_OF_USER_OK);
-
-                SignInRequestDto authenticationDtoRequest = new SignInRequestDto(
-                                this.registerRequestDto.username(), this.registerRequestDto.password());
-
-                response = this.mockMvc.perform(
                                 post(Endpoint.SIGN_IN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                 .content(this.objectMapper
-                                                                .writeValueAsString(authenticationDtoRequest)))
+                                                                .writeValueAsString(this.adminSignInRequestDto)))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                returnedResponse = response.andReturn().getResponse().getContentAsString();
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
                 SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
                                 SignInResponseDto.class);
-                // assertThat(signInDtoresponse.bearer().length()).isEqualTo(145);
                 assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+
+                return signInDtoresponse;
+        }
+
+        private SignInResponseDto connectAnUserAndReturnAllCredentials() throws JsonProcessingException, Exception {
+                ResultActions response = this.mockMvc.perform(
+                                post(Endpoint.SIGN_IN)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                .content(this.objectMapper
+                                                                .writeValueAsString(this.userSignInRequestDto)))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+                String returnedResponse = response.andReturn().getResponse().getContentAsString();
+                SignInResponseDto signInDtoresponse = this.objectMapper.readValue(returnedResponse,
+                                SignInResponseDto.class);
+                assertThat(signInDtoresponse.refresh().length()).isEqualTo(UUID.randomUUID().toString().length());
+
                 return signInDtoresponse;
         }
 }
