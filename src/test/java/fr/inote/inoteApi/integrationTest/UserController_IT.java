@@ -10,7 +10,7 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.ProtectedUserRequestDto;
+import fr.inote.inoteApi.dto.ProtectedUserResponseDto;
 import fr.inote.inoteApi.dto.SignInRequestDto;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.SignInResponseDto;
@@ -110,7 +110,7 @@ public class UserController_IT {
         final String ENCRYPTION_KEY_FOR_TEST = "40c9201ff1204cfaa2b8eb5ac72bbe5020af8dfaa3b59cf243a5d41e04fb6b1907c490ef0686e646199d6629711cbccd953e11df4bbd913da2a8902f57e99a55";
 
         List<User> users = new ArrayList<>();
-        List<ProtectedUserRequestDto> protectedUserDtos = new ArrayList<>();
+        List<ProtectedUserResponseDto> protectedUserDtos = new ArrayList<>();
 
         /* FIXTURES */
         /* ============================================================ */
@@ -206,7 +206,7 @@ public class UserController_IT {
                 /* Arrange */
                 this.protectedUserDtos.clear();
                 protectedUserDtos = new ArrayList<>();
-                this.protectedUserDtos.add(new ProtectedUserRequestDto(
+                this.protectedUserDtos.add(new ProtectedUserResponseDto(
                                 this.userRef.getPseudonyme(),
                                 this.userRef.getEmail(),
                                 this.userRef.isActif(),
@@ -221,8 +221,8 @@ public class UserController_IT {
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 String serializedResponse = response.andReturn().getResponse().getContentAsString();
-                List<ProtectedUserRequestDto> parsedResponse = this.objectMapper.readValue(serializedResponse,
-                                new TypeReference<List<ProtectedUserRequestDto>>() {
+                List<ProtectedUserResponseDto> parsedResponse = this.objectMapper.readValue(serializedResponse,
+                                new TypeReference<List<ProtectedUserResponseDto>>() {
                                 });
 
                 assertThat(parsedResponse).isNotEmpty();

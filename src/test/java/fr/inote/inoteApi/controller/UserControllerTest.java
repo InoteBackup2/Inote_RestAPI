@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.inote.inoteApi.crossCutting.constants.Endpoint;
 import fr.inote.inoteApi.crossCutting.enums.RoleEnum;
 import fr.inote.inoteApi.crossCutting.security.impl.JwtServiceImpl;
-import fr.inote.inoteApi.dto.ProtectedUserRequestDto;
+import fr.inote.inoteApi.dto.ProtectedUserResponseDto;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.UserRequestDto;
 import fr.inote.inoteApi.entity.Role;
@@ -152,10 +152,10 @@ public class UserControllerTest {
                 List<User> users = new ArrayList<>();
                 users.add(this.userRef);
                 users.add(this.userRef2);
-                List<ProtectedUserRequestDto> protectedUserDtos = new ArrayList<>();
+                List<ProtectedUserResponseDto> protectedUserDtos = new ArrayList<>();
                 for (User item : users) {
                         protectedUserDtos.add(
-                                        new ProtectedUserRequestDto(
+                                        new ProtectedUserResponseDto(
                                                         item.getName(),
                                                         item.getEmail(),
                                                         item.isActif(),
@@ -171,8 +171,8 @@ public class UserControllerTest {
                                 .andExpect(MockMvcResultMatchers.status().isOk());
 
                 String serializedResponse = response.andReturn().getResponse().getContentAsString();
-                List<ProtectedUserRequestDto> parsedResponse = this.objectMapper.readValue(serializedResponse,
-                                new TypeReference<List<ProtectedUserRequestDto>>() {
+                List<ProtectedUserResponseDto> parsedResponse = this.objectMapper.readValue(serializedResponse,
+                                new TypeReference<List<ProtectedUserResponseDto>>() {
                                 });
                 assertThat(parsedResponse).isEqualTo(protectedUserDtos);
         }

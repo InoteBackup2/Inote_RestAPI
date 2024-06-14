@@ -1,6 +1,6 @@
 package fr.inote.inoteApi.dto;
 
-public record ProtectedUserRequestDto(
+public record ProtectedUserResponseDto(
     String name,
     String email,
     boolean active,

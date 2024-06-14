@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.inote.inoteApi.dto.ProtectedUserRequestDto;
+import fr.inote.inoteApi.dto.ProtectedUserResponseDto;
 import fr.inote.inoteApi.dto.PublicUserResponseDto;
 import fr.inote.inoteApi.dto.UserRequestDto;
 import fr.inote.inoteApi.entity.User;
@@ -59,12 +59,12 @@ public class UserController {
      * @return List of ProtectedUseRequestDto or "[]" if empty
      */
     @GetMapping(path = GET_ALL_USERS)
-    public ResponseEntity<List<ProtectedUserRequestDto>> getAllUsers() {
+    public ResponseEntity<List<ProtectedUserResponseDto>> getAllUsers() {
         List<User> users = this.userService.list();
-        List<ProtectedUserRequestDto> protectedUserDtos = new ArrayList<>();
+        List<ProtectedUserResponseDto> protectedUserDtos = new ArrayList<>();
         for(User item:users){
             protectedUserDtos.add(
-                new ProtectedUserRequestDto(
+                new ProtectedUserResponseDto(
                     item.getName(),
                     item.getEmail(),
                     item.isActif(),
