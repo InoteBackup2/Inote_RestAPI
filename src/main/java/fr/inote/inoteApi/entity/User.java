@@ -41,7 +41,9 @@ public class User implements UserDetails {
     private boolean actif = false;
 
     private String pseudonyme;
-    private String avatar;
+    
+    @Builder.Default
+    private String avatar = "../../resources/assets/user.svg";
 
     /* Private attributes in relations with others entities <=> foreign key*/
     /* ============================================================ */
