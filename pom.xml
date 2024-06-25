@@ -28,7 +28,7 @@
     <groupId>fr.inote</groupId>
     <artifactId>inote-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Inote-api</name>
+    <name>Inote API</name>
     <description>Inote Project REST API</description>
 
     <!-- The <properties> tag in a pom.xml file is used to define project-level properties that can
