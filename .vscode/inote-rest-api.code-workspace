@@ -34,8 +34,8 @@
 				"type": "java",
 				"name": "Inote API application",
 				"request": "launch",
-				"mainClass": "fr.inote.inoteApi.InoteApiApplication",
-				"projectName": "InoteApi"
+				"mainClass": "fr.inote.inote-api.InoteApiApplication",
+				"projectName": "inote-api"
 				
 				/* Ceci n'est plus utile, tout la configuration pour le runner des test
 				   L'ajout de la ligne spring.config.import=optional:file:./../.env[.properties]
